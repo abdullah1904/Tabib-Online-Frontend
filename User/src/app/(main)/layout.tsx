@@ -1,0 +1,17 @@
+import AppNavbar from '@/components/AppNavbar'
+import React, { ReactNode } from 'react'
+
+type Props = {
+    children: ReactNode
+}
+
+const MainLayout = ({children}: Props) => {
+  return (
+    <main>
+        <AppNavbar/>
+        {children}
+    </main>
+  )
+}
+
+export default MainLayout
