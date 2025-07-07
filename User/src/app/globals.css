@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 @import 'tailwindcss';
 @plugin './hero.ts';
 
@@ -6,26 +7,26 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary: #3A5A40;
+  --primary-light: #588157;
+  --primary-dark: #344E41;
+  --secondary: #E5E4E2;
+  --foreground: #DAD7CD;
+  --open-sans-font: "Open Sans", sans-serif;
+  --inter-font: "Inter", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+  --color-secondary: var(--secondary);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-open-sans: var(--open-sans-font);
+  --font-inter: var(--inter-font);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+body{
+  background-color: var(--foreground);
+  font-family: var(--inter-font);
 }
