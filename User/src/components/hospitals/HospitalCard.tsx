@@ -1,18 +1,18 @@
-import { Button, Card, CardBody, CardFooter } from "@heroui/react"
-import Image from "next/image"
-import Link from "next/link"
-import { Star, BadgeCheck } from "lucide-react"
+import { Button, Card, CardBody, CardFooter } from '@heroui/react';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react'
+import { Star } from "lucide-react"
 
-type DoctorCardProps = {
+type Props = {
     id: string;
     name: string;
-    designation: string;
+    location: string;
     rating: number;
-    isVerified: boolean;
     image?: string;
 }
 
-const DoctorCard = ({name, designation, image, rating, isVerified, id}:DoctorCardProps) => {
+const HospitalCard = ({location, name, image, rating, id}: Props) => {
     const renderStars = () => {
         const stars = [];
         const fullStars = Math.floor(rating);
@@ -50,26 +50,16 @@ const DoctorCard = ({name, designation, image, rating, isVerified, id}:DoctorCar
     return (
         <Card>
             <CardBody>
-                <div className="relative inline-block mx-auto">
-                    <Image
-                        src={`/assets/${image}`}
-                        alt="Doctor"
-                        width={100}
-                        height={100}
-                        className="w-24 h-24 rounded-full mx-auto mb-4 border-primary border-2"
-                    />
-                </div>
-                
-                <div className="flex items-center justify-center gap-1">
-                    <h3 className="text-primary-dark text-lg font-semibold text-center">{name}</h3>
-                    {/* Alternative verification tick next to name */}
-                    {isVerified && (
-                        <BadgeCheck className="w-5 h-5 text-primary" />
-                    )}
-                </div>
-                
+                <Image
+                    src={`/assets/${image}`}
+                    alt="Hospital"
+                    width={100}
+                    height={100}
+                    className="w-24 h-24 rounded-full mx-auto mb-4 border-primary border-2"
+                />
+                <h3 className="text-primary-dark text-lg font-semibold text-center">{name}</h3>
                 <p className="text-primary text-center mb-2">
-                    {designation}
+                    {location}
                 </p>
                 
                 {/* Rating Section */}
@@ -81,7 +71,7 @@ const DoctorCard = ({name, designation, image, rating, isVerified, id}:DoctorCar
                 </div>
             </CardBody>
             <CardFooter className="pt-0">
-                <Button as={Link} href={`/doctors/${id}`} className="mx-auto" color="primary">
+                <Button as={Link} href={`/hospitals/${id}`} className="mx-auto" color="primary">
                     View Profile
                 </Button>
             </CardFooter>
@@ -89,4 +79,4 @@ const DoctorCard = ({name, designation, image, rating, isVerified, id}:DoctorCar
     )
 }
 
-export default DoctorCard
+export default HospitalCard

@@ -1,5 +1,6 @@
 "use client";
-import {HeroUIProvider} from "@heroui/react";
+import {HeroUIProvider } from "@heroui/react";
+import {ToastProvider} from "@heroui/toast"
 import { ReactNode } from "react";
 
 type Props = {
@@ -10,6 +11,7 @@ const HeroUIThemeProvider = ({children}: Props) => {
   return (
     <HeroUIProvider>
         {children}
+        <ToastProvider/>
     </HeroUIProvider>
   )
 }
