@@ -6,26 +6,10 @@ import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useRouter } from "next/navigation";
+import { SignInFormData, signInFormSchema } from "@/lib/validation";
+import { showToast } from "@/utils";
 
-// Zod validation schema
-const signInSchema = z.object({
-    email: z
-        .string()
-        .min(1, "Email is required")
-        .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address"),
-    password: z
-        .string()
-        .min(1, "Password is required")
-        .min(8, "Password must be at least 8 characters long")
-        .regex(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-            "Password must contain at least one uppercase letter, one lowercase letter, and one number"
-        ),
-});
-
-type SignInFormData = z.infer<typeof signInSchema>;
 
 const SignInForm = () => {
     const router = useRouter();
@@ -41,7 +25,7 @@ const SignInForm = () => {
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm<SignInFormData>({
-        resolver: zodResolver(signInSchema),
+        resolver: zodResolver(signInFormSchema),
         mode: "onBlur",
     });
 
@@ -50,10 +34,11 @@ const SignInForm = () => {
         try {
             await new Promise(resolve => setTimeout(resolve, 2000));
             console.log("Login successful!", data);
+            showToast("Login successful!", "success");
             router.push("/");
         } catch (error) {
             console.error("Login failed:", error);
-            
+            showToast("Login failed. Please try again.", "error");
         } finally {
             setIsLoading(false);
         }

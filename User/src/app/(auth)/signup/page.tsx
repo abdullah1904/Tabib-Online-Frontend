@@ -1,10 +1,11 @@
+import SignUpForm from '@/components/auth/signup/SignUpForm'
 import React from 'react'
 
 
 
 const SignupPage = () => {
   return (
-    <div>SignupPage</div>
+    <SignUpForm/>
   )
 }
 
