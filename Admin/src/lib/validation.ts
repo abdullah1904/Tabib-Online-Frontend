@@ -1,0 +1,18 @@
+import {z} from "zod";
+
+export const signInFormSchema = z.object({
+    email: z
+        .string()
+        .min(1, "Email is required")
+        .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address"),
+    password: z
+        .string()
+        .min(1, "Password is required")
+        .min(8, "Password must be at least 8 characters long")
+        .regex(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+            "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+        ),
+});
+
+export type SignInFormData = z.infer<typeof signInFormSchema>;
