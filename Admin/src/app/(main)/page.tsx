@@ -1,8 +1,12 @@
-
+import Metrics from "@/components/home/Metrics"
+import Stats from "@/components/home/Stats"
 
 const HomePage = () => {
   return (
-    <div>HomePage</div>
+    <div>
+      <Metrics/>
+      <Stats/>
+    </div>
   )
 }
 
