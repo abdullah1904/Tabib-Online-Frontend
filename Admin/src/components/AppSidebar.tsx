@@ -43,6 +43,7 @@ import {
     AvatarFallback,
     AvatarImage
 } from "./ui/avatar"
+import { useRouter } from "next/navigation"
 
 const data = {
     user: {
@@ -163,7 +164,11 @@ const data = {
 }
 
 const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
-    const { isMobile } = useSidebar()
+    const { isMobile } = useSidebar();
+    const router = useRouter();
+    const handleLogoClick = ()=>{
+        router.push("/");
+    }
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
@@ -171,7 +176,8 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                     <SidebarMenuItem>
                         <SidebarMenuButton
                             size="lg"
-                            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
+                            onClick={handleLogoClick}
                         >
                             <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                                 <Pill className="size-4" />
