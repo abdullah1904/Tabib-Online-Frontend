@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { Separator } from "./ui/separator"
 import { SidebarTrigger } from "./ui/sidebar"
 
@@ -12,7 +13,9 @@ const AppNavbar = () => {
                     className="mr-2 data-[orientation=vertical]:h-4"
                 />
                 <div className='p-2'>
-                    <h2 className='text-2xl md:text-3xl font-semibold text-gray-800'>Tabib Online</h2>
+                    <Link href="/">
+                        <h2 className='text-2xl md:text-3xl font-semibold text-gray-800'>Tabib Online</h2>
+                    </Link>
                 </div>
             </div>
         </header>
