@@ -1,6 +1,6 @@
 "use client"
 
-import { Ban, EllipsisVertical, Eye, OctagonPause } from "lucide-react"
+import { Ban, EllipsisVertical, Eye, Info, OctagonPause } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import {
     Table,
@@ -14,6 +14,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Input } from "../ui/input"
+import { Tooltip, TooltipContent } from "../ui/tooltip"
+import { TooltipTrigger } from "@radix-ui/react-tooltip"
 
 const userData = [
     {
@@ -151,9 +153,16 @@ const UsersTable = () => {
                                     <AvatarFallback className="rounded-lg">{user.fullName.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 {user.fullName}
-                                <div className="sm:hidden text-sm text-muted-foreground">
-                                    {user.email}
-                                </div>
+                                <Tooltip>
+                                    <TooltipTrigger className="sm:hidden">
+                                        <Info className="size-4"/>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Email: {user.email}</p>
+                                        <p>Phone: {user.phone}</p>
+                                        <p>Location: {user.location}</p>
+                                    </TooltipContent>
+                                </Tooltip>
                             </TableCell>
                             <TableCell className="hidden sm:table-cell">{user.email}</TableCell>
                             <TableCell className="hidden md:table-cell">{user.phone}</TableCell>
