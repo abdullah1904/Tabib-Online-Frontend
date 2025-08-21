@@ -1,7 +1,7 @@
 "use client"
 import { useState, useRef, useEffect } from 'react';
 import { Button, Card, CardBody, Input } from "@heroui/react";
-import { Bot, X, Send, User } from "lucide-react";
+import { Bot, Send, User } from "lucide-react";
 
 interface Message {
     id: number;
