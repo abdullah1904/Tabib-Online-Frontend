@@ -97,6 +97,10 @@ const data = {
                     url: "/doctors",
                 },
                 {
+                    title: "Banned Doctors",
+                    url: "/doctors/banned-doctors",
+                },
+                {
                     title: "Verification Applications",
                     url: "/doctors/verification-applications",
                 },

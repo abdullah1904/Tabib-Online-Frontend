@@ -17,12 +17,12 @@ import { Input } from "../ui/input"
 import { Tooltip, TooltipContent } from "../ui/tooltip"
 import { TooltipTrigger } from "@radix-ui/react-tooltip"
 
-const doctorData = [
+const doctorsData = [
     {
         id: 1,
         avatar: undefined,
         fullName: "Dr. Ahmed Hassan",
-        designation: "Cardiologist",
+        specialization: "Cardiologist",
         email: "ahmed.hassan@email.com",
         phone: "+92 300 6392039",
         location: "Lahore",
@@ -32,7 +32,7 @@ const doctorData = [
         id: 2,
         avatar: undefined,
         fullName: "Dr. Fatima Khan",
-        designation: "Dermatologist",
+        specialization: "Dermatologist",
         email: "fatima.khan@email.com",
         phone: "+92 321 3670982",
         location: "Karachi",
@@ -42,7 +42,7 @@ const doctorData = [
         id: 3,
         avatar: undefined,
         fullName: "Dr. Muhammad Ali",
-        designation: "Neurologist",
+        specialization: "Neurologist",
         email: "muhammad.ali@email.com",
         phone: "+92 333 0846739",
         location: "Islamabad",
@@ -52,7 +52,7 @@ const doctorData = [
         id: 4,
         avatar: undefined,
         fullName: "Dr. Ayesha Malik",
-        designation: "Pediatrician",
+        specialization: "Pediatrician",
         email: "ayesha.malik@email.com",
         phone: "+92 301 5478034",
         location: "Faisalabad",
@@ -62,7 +62,7 @@ const doctorData = [
         id: 5,
         avatar: undefined,
         fullName: "Dr. Usman Sheikh",
-        designation: "Orthopedist",
+        specialization: "Orthopedist",
         email: "usman.sheikh@email.com",
         phone: "+92 322 3452671",
         location: "Rawalpindi",
@@ -72,7 +72,7 @@ const doctorData = [
         id: 6,
         avatar: undefined,
         fullName: "Dr. Zara Ahmed",
-        designation: "Gynecologist",
+        specialization: "Gynecologist",
         email: "zara.ahmed@email.com",
         phone: "+92 334 8456234",
         location: "Multan",
@@ -82,7 +82,7 @@ const doctorData = [
         id: 7,
         avatar: undefined,
         fullName: "Dr. Tariq Mahmood",
-        designation: "General Physician",
+        specialization: "General Physician",
         email: "tariq.mahmood@email.com",
         phone: "+92 302 2645234",
         location: "Lahore",
@@ -92,7 +92,7 @@ const doctorData = [
         id: 8,
         avatar: undefined,
         fullName: "Dr. Sana Riaz",
-        designation: "Psychiatrist",
+        specialization: "Psychiatrist",
         email: "sara.riaz@email.com",
         phone: "+92 323 2849038",
         location: "Peshawar",
@@ -102,14 +102,13 @@ const doctorData = [
         id: 9,
         avatar: undefined,
         fullName: "Dr. Bilal Rashid",
-        designation: "ENT Specialist",
+        specialization: "ENT Specialist",
         email: "bilal.rashid@email.com",
         phone: "+92 335 5374839",
         location: "Quetta",
         status: "suspended",
     }
 ]
-
 
 const DoctorsTable = () => {
     const router = useRouter();
@@ -137,7 +136,7 @@ const DoctorsTable = () => {
                 <TableHeader>
                     <TableRow>
                         <TableHead>Full Name</TableHead>
-                        <TableHead className="hidden sm:table-cell">Designation</TableHead>
+                        <TableHead className="hidden sm:table-cell">Specialization</TableHead>
                         <TableHead className="hidden sm:table-cell">Email</TableHead>
                         <TableHead className="hidden md:table-cell">Phone</TableHead>
                         <TableHead className="hidden lg:table-cell">Location</TableHead>
@@ -146,7 +145,7 @@ const DoctorsTable = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {doctorData.map(doctor => (
+                    {doctorsData.map(doctor => (
                         <TableRow key={doctor.id}>
                             <TableCell className="flex items-center gap-2">
                                 <Avatar className="h-8 w-8 rounded-lg">
@@ -159,14 +158,14 @@ const DoctorsTable = () => {
                                         <Info className="size-4"/>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                        <p>Designation: {doctor.designation}</p>
+                                        <p>Specialization: {doctor.specialization}</p>
                                         <p>Email: {doctor.email}</p>
                                         <p>Phone: {doctor.phone}</p>
                                         <p>Location: {doctor.location}</p>
                                     </TooltipContent>
                                 </Tooltip>
                             </TableCell>
-                            <TableCell className="hidden sm:table-cell">{doctor.designation}</TableCell>
+                            <TableCell className="hidden sm:table-cell">{doctor.specialization}</TableCell>
                             <TableCell className="hidden sm:table-cell">{doctor.email}</TableCell>
                             <TableCell className="hidden md:table-cell">{doctor.phone}</TableCell>
                             <TableCell className="hidden lg:table-cell">{doctor.location}</TableCell>

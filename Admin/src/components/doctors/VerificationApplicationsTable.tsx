@@ -16,12 +16,12 @@ import { Input } from "../ui/input"
 import { Tooltip, TooltipContent } from "../ui/tooltip"
 import { TooltipTrigger } from "@radix-ui/react-tooltip"
 
-const doctorData = [
+const doctorsData = [
     {
         id: 1,
         avatar: undefined,
         fullName: "Dr. Ahmed Hassan",
-        qualification: "Cardiologist",
+        specialization: "Cardiologist",
         verificationStatus: "Verified",
         verifiedBy: "Admin",
     },
@@ -29,7 +29,7 @@ const doctorData = [
         id: 2,
         avatar: undefined,
         fullName: "Dr. Fatima Khan",
-        qualification: "Dermatologist",
+        specialization: "Dermatologist",
         verificationStatus: "Verified",
         verifiedBy: "Admin",
     },
@@ -37,7 +37,7 @@ const doctorData = [
         id: 3,
         avatar: undefined,
         fullName: "Dr. Muhammad Ali",
-        qualification: "Neurologist",
+        specialization: "Neurologist",
         verificationStatus: "In Progress",
         verifiedBy: "Agent",
     },
@@ -45,7 +45,7 @@ const doctorData = [
         id: 4,
         avatar: undefined,
         fullName: "Dr. Ayesha Malik",
-        qualification: "Pediatrician",
+        specialization: "Pediatrician",
         verificationStatus: "Verified",
         verifiedBy: "Admin",
     },
@@ -53,7 +53,7 @@ const doctorData = [
         id: 5,
         avatar: undefined,
         fullName: "Dr. Usman Sheikh",
-        qualification: "Orthopedist",
+        specialization: "Orthopedist",
         verificationStatus: "Failed",
         verifiedBy: "Agent",
     },
@@ -61,7 +61,7 @@ const doctorData = [
         id: 6,
         avatar: undefined,
         fullName: "Dr. Zara Ahmed",
-        qualification: "Gynecologist",
+        specialization: "Gynecologist",
         verificationStatus: "In Progress",
         verifiedBy: "Admin",
     },
@@ -69,7 +69,7 @@ const doctorData = [
         id: 7,
         avatar: undefined,
         fullName: "Dr. Tariq Mahmood",
-        qualification: "General Physician",
+        specialization: "General Physician",
         verificationStatus: "Verified",
         verifiedBy: "Agent",
     },
@@ -77,7 +77,7 @@ const doctorData = [
         id: 8,
         avatar: undefined,
         fullName: "Dr. Sana Riaz",
-        qualification: "Psychiatrist",
+        specialization: "Psychiatrist",
         verificationStatus: "Verified",
         verifiedBy: "Agent",
     },
@@ -85,12 +85,11 @@ const doctorData = [
         id: 9,
         avatar: undefined,
         fullName: "Dr. Bilal Rashid",
-        qualification: "ENT Specialist",
+        specialization: "ENT Specialist",
         verificationStatus: "Verified",
         verifiedBy: "Admin",
     }
 ]
-
 
 const VerificationApplicationsTable = () => {
     const router = useRouter();
@@ -110,14 +109,14 @@ const VerificationApplicationsTable = () => {
                 <TableHeader>
                     <TableRow>
                         <TableHead>Full Name</TableHead>
-                        <TableHead className="hidden sm:table-cell">Qualification</TableHead>
+                        <TableHead className="hidden sm:table-cell">Specialization</TableHead>
                         <TableHead className="hidden sm:table-cell">Verification Status</TableHead>
                         <TableHead className="hidden md:table-cell">Verified By</TableHead>
                         <TableHead>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {doctorData.map(doctor => (
+                    {doctorsData.map(doctor => (
                         <TableRow key={doctor.id}>
                             <TableCell className="flex items-center gap-2">
                                 <Avatar className="h-8 w-8 rounded-lg">
@@ -130,13 +129,13 @@ const VerificationApplicationsTable = () => {
                                         <Info className="size-4"/>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                        <p>Qualification: {doctor.qualification}</p>
+                                        <p>Qualification: {doctor.specialization}</p>
                                         <p>Verification Status: {doctor.verificationStatus}</p>
                                         <p>Verified By: {doctor.verifiedBy}</p>
                                     </TooltipContent>
                                 </Tooltip>
                             </TableCell>
-                            <TableCell className="hidden sm:table-cell">{doctor.qualification}</TableCell>
+                            <TableCell className="hidden sm:table-cell">{doctor.specialization}</TableCell>
                             <TableCell className="hidden sm:table-cell">{doctor.verificationStatus}</TableCell>
                             <TableCell className="hidden md:table-cell">{doctor.verifiedBy}</TableCell>
                             <TableCell>

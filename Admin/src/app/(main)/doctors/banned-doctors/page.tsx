@@ -1,7 +1,8 @@
-import VerificationApplicationsTable from "@/components/doctors/VerificationApplicationsTable"
-import { Breadcrumb, BreadcrumbLink, BreadcrumbList, BreadcrumbItem, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb"
+import BannedDoctorsTable from "@/components/doctors/BannedDoctorsTable"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 
-const VerificationApplicationsPage = () => {
+
+const BannedDoctorsPage = () => {
     return (
         <div>
             <Breadcrumb>
@@ -19,13 +20,13 @@ const VerificationApplicationsPage = () => {
                     </BreadcrumbItem>
                     <BreadcrumbSeparator className="hidden md:block" />
                     <BreadcrumbItem>
-                        <BreadcrumbPage>Verification Applications</BreadcrumbPage>
+                        <BreadcrumbPage>Banned Doctors</BreadcrumbPage>
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
-            <VerificationApplicationsTable />
+            <BannedDoctorsTable />
         </div>
     )
 }
 
-export default VerificationApplicationsPage
+export default BannedDoctorsPage

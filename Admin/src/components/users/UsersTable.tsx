@@ -17,7 +17,7 @@ import { Input } from "../ui/input"
 import { Tooltip, TooltipContent } from "../ui/tooltip"
 import { TooltipTrigger } from "@radix-ui/react-tooltip"
 
-const userData = [
+const usersData = [
     {
         id: 1,
         avatar: undefined,
@@ -145,7 +145,7 @@ const UsersTable = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {userData.map(user => (
+                    {usersData.map(user => (
                         <TableRow key={user.id}>
                             <TableCell className="flex items-center gap-2">
                                 <Avatar className="h-8 w-8 rounded-lg">
