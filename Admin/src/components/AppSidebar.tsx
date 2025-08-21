@@ -83,7 +83,7 @@ const data = {
                 },
                 {
                     title: "Banned Users",
-                    url: "/users/banned",
+                    url: "/users/banned-users",
                 },
             ],
         },
@@ -98,11 +98,11 @@ const data = {
                 },
                 {
                     title: "Verification Applications",
-                    url: "/doctors/verification",
+                    url: "/doctors/verification-applications",
                 },
                 {
                     title: "Verified Doctors",
-                    url: "/doctors/verified",
+                    url: "/doctors/verified-doctors",
                 },
                 {
                     title: "Doctor Appointments",
@@ -168,6 +168,9 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
     const router = useRouter();
     const handleLogoClick = ()=>{
         router.push("/");
+    }
+    const handleLogOut = ()=>{
+        router.push("/signin");
     }
     return (
         <Sidebar collapsible="icon" {...props}>
@@ -273,7 +276,7 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                                     </DropdownMenuItem>
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onClick={handleLogOut}>
                                     <LogOut />
                                     Log out
                                 </DropdownMenuItem>
