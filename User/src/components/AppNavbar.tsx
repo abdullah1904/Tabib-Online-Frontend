@@ -14,7 +14,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "@heroui/react";
-import { Hospital, LogIn, LogOut, Stethoscope, User } from "lucide-react";
+import { Bot, Hospital, LogIn, LogOut, Stethoscope, User } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -32,6 +32,11 @@ const AppNavbar = () => {
       "name": "Hospitals",
       "link": "/hospitals",
       "icon": <Hospital className="size-4" />
+    },
+    {
+      "name": "Tabib Bot",
+      "link": "tabib-bot",
+      "icon": <Bot className="size-4"/>
     }
   ];
   return (
