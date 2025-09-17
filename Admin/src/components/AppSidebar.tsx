@@ -43,7 +43,8 @@ import {
     AvatarFallback,
     AvatarImage
 } from "./ui/avatar"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
+import Link from "next/link"
 
 const data = {
     user: {
@@ -52,26 +53,6 @@ const data = {
         avatar: "/avatars/shadcn.jpg",
     },
     navMain: [
-        // {
-        //     title: "Stats",
-        //     url: "#",
-        //     icon: ChartSpline,
-        //     isActive: true,
-        //     items: [
-        //         {
-        //             title: "History",
-        //             url: "#",
-        //         },
-        //         {
-        //             title: "Starred",
-        //             url: "#",
-        //         },
-        //         {
-        //             title: "Settings",
-        //             url: "#",
-        //         },
-        //     ],
-        // },
         {
             title: "Users",
             url: "#",
@@ -168,16 +149,20 @@ const data = {
 }
 
 const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
-    const { isMobile } = useSidebar();
-    const router = useRouter();
-    const handleLogoClick = ()=>{
-        router.push("/");
+    const { isMobile } = useSidebar()
+    const router = useRouter()
+    const pathname = usePathname()
+
+    const handleLogoClick = () => {
+        router.push("/")
     }
-    const handleLogOut = ()=>{
-        router.push("/signin");
+    const handleLogOut = () => {
+        router.push("/signin")
     }
+
     return (
         <Sidebar collapsible="icon" {...props}>
+            {/* HEADER */}
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
@@ -196,6 +181,8 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
+
+            {/* NAVIGATION */}
             <SidebarContent className="custom-scrollbar">
                 <SidebarGroup>
                     <SidebarMenu>
@@ -203,7 +190,7 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                             <Collapsible
                                 key={item.title}
                                 asChild
-                                // defaultOpen={item.isActive}
+                                // defaultOpen={isParentActive}
                                 className="group/collapsible"
                             >
                                 <SidebarMenuItem>
@@ -216,15 +203,24 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                                     </CollapsibleTrigger>
                                     <CollapsibleContent>
                                         <SidebarMenuSub>
-                                            {item.items?.map((subItem) => (
-                                                <SidebarMenuSubItem key={subItem.title}>
-                                                    <SidebarMenuSubButton asChild>
-                                                        <a href={subItem.url}>
-                                                            <span>{subItem.title}</span>
-                                                        </a>
-                                                    </SidebarMenuSubButton>
-                                                </SidebarMenuSubItem>
-                                            ))}
+                                            {item.items?.map((subItem) => {
+                                                const isActive = pathname === subItem.url
+                                                return (
+                                                    <SidebarMenuSubItem key={subItem.title}>
+                                                        <SidebarMenuSubButton asChild>
+                                                            <Link
+                                                                href={subItem.url}
+                                                                className={`flex w-full items-center rounded-md px-2 py-1 text-sm ${isActive
+                                                                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                                                                    : "hover:bg-muted"
+                                                                    }`}
+                                                            >
+                                                                <span>{subItem.title}</span>
+                                                            </Link>
+                                                        </SidebarMenuSubButton>
+                                                    </SidebarMenuSubItem>
+                                                )
+                                            })}
                                         </SidebarMenuSub>
                                     </CollapsibleContent>
                                 </SidebarMenuItem>
@@ -232,8 +228,8 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                         ))}
                     </SidebarMenu>
                 </SidebarGroup>
-                {/* <NavProjects projects={data.projects} /> */}
             </SidebarContent>
+            {/* FOOTER */}
             <SidebarFooter>
                 <SidebarMenu>
                     <SidebarMenuItem>
@@ -274,10 +270,12 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
-                                    <DropdownMenuItem>
-                                        <User />
-                                        Profile
-                                    </DropdownMenuItem>
+                                    <Link href="/profile">
+                                        <DropdownMenuItem>
+                                            <User />
+                                            Profile
+                                        </DropdownMenuItem>
+                                    </Link>
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={handleLogOut}>
@@ -290,7 +288,7 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                 </SidebarMenu>
             </SidebarFooter>
             <SidebarRail />
-        </Sidebar>
+        </Sidebar >
     )
 }
 

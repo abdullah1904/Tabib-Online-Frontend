@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 import { SignInFormData, signInFormSchema } from "@/lib/validation"
 import { Shield } from "lucide-react"
@@ -13,7 +12,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { PasswordInput } from "@/components/ui/password-input"
 
 
 const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
@@ -82,7 +82,7 @@ const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
                                                     <FormItem>
                                                         <FormLabel>Password</FormLabel>
                                                         <FormControl>
-                                                            <Input type="password" placeholder="admin@example.com" {...field} />
+                                                            <PasswordInput placeholder="admin@example.com" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>

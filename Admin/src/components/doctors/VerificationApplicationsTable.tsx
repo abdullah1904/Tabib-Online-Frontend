@@ -129,7 +129,7 @@ const VerificationApplicationsTable = () => {
                                         <Info className="size-4"/>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                        <p>Qualification: {doctor.specialization}</p>
+                                        <p>Specialization: {doctor.specialization}</p>
                                         <p>Verification Status: {doctor.verificationStatus}</p>
                                         <p>Verified By: {doctor.verifiedBy}</p>
                                     </TooltipContent>
