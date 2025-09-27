@@ -1,19 +1,19 @@
-"use client"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from "@/components/ui/input-otp"
-import { PasswordInput } from "@/components/ui/password-input"
-import { cn } from "@/lib/utils"
-import { ForgotPasswordFormData, forgotPasswordFormSchema, ResetPasswordFormData, resetPasswordFormSchema } from "@/lib/validation"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Shield } from "lucide-react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
+'use client';
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { ForgotPasswordFormData, forgotPasswordFormSchema, ResetPasswordFormData, resetPasswordFormSchema } from "@/lib/validation";
+import { Stethoscope } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Card, CardContent } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
+import { PasswordInput } from "@/components/ui/password-input";
 
 
 const ForgotPasswordForm = ({ className, ...props }: React.ComponentProps<"div">) => {
@@ -60,7 +60,7 @@ const ForgotPasswordForm = ({ className, ...props }: React.ComponentProps<"div">
                                             <div className="flex flex-col items-center text-center">
                                                 <h1 className="text-2xl font-bold">Forgot Password</h1>
                                                 <p className="text-muted-foreground text-balance">
-                                                    Enter your email to reset your Tabib Online Admin password.
+                                                    Enter your email to reset your Tabib Online Doctor password.
                                                 </p>
                                             </div>
                                             <div className="grid gap-3">
@@ -71,7 +71,7 @@ const ForgotPasswordForm = ({ className, ...props }: React.ComponentProps<"div">
                                                         <FormItem>
                                                             <FormLabel>Email</FormLabel>
                                                             <FormControl>
-                                                                <Input placeholder="admin@example.com" {...field} />
+                                                                <Input placeholder="doctor@example.com" {...field} />
                                                             </FormControl>
                                                             <FormMessage />
                                                         </FormItem>
@@ -168,7 +168,7 @@ const ForgotPasswordForm = ({ className, ...props }: React.ComponentProps<"div">
                             )}
                             <div className="relative hidden md:flex items-center justify-center bg-muted/60 dark:bg-muted rounded-r-lg overflow-hidden">
                                 <div className="absolute inset-0 bg-gradient-to-br from-muted to-background opacity-70" />
-                                <Shield className="w-2/3 h-2/3 text-foreground/10 dark:text-white/10" />
+                                <Stethoscope className="w-2/3 h-2/3 text-foreground/10 dark:text-white/10" />
                             </div>
                         </CardContent>
                     </Card>

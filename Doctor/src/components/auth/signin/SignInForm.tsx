@@ -1,19 +1,19 @@
-"use client"
+'use client';
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
-import { SignInFormData, signInFormSchema } from "@/lib/validation"
-import { Shield } from "lucide-react"
-import Link from "next/link"
-import { useForm } from "react-hook-form"
+import { SignInFormData, signInFormSchema } from "@/lib/validation";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { toast } from "sonner"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { PasswordInput } from "@/components/ui/password-input"
+import { cn } from "@/lib/utils";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Card, CardContent } from "@/components/ui/card";
+import { Stethoscope } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { PasswordInput } from "@/components/ui/password-input";
 
 
 const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
@@ -43,7 +43,6 @@ const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
             setIsLoading(false);
         }
     };
-
     return (
         <div className="flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
             <div className="w-full max-w-sm md:max-w-3xl">
@@ -56,7 +55,7 @@ const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
                                         <div className="flex flex-col items-center text-center">
                                             <h1 className="text-2xl font-bold">Welcome</h1>
                                             <p className="text-muted-foreground text-balance">
-                                                Login to your Tabib Online Admin account
+                                                Login to your Tabib Online Doctor account
                                             </p>
                                         </div>
                                         <div className="grid gap-3">
@@ -82,7 +81,7 @@ const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
                                                     <FormItem>
                                                         <FormLabel>Password</FormLabel>
                                                         <FormControl>
-                                                            <PasswordInput placeholder="admin@example.com" {...field} />
+                                                            <PasswordInput placeholder="********" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -105,7 +104,7 @@ const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
                             </Form>
                             <div className="relative hidden md:flex items-center justify-center bg-muted/60 dark:bg-muted rounded-r-lg overflow-hidden">
                                 <div className="absolute inset-0 bg-gradient-to-br from-muted to-background opacity-70" />
-                                <Shield className="w-2/3 h-2/3 text-foreground/10 dark:text-white/10" />
+                                <Stethoscope className="w-2/3 h-2/3 text-foreground/10 dark:text-white/10" />
                             </div>
                         </CardContent>
                     </Card>

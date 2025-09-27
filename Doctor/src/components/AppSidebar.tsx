@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react"
-import { ChevronsUpDown, LogOut, Pill, User } from "lucide-react"
+import { ChevronsUpDown, LogOut, Stethoscope, User } from "lucide-react"
 import {
     Sidebar,
     SidebarContent,
@@ -64,7 +64,7 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                             onClick={handleLogoClick}
                         >
                             <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                                <Pill className="size-4" />
+                                <Stethoscope className="size-4" />
                             </div>
                             <div className="grid flex-1 text-left text-sm leading-tight">
                                 <h2 className="truncate font-medium">Tabib Online</h2>

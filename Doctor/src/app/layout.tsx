@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Doctor | Tabib Online",
@@ -14,10 +15,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`antialiased`}
+        className={`bg-muted antialiased custom-scrollbar`}
         suppressHydrationWarning={true}
       >
         {children}
+        <Toaster />
       </body>
     </html>
   );
