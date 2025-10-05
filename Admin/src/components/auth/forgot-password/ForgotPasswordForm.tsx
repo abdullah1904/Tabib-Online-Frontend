@@ -7,7 +7,9 @@ import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from "@/comp
 import { PasswordInput } from "@/components/ui/password-input"
 import { cn } from "@/lib/utils"
 import { ForgotPasswordFormData, forgotPasswordFormSchema, ResetPasswordFormData, resetPasswordFormSchema } from "@/lib/validation"
+import { forgotPassword } from "@/services/auth.service"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
 import { Shield } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -28,17 +30,25 @@ const ForgotPasswordForm = ({ className, ...props }: React.ComponentProps<"div">
             email: '',
         }
     });
+    const { mutate: forgotPasswordMutate, isPending: isForgotPasswordPending } = useMutation({
+        mutationFn: forgotPassword,
+        onSuccess: () => {
+            setStep('RESET');
+            toast.success(`OTP sent to your ${forgotPasswordForm.getValues('email')}!`);
+        },
+        onError: (error)=>{
+            toast.error(error?.message);
+        }
+    });
     const onForgotPasswordSubmit = async (data: ForgotPasswordFormData) => {
-        console.log(data);
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setStep('RESET');
-        toast.success(`OTP sent to your ${data.email}!`);
+        forgotPasswordMutate(data);
     }
     const resetPasswordForm = useForm<ResetPasswordFormData>({
         resolver: zodResolver(resetPasswordFormSchema),
         defaultValues: {
+            email: forgotPasswordForm.getValues('email'),
             otp: '',
-            password: '',
+            newPassword: '',
         }
     });
     const onResetPasswordSubmit = async (data: ResetPasswordFormData) => {
@@ -86,8 +96,8 @@ const ForgotPasswordForm = ({ className, ...props }: React.ComponentProps<"div">
                                                     </Link>
                                                 </div>
                                             </div>
-                                            <Button type="submit" className="w-full cursor-pointer" disabled={forgotPasswordForm.formState.isSubmitting}>
-                                                {forgotPasswordForm.formState.isSubmitting ? "Loading..." : "Send Reset OTP"}
+                                            <Button type="submit" className="w-full cursor-pointer" disabled={isForgotPasswordPending}>
+                                                {isForgotPasswordPending ? "Loading..." : "Send Reset OTP"}
                                             </Button>
                                         </div>
                                     </form>
@@ -134,7 +144,7 @@ const ForgotPasswordForm = ({ className, ...props }: React.ComponentProps<"div">
                                                 />
                                                 <FormField
                                                     control={resetPasswordForm.control}
-                                                    name="password"
+                                                    name="newPassword"
                                                     render={({ field }) => (
                                                         <FormItem>
                                                             <FormLabel>New Password</FormLabel>

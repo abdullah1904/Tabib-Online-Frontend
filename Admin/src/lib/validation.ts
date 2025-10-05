@@ -27,10 +27,14 @@ export const forgotPasswordFormSchema = z.object({
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordFormSchema>;
 
 export const resetPasswordFormSchema = z.object({
+    email: z
+        .string()
+        .min(1, "Email is required")
+        .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address"),
     otp: z.string().min(6, {
         message: "OTP must be 6 characters.",
     }),
-    password: z
+    newPassword: z
         .string()
         .min(1, "Password is required")
         .min(8, "Password must be at least 8 characters long")

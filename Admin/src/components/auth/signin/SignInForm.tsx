@@ -9,16 +9,16 @@ import { Shield } from "lucide-react"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { PasswordInput } from "@/components/ui/password-input"
+import { PasswordInput } from "@/components/ui/password-input";
+import { signIn } from "next-auth/react";
+import { useMutation } from "@tanstack/react-query"
 
 
 const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
 
     const form = useForm<SignInFormData>({
         resolver: zodResolver(signInFormSchema),
@@ -29,19 +29,35 @@ const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
         }
     });
 
-    const onSubmit = async (data: SignInFormData) => {
-        setIsLoading(true);
-        try {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            console.log("Login successful!", data);
+    const { mutate, isPending } = useMutation({
+        mutationFn: async (data: SignInFormData) => {
+            try {
+                const res = await signIn("credentials", {
+                    email: data.email,
+                    password: data.password,
+                    redirect: false,
+                });
+                if (res?.ok) {
+                    return res;
+                } else {
+                    throw new Error(res?.error || "Invalid credentials");
+                }
+            }
+            catch (error) {
+                throw error;
+            }
+        },
+        onSuccess: () => {
             toast.success("Login successful!");
             router.push("/");
-        } catch (error) {
-            console.error("Login failed:", error);
-            toast.error("Login failed. Please try again.");
-        } finally {
-            setIsLoading(false);
+        },
+        onError: (error) => {
+            toast.error(error?.message || "Invalid credentials");
         }
+    })
+
+    const onSubmit = (data: SignInFormData) => {
+        mutate(data);
     };
 
     return (
@@ -97,8 +113,8 @@ const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
                                                 </Link>
                                             </div>
                                         </div>
-                                        <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
-                                            {isLoading ? "Loading..." : "Login"}
+                                        <Button type="submit" className="w-full cursor-pointer" disabled={isPending}>
+                                            {isPending ? "Loading..." : "Login"}
                                         </Button>
                                     </div>
                                 </form>
