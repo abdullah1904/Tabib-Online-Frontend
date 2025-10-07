@@ -7,7 +7,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from "@/comp
 import { PasswordInput } from "@/components/ui/password-input"
 import { cn } from "@/lib/utils"
 import { ForgotPasswordFormData, forgotPasswordFormSchema, ResetPasswordFormData, resetPasswordFormSchema } from "@/lib/validation"
-import { forgotPassword } from "@/services/auth.service"
+import { forgotPassword, resetPassword } from "@/services/auth.service"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { Shield } from "lucide-react"
@@ -24,6 +24,7 @@ const ForgotPasswordForm = ({ className, ...props }: React.ComponentProps<"div">
     const handleBack = () => {
         setStep('FORGOT');
     }
+    // Form for Forgot Password
     const forgotPasswordForm = useForm<ForgotPasswordFormData>({
         resolver: zodResolver(forgotPasswordFormSchema),
         defaultValues: {
@@ -34,28 +35,38 @@ const ForgotPasswordForm = ({ className, ...props }: React.ComponentProps<"div">
         mutationFn: forgotPassword,
         onSuccess: () => {
             setStep('RESET');
+            resetPasswordForm.setValue('email', forgotPasswordForm.getValues('email'));
             toast.success(`OTP sent to your ${forgotPasswordForm.getValues('email')}!`);
         },
-        onError: (error)=>{
+        onError: (error) => {
             toast.error(error?.message);
         }
     });
     const onForgotPasswordSubmit = async (data: ForgotPasswordFormData) => {
         forgotPasswordMutate(data);
     }
+    // Form for Reset Password
     const resetPasswordForm = useForm<ResetPasswordFormData>({
         resolver: zodResolver(resetPasswordFormSchema),
         defaultValues: {
-            email: forgotPasswordForm.getValues('email'),
+            email: '',
             otp: '',
             newPassword: '',
         }
     });
+    const { mutate: resetPasswordMutate, isPending: isResetPasswordPending } = useMutation({
+        mutationFn: resetPassword,
+        onSuccess: () => {
+            router.push('/signin');
+            toast.success("Password reset successful! Please login with your new password.");
+        },
+        onError: (error) => {
+            toast.error(error?.message);
+        }
+    });
     const onResetPasswordSubmit = async (data: ResetPasswordFormData) => {
         console.log(data);
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        toast.success("Password reset successful! Please login with your new password.");
-        router.push('/signin');
+        resetPasswordMutate(data);
     }
     return (
         <div className="flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
@@ -165,10 +176,10 @@ const ForgotPasswordForm = ({ className, ...props }: React.ComponentProps<"div">
                                                 </div>
                                             </div>
                                             <div className="grid grid-cols-1 gap-3">
-                                                <Button type="submit" className="w-full cursor-pointer" disabled={resetPasswordForm.formState.isSubmitting}>
-                                                    {resetPasswordForm.formState.isSubmitting ? "Loading..." : "Reset Password"}
+                                                <Button type="submit" className="w-full cursor-pointer" disabled={isResetPasswordPending}>
+                                                    {isResetPasswordPending ? "Loading..." : "Reset Password"}
                                                 </Button>
-                                                <Button type="button" onClick={handleBack} variant='outline' className="w-full cursor-pointer" disabled={resetPasswordForm.formState.isSubmitting}>
+                                                <Button type="button" onClick={handleBack} variant='outline' className="w-full cursor-pointer" disabled={isResetPasswordPending}>
                                                     Change Email
                                                 </Button>
                                             </div>

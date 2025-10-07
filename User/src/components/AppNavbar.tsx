@@ -20,7 +20,7 @@ import { useState } from "react";
 
 const AppNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLogin] = useState(false);
+  const [isLogin] = useState(true);
 
   const menuItems = [
     {
@@ -36,7 +36,7 @@ const AppNavbar = () => {
     {
       "name": "Tabib Bot",
       "link": "tabib-bot",
-      "icon": <Bot className="size-4"/>
+      "icon": <Bot className="size-4" />
     }
   ];
   return (
@@ -65,7 +65,7 @@ const AppNavbar = () => {
           </NavbarItem>
         ))}
       </NavbarContent>
-      <NavbarContent className="hidden sm:flex gap-4" justify="end">
+      <NavbarContent className={`sm:flex gap-4`} justify="end">
         {isLogin ? (
           <NavbarItem>
             <Dropdown placement="bottom-end">
@@ -78,14 +78,16 @@ const AppNavbar = () => {
               <DropdownMenu>
                 <DropdownItem
                   key="profile"
-                  startContent={<User className="size-4"/>}
+                  startContent={<User className="size-4" />}
                 >
-                  Profile
+                  <Link href={'/profile'}>
+                    Profile
+                  </Link>
                 </DropdownItem>
                 <DropdownItem
                   key="signOut"
                   color="danger"
-                  startContent={<LogOut className="size-4"/>}
+                  startContent={<LogOut className="size-4" />}
                 >
                   Sign Out
                 </DropdownItem>
@@ -94,7 +96,7 @@ const AppNavbar = () => {
           </NavbarItem>
         ) : (
           <NavbarItem>
-            <Button as={Link} href="/signin" endContent={<LogIn className="size-4"/>}>
+            <Button as={Link} href="/signin" endContent={<LogIn className="size-4" />}>
               Sign In
             </Button>
           </NavbarItem>

@@ -51,7 +51,8 @@ const doctor = {
 
 }
 
-const DoctorProfile = ({  }: Props) => {
+const DoctorProfile = ({ }: Props) => {
+  const [showModel, setShowModel] = useState<'Appointment' | 'Review' | 'Complaint' | null>(null);
   const [selectedConsultation, setSelectedConsultation] = useState<string | null>(null);
   const renderStars = (rating: number) => {
     const stars = [];
@@ -87,6 +88,7 @@ const DoctorProfile = ({  }: Props) => {
     return stars;
   };
   const handleConsultationClick = (type: string) => {
+    setShowModel('Appointment');
     setSelectedConsultation(type);
   }
   return (
@@ -195,11 +197,20 @@ const DoctorProfile = ({  }: Props) => {
             </div>
           </CardBody>
         </Card>
+        <Card className='w-full max-w-4xl lg:w-3/4 p-2'>
+          <CardBody className='grid grid-cols-2 items-center gap-2'>
+            <Button className="w-full" size="md" color="primary">
+              Give Review
+            </Button>
+            <Button className="w-full" size="md" color="danger" >
+              Complaint
+            </Button>
+          </CardBody>
+        </Card>
         <Card className='w-full max-w-4xl lg:w-3/4 p-4'>
           <CardHeader>
             <h3 className="text-primary-dark text-xl font-semibold">Reviews</h3>
           </CardHeader>
-
           <CardBody className="space-y-4">
             {doctor.reviews.map((review, index) => (
               <div
@@ -223,10 +234,13 @@ const DoctorProfile = ({  }: Props) => {
         </Card>
 
       </div>
-      {selectedConsultation && (
+      {showModel == 'Appointment' && selectedConsultation && (
         <ConsultationDetailModel
+          showModel={showModel}
+          setShowModel={setShowModel}
           consultationType={selectedConsultation}
           setConsultationType={setSelectedConsultation}
+
         />
       )}
     </>

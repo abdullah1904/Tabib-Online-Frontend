@@ -112,15 +112,12 @@ export const emailFormSchema = z.object({
         .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address"),
 });
 
-export const otpFormSchema = z.object({
+export const passwordResetFormSchema = z.object({
     otp: z
         .string()
         .min(1, "OTP is required")
         .length(6, "OTP must be exactly 6 digits")
         .regex(/^\d{6}$/, "OTP must contain only numbers"),
-});
-
-export const passwordResetFormSchema = z.object({
     password: z
         .string()
         .min(1, "Password is required")
@@ -138,5 +135,4 @@ export const passwordResetFormSchema = z.object({
 });
 
 export type EmailFormData = z.infer<typeof emailFormSchema>;
-export type OTPFormData = z.infer<typeof otpFormSchema>;
 export type PasswordResetFormData = z.infer<typeof passwordResetFormSchema>;

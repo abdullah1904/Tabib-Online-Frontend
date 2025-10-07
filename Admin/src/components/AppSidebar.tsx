@@ -47,6 +47,7 @@ import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
 import { signOut, useSession } from "next-auth/react";
 import { toast } from "sonner"
+import { getAvatarFallbackText } from "@/utils"
 
 const data = {
     navMain: [
@@ -240,7 +241,7 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                                 >
                                     <Avatar className="h-8 w-8 rounded-lg">
                                         <AvatarImage src={session?.user.imageURL} alt={session?.user.fullName} />
-                                        <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                                        <AvatarFallback className="rounded-lg">{getAvatarFallbackText(session?.user.fullName)}</AvatarFallback>
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
                                         <span className="truncate font-medium">{session?.user.fullName}</span>
@@ -259,7 +260,7 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                                     <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                                         <Avatar className="h-8 w-8 rounded-lg">
                                             <AvatarImage src={session?.user.imageURL} alt={session?.user.fullName} />
-                                            <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                                            <AvatarFallback className="rounded-lg">{getAvatarFallbackText(session?.user.fullName)}</AvatarFallback>
                                         </Avatar>
                                         <div className="grid flex-1 text-left text-sm leading-tight">
                                             <span className="truncate font-medium">{session?.user.fullName}</span>
