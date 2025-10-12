@@ -8,10 +8,9 @@ import { useForm } from 'react-hook-form';
 interface MedicalInfoStepProps {
     formData: MedicalInfoFormData | null;
     onSubmit: (data: MedicalInfoFormData) => Promise<void>;
-    isLoading: boolean;
 }
 
-const MedicalInfoStep = ({ isLoading, onSubmit, formData }: MedicalInfoStepProps) => {
+const MedicalInfoStep = ({ onSubmit, formData }: MedicalInfoStepProps) => {
     const medicalInfoForm = useForm<MedicalInfoFormData>({
         resolver: zodResolver(medicalInfoFormSchema),
         mode: "onBlur",
@@ -167,11 +166,11 @@ const MedicalInfoStep = ({ isLoading, onSubmit, formData }: MedicalInfoStepProps
                         type="submit"
                         color="primary"
                         size="lg"
-                        isLoading={isLoading || medicalInfoForm.formState.isSubmitting}
-                        disabled={isLoading || medicalInfoForm.formState.isSubmitting}
+                        isLoading={medicalInfoForm.formState.isSubmitting}
+                        disabled={medicalInfoForm.formState.isSubmitting}
                         className="w-full font-medium py-3 transition-all duration-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                     >
-                        {isLoading || medicalInfoForm.formState.isSubmitting ? "Processing..." : "Continue"}
+                        {medicalInfoForm.formState.isSubmitting ? "Processing..." : "Continue"}
                     </Button>
 
                     <div className="text-center pt-4">

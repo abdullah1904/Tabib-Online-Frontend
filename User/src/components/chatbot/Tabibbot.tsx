@@ -121,9 +121,9 @@ const TabibBot = () => {
                                             }`}
                                     >
                                         {message.isBot ? (
-                                            <Bot className="w-4 h-4" />
+                                            <Bot className="size-6 text-secondary" />
                                         ) : (
-                                            <User className="w-4 h-4" />
+                                            <User className="size-6 text-primary" />
                                         )}
                                     </div>
                                     <div

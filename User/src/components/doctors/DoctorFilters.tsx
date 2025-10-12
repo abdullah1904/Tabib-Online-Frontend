@@ -1,4 +1,8 @@
-import { Autocomplete, AutocompleteItem, Button, Card, CardBody, CardFooter, CardHeader, Checkbox, Input, RadioGroup, Select, SelectItem, Radio, Divider } from "@heroui/react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Autocomplete, AutocompleteItem, Button, Card, CardBody, CardFooter, Checkbox, Input, RadioGroup, Select, SelectItem, Radio, Divider, AccordionItem, Accordion } from "@heroui/react";
+import { Filter } from "lucide-react";
+import { useEffect, useState } from "react";
+import type {Selection} from "@heroui/react";
 
 
 const gender = [
@@ -46,85 +50,105 @@ const consultationType = [
 ];
 
 const DoctorFilters = () => {
+    const isMobile = useIsMobile();
+    const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(["filters"]));
+
+    useEffect(() => {
+        if (isMobile) {
+            setSelectedKeys(new Set());
+        } else {
+            setSelectedKeys(new Set(['filters']));
+        }
+    }, [isMobile]);
+
     return (
-        <Card className='flex-1 w-full shadow-lg rounded-lg'>
-            <CardHeader className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 bg-white p-4 rounded-t-lg">
-                <h2 className='text-lg font-semibold text-primary'>Search Filters</h2>
-                <p className="underline text-primary cursor-pointer hover:opacity-80">Clear All</p>
-            </CardHeader>
-            <Divider className="w-[90%] mx-auto bg-primary"/>
-            <CardBody className='text-primary flex flex-col gap-4 p-4'>
-                <div>
-                    <Input
-                        label='Search Doctors'
-                    />
-                </div>
-                <div>
-                    <Checkbox color='primary' classNames={{ label: 'text-primary' }}>PMDC Verified</Checkbox>
-                </div>
-                <div>
-                    <Autocomplete label='Specialty'>
-                        {specialty.map((item) => (
-                            <AutocompleteItem
-                                key={item.value}
-                            >
-                                {item.label}
-                            </AutocompleteItem>
-                        ))}
-                    </Autocomplete>
-                </div>
-                <div>
-                    <RadioGroup label="Gender" orientation="horizontal">
-                        {gender.map((item) => (
-                            <Radio
-                                color="primary"
-                                classNames={{ label: 'text-primary' }}
-                                key={item.value}
-                                value={item.value}
-                            >{item.label}</Radio>
-                        ))}
-                    </RadioGroup>
-                </div>
-                <div>
-                    <Select label='Experience'>
-                        {experience.map((item) => (
-                            <SelectItem
-                                key={item.value}
-                            >
-                                {item.label}
-                            </SelectItem>
-                        ))}
-                    </Select>
-                </div>
-                <div>
-                    <Select label='Rating'>
-                        {rating.map((item) => (
-                            <SelectItem
-                                key={item.value}
-                            >
-                                {item.label}
-                            </SelectItem>
-                        ))}
-                    </Select>
-                </div>
-                <div>
-                    <Select label='Consultation Type'>
-                        {consultationType.map((item) => (
-                            <SelectItem
-                                key={item.value}
-                            >
-                                {item.label}
-                            </SelectItem>
-                        ))}
-                    </Select>
-                </div>
-            </CardBody>
-            <Divider className="w-[90%] mx-auto bg-primary"/>
-            <CardFooter className='flex justify-end p-4'>
-                <Button color="primary" className='w-full'>
-                    Apply Filters
-                </Button>
-            </CardFooter>
+        <Card className='flex-1 w-full shadow-lg rounded-lg p-2'>
+            <Accordion selectedKeys={selectedKeys} onSelectionChange={setSelectedKeys}>
+                <AccordionItem
+                    key='filters'
+                    aria-label="Filters"
+                    title="Filters"
+                    classNames={{
+                        title: 'text-primary text-2xl font-semibold',
+                        indicator: 'text-primary'
+                    }}
+                    startContent={<Filter className="text-primary" />}
+                    isCompact={true}
+                >
+                    <CardBody className='text-primary flex flex-col gap-4'>
+                        <div>
+                            <Input
+                                label='Search Doctors'
+                            />
+                        </div>
+                        <div>
+                            <Checkbox color='primary' classNames={{ label: 'text-primary' }}>PMDC Verified</Checkbox>
+                        </div>
+                        <div>
+                            <Autocomplete label='Specialty'>
+                                {specialty.map((item) => (
+                                    <AutocompleteItem
+                                        key={item.value}
+                                    >
+                                        {item.label}
+                                    </AutocompleteItem>
+                                ))}
+                            </Autocomplete>
+                        </div>
+                        <div>
+                            <RadioGroup label="Gender" orientation="horizontal">
+                                {gender.map((item) => (
+                                    <Radio
+                                        color="primary"
+                                        classNames={{ label: 'text-primary' }}
+                                        key={item.value}
+                                        value={item.value}
+                                    >{item.label}</Radio>
+                                ))}
+                            </RadioGroup>
+                        </div>
+                        <div>
+                            <Select label='Experience'>
+                                {experience.map((item) => (
+                                    <SelectItem
+                                        key={item.value}
+                                    >
+                                        {item.label}
+                                    </SelectItem>
+                                ))}
+                            </Select>
+                        </div>
+                        <div>
+                            <Select label='Rating'>
+                                {rating.map((item) => (
+                                    <SelectItem
+                                        key={item.value}
+                                    >
+                                        {item.label}
+                                    </SelectItem>
+                                ))}
+                            </Select>
+                        </div>
+                        <div>
+                            <Select label='Consultation Type'>
+                                {consultationType.map((item) => (
+                                    <SelectItem
+                                        key={item.value}
+                                    >
+                                        {item.label}
+                                    </SelectItem>
+                                ))}
+                            </Select>
+                        </div>
+                    </CardBody>
+                    <Divider className="w-[90%] mx-auto bg-primary" />
+                    <CardFooter className='flex justify-end p-4'>
+                        <Button color="primary" className='w-full'>
+                            Apply Filters
+                        </Button>
+                    </CardFooter>
+                </AccordionItem>
+            </Accordion>
         </Card>
     )
 }

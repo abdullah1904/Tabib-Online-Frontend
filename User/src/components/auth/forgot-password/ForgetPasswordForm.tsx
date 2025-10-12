@@ -5,104 +5,54 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import EmailStep from "./EmailStep";
-import OTPStep from "./OTPStep";
 import PasswordResetStep from "./PasswordResetStep";
-import { EmailFormData, OTPFormData, PasswordResetFormData } from "@/lib/validation";
+import { EmailFormData, PasswordResetFormData } from "@/lib/validation";
 import { showToast } from "@/utils";
+import { useMutation } from "@tanstack/react-query";
+import { forgotPassword, resetPassword } from "@/services/auth.service";
 
 const ForgotPasswordForm = () => {
     const router = useRouter();
     const [currentStep, setCurrentStep] = useState(1);
-    const [isLoading, setIsLoading] = useState(false);
     const [userEmail, setUserEmail] = useState("");
-    const [otpTimer, setOtpTimer] = useState(0);
 
-    // Step 1: Send OTP
-    const onEmailSubmit = async (data: EmailFormData) => {
-        setIsLoading(true);
-        try {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            console.log("OTP sent to:", data.email);
-            setUserEmail(data.email);
+    const {mutate: sendOtpMutate, isPending: isSendingOTP} = useMutation({
+        mutationFn: forgotPassword,
+        onSuccess: ()=>{
             setCurrentStep(2);
-            showToast("OTP sent successfully! Please check your email.", "success");
-            // Start 60-second timer for resend
-            setOtpTimer(60);
-            const timer = setInterval(() => {
-                setOtpTimer((prev) => {
-                    if (prev <= 1) {
-                        clearInterval(timer);
-                        return 0;
-                    }
-                    return prev - 1;
-                });
-            }, 1000);
-        } catch (error) {
-            console.error("Failed to send OTP:", error);
-            showToast("Failed to send OTP. Please try again.", "error");
-        } finally {
-            setIsLoading(false);
+            showToast("OTP sent to your email", "success");
+        },
+        onError: (error)=>{
+            showToast(error.message || "Failed to send OTP", "error");
         }
-    };
+    });
 
-    // Step 2: Verify OTP
-    const onOTPSubmit = async (data: OTPFormData) => {
-        setIsLoading(true);
-        try {
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            console.log("OTP verified:", data.otp);
-            setCurrentStep(3);
-            showToast("OTP verified successfully!", "success");
-        } catch (error) {
-            console.error("OTP verification failed:", error);
-            showToast("Invalid OTP. Please try again.", "error");
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    // Step 3: Reset Password
-    const onPasswordSubmit = async (data: PasswordResetFormData) => {
-        setIsLoading(true);
-        try {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            console.log("Password reset successful!", data);
+    const {mutate: resetPasswordMutate, isPending: isResettingPassword} = useMutation({
+        mutationFn: resetPassword,
+        onSuccess: ()=>{
+            showToast("Password reset successfully", "success");
             router.push("/signin");
-            showToast("Password reset successful! You can now log in.", "success");
-        } catch (error) {
-            console.error("Password reset failed:", error);
-            showToast("Failed to reset password. Please try again.", "error");
-        } finally {
-            setIsLoading(false);
+        },
+        onError: (error)=>{
+            showToast(error.message || "Failed to reset password", "error");
         }
+    });
+
+    const onEmailSubmit = async (data: EmailFormData) => {
+        setUserEmail(data.email);
+        sendOtpMutate(data);
     };
 
-    const resendOTP = async () => {
-        if (otpTimer > 0) return;
-        
-        setIsLoading(true);
-        try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            console.log("OTP resent to:", userEmail);
-            setOtpTimer(60);
-            const timer = setInterval(() => {
-                setOtpTimer((prev) => {
-                    if (prev <= 1) {
-                        clearInterval(timer);
-                        return 0;
-                    }
-                    return prev - 1;
-                });
-            }, 1000);
-        } catch (error) {
-            console.error("Failed to resend OTP:", error);
-        } finally {
-            setIsLoading(false);
-        }
+    const onPasswordSubmit = async (data: PasswordResetFormData) => {
+        resetPasswordMutate({ 
+            email: userEmail,
+            otp: data.otp,
+            newPassword: data.newPassword
+         });
     };
 
     const goBack = () => {
-        if (currentStep > 1) {
+        if (currentStep > 1 && !isSendingOTP && !isResettingPassword) {
             setCurrentStep(currentStep - 1);
         }
     };
@@ -110,21 +60,18 @@ const ForgotPasswordForm = () => {
     const renderCurrentStep = () => {
         switch (currentStep) {
             case 1:
-                return <EmailStep onSubmit={onEmailSubmit} isLoading={isLoading} />;
+                return <EmailStep onSubmit={onEmailSubmit} isLoading={isSendingOTP} />;
             case 2:
                 return (
-                    <OTPStep
-                        onSubmit={onOTPSubmit}
-                        isLoading={isLoading}
+                    <PasswordResetStep
+                        onSubmit={onPasswordSubmit}
+                        isLoading={isResettingPassword}
                         userEmail={userEmail}
-                        otpTimer={otpTimer}
-                        onResendOTP={resendOTP}
                     />
                 );
-            case 3:
-                return <PasswordResetStep onSubmit={onPasswordSubmit} isLoading={isLoading} />;
+
             default:
-                return <EmailStep onSubmit={onEmailSubmit} isLoading={isLoading} />;
+                return <EmailStep onSubmit={onEmailSubmit} isLoading={isSendingOTP} />;
         }
     };
 

@@ -21,7 +21,7 @@ export const showToast = (message: string, type: 'success' | 'error' | 'warning'
         addToast({
             title: message,
             color: 'warning',
-            closeIcon: true,  
+            closeIcon: true,
             timeout: 3000,
         })
     }

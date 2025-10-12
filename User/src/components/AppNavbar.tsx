@@ -15,12 +15,13 @@ import {
   DropdownItem,
 } from "@heroui/react";
 import { Bot, Hospital, LogIn, LogOut, Stethoscope, User } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 
 const AppNavbar = () => {
+  const {data: session} = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLogin] = useState(false);
 
   const menuItems = [
     {
@@ -36,9 +37,12 @@ const AppNavbar = () => {
     {
       "name": "Tabib Bot",
       "link": "tabib-bot",
-      "icon": <Bot className="size-4"/>
+      "icon": <Bot className="size-4" />
     }
   ];
+  const handleSignOut =  () => {
+    signOut();
+  }
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen} maxWidth="full" className="flex items-center bg-primary text-white">
       <NavbarContent className="mx-auto" justify="start">
@@ -65,8 +69,8 @@ const AppNavbar = () => {
           </NavbarItem>
         ))}
       </NavbarContent>
-      <NavbarContent className="hidden sm:flex gap-4" justify="end">
-        {isLogin ? (
+      <NavbarContent className={`sm:flex gap-4`} justify="end">
+        {session?.user ? (
           <NavbarItem>
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
@@ -78,14 +82,17 @@ const AppNavbar = () => {
               <DropdownMenu>
                 <DropdownItem
                   key="profile"
-                  startContent={<User className="size-4"/>}
+                  startContent={<User className="size-4" />}
                 >
-                  Profile
+                  <Link href={'/profile'}>
+                    Profile
+                  </Link>
                 </DropdownItem>
                 <DropdownItem
                   key="signOut"
                   color="danger"
-                  startContent={<LogOut className="size-4"/>}
+                  startContent={<LogOut className="size-4" />}
+                  onPress={handleSignOut}
                 >
                   Sign Out
                 </DropdownItem>
@@ -94,7 +101,7 @@ const AppNavbar = () => {
           </NavbarItem>
         ) : (
           <NavbarItem>
-            <Button as={Link} href="/signin" endContent={<LogIn className="size-4"/>}>
+            <Button as={Link} href="/signin" endContent={<LogIn className="size-4" />}>
               Sign In
             </Button>
           </NavbarItem>

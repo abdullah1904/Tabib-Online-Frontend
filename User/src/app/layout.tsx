@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import HeroUIThemeProvider from "@/providers/HeroUIThemeProvider";
+import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
+import TanStackQueryProvider from "@/providers/TanStackQueryProvider";
 
 
 export const metadata: Metadata = {
@@ -19,7 +21,11 @@ export default function RootLayout({
         suppressHydrationWarning={true}
       >
         <HeroUIThemeProvider>
-          {children}
+          <NextAuthSessionProvider>
+            <TanStackQueryProvider>
+              {children}
+            </TanStackQueryProvider>
+          </NextAuthSessionProvider>
         </HeroUIThemeProvider>
       </body>
     </html>

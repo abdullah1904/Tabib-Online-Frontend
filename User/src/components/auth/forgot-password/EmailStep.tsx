@@ -32,7 +32,7 @@ const EmailStep = ({ onSubmit, isLoading }: EmailStepProps) => {
             </div>
             <div className="flex justify-center mb-8">
                 <div className="flex items-center space-x-2">
-                    {[1, 2, 3].map((step) => (
+                    {[1, 2].map((step) => (
                         <div key={step} className="flex items-center">
                             <div
                                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${step <= 1
@@ -42,7 +42,7 @@ const EmailStep = ({ onSubmit, isLoading }: EmailStepProps) => {
                             >
                                 {step}
                             </div>
-                            {step < 3 && (
+                            {step < 2 && (
                                 <div
                                     className={`w-8 h-0.5 mx-2 transition-colors ${step < 1 ? "bg-primary" : "bg-gray-200"}`}
                                 />
