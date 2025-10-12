@@ -14,7 +14,6 @@ interface PasswordResetStepProps {
 
 const PasswordResetStep = ({ onSubmit, isLoading, userEmail, }: PasswordResetStepProps) => {
     const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const {
         register,
@@ -26,7 +25,6 @@ const PasswordResetStep = ({ onSubmit, isLoading, userEmail, }: PasswordResetSte
     });
 
     const togglePasswordVisibility = () => setShowPassword(!showPassword);
-    const toggleConfirmPasswordVisibility = () => setShowConfirmPassword(!showConfirmPassword);
 
     return (
         <>
@@ -73,15 +71,17 @@ const PasswordResetStep = ({ onSubmit, isLoading, userEmail, }: PasswordResetSte
                             errorMessage={errors.otp?.message}
                             classNames={{
                                 base: "w-full",
-                                input: "text-base",
-                                errorMessage: "text-xs",
-                                wrapper: 'flex justify-evenly'
+                                input: "text-base text-primary",
+                                errorMessage: "text-sm",
+                                wrapper: 'flex justify-evenly',
+                                passwordChar: 'text-primary text-lg',
+                                segment: 'text-primary text-lg'
                             }}
                         />
                     </div>
                     <div className="space-y-6">
                         <Input
-                            {...register("password")}
+                            {...register("newPassword")}
                             type={showPassword ? "text" : "password"}
                             endContent={
                                 <button
@@ -95,32 +95,8 @@ const PasswordResetStep = ({ onSubmit, isLoading, userEmail, }: PasswordResetSte
                             }
                             placeholder="********"
                             label="New Password"
-                            isInvalid={!!errors.password}
-                            errorMessage={errors.password?.message}
-                            classNames={{
-                                base: "w-full",
-                                input: "text-base",
-                                label: "text-sm font-medium",
-                                errorMessage: "text-xs"
-                            }}
-                        />
-                        <Input
-                            {...register("confirmPassword")}
-                            type={showConfirmPassword ? "text" : "password"}
-                            endContent={
-                                <button
-                                    onClick={toggleConfirmPasswordVisibility}
-                                    className="text-primary hover:text-primary-600 transition-colors focus:outline-none"
-                                    type="button"
-                                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                                >
-                                    {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                                </button>
-                            }
-                            placeholder="********"
-                            label="Confirm Password"
-                            isInvalid={!!errors.confirmPassword}
-                            errorMessage={errors.confirmPassword?.message}
+                            isInvalid={!!errors.newPassword}
+                            errorMessage={errors.newPassword?.message}
                             classNames={{
                                 base: "w-full",
                                 input: "text-base",

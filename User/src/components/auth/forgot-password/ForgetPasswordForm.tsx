@@ -8,48 +8,51 @@ import EmailStep from "./EmailStep";
 import PasswordResetStep from "./PasswordResetStep";
 import { EmailFormData, PasswordResetFormData } from "@/lib/validation";
 import { showToast } from "@/utils";
+import { useMutation } from "@tanstack/react-query";
+import { forgotPassword, resetPassword } from "@/services/auth.service";
 
 const ForgotPasswordForm = () => {
     const router = useRouter();
     const [currentStep, setCurrentStep] = useState(1);
-    const [isLoading, setIsLoading] = useState(false);
     const [userEmail, setUserEmail] = useState("");
 
-    // Step 1: Send OTP
-    const onEmailSubmit = async (data: EmailFormData) => {
-        setIsLoading(true);
-        try {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            console.log("OTP sent to:", data.email);
-            setUserEmail(data.email);
+    const {mutate: sendOtpMutate, isPending: isSendingOTP} = useMutation({
+        mutationFn: forgotPassword,
+        onSuccess: ()=>{
             setCurrentStep(2);
-            showToast("OTP sent successfully! Please check your email.", "success");
-        } catch (error) {
-            console.error("Failed to send OTP:", error);
-            showToast("Failed to send OTP. Please try again.", "error");
-        } finally {
-            setIsLoading(false);
+            showToast("OTP sent to your email", "success");
+        },
+        onError: (error)=>{
+            showToast(error.message || "Failed to send OTP", "error");
         }
+    });
+
+    const {mutate: resetPasswordMutate, isPending: isResettingPassword} = useMutation({
+        mutationFn: resetPassword,
+        onSuccess: ()=>{
+            showToast("Password reset successfully", "success");
+            router.push("/signin");
+        },
+        onError: (error)=>{
+            showToast(error.message || "Failed to reset password", "error");
+        }
+    });
+
+    const onEmailSubmit = async (data: EmailFormData) => {
+        setUserEmail(data.email);
+        sendOtpMutate(data);
     };
 
-    // Step 3: Reset Password
     const onPasswordSubmit = async (data: PasswordResetFormData) => {
-        setIsLoading(true);
-        try {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            console.log("Password reset successful!", data);
-            router.push("/signin");
-            showToast("Password reset successful! You can now log in.", "success");
-        } catch (error) {
-            console.error("Password reset failed:", error);
-            showToast("Failed to reset password. Please try again.", "error");
-        } finally {
-            setIsLoading(false);
-        }
+        resetPasswordMutate({ 
+            email: userEmail,
+            otp: data.otp,
+            newPassword: data.newPassword
+         });
     };
 
     const goBack = () => {
-        if (currentStep > 1) {
+        if (currentStep > 1 && !isSendingOTP && !isResettingPassword) {
             setCurrentStep(currentStep - 1);
         }
     };
@@ -57,18 +60,18 @@ const ForgotPasswordForm = () => {
     const renderCurrentStep = () => {
         switch (currentStep) {
             case 1:
-                return <EmailStep onSubmit={onEmailSubmit} isLoading={isLoading} />;
+                return <EmailStep onSubmit={onEmailSubmit} isLoading={isSendingOTP} />;
             case 2:
                 return (
                     <PasswordResetStep
                         onSubmit={onPasswordSubmit}
-                        isLoading={isLoading}
+                        isLoading={isResettingPassword}
                         userEmail={userEmail}
                     />
                 );
 
             default:
-                return <EmailStep onSubmit={onEmailSubmit} isLoading={isLoading} />;
+                return <EmailStep onSubmit={onEmailSubmit} isLoading={isSendingOTP} />;
         }
     };
 

@@ -9,12 +9,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { SignInFormData, signInFormSchema } from "@/lib/validation";
 import { showToast } from "@/utils";
+import { signIn } from "next-auth/react";
+import { useMutation } from "@tanstack/react-query";
 
 
 const SignInForm = () => {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -23,27 +24,43 @@ const SignInForm = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm<SignInFormData>({
         resolver: zodResolver(signInFormSchema),
         mode: "onBlur",
     });
 
-    const onSubmit = async (data: SignInFormData) => {
-        setIsLoading(true);
-        try {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            console.log("Login successful!", data);
+    const { mutate, isPending } = useMutation({
+        mutationFn: async (data: SignInFormData) => {
+            try {
+                const res = await signIn("credentials", {
+                    email: data.email,
+                    password: data.password,
+                    redirect: false,
+                });
+                if (res?.ok) {
+                    return res;
+                } else {
+                    throw new Error(res?.error || "Invalid credentials");
+                }
+            }
+            catch (error) {
+                throw error;
+            }
+        },
+        onSuccess: () => {
             showToast("Login successful!", "success");
-            router.push("/");
-        } catch (error) {
-            console.error("Login failed:", error);
-            showToast("Login failed. Please try again.", "error");
-        } finally {
-            setIsLoading(false);
+            router.push("/doctors");
+        },
+        onError: (error) => {
+            showToast(error?.message || "Invalid credentials", "error");
         }
+    })
+
+    const onSubmit = async (data: SignInFormData) => {
+        mutate(data);
     };
-    
+
     return (
         <div className="min-h-screen flex items-center justify-center p-4">
             <div className="w-full max-w-6xl">
@@ -82,7 +99,7 @@ const SignInForm = () => {
                                                 }}
                                             />
                                         </div>
-                                        
+
                                         {/* Password Input */}
                                         <div>
                                             <Input
@@ -113,8 +130,8 @@ const SignInForm = () => {
 
                                         {/* Forgot Password Link */}
                                         <div className="text-right">
-                                            <Link 
-                                                href="/forgot-password" 
+                                            <Link
+                                                href="/forgot-password"
                                                 className="text-sm text-primary hover:text-primary-600 underline transition-colors"
                                             >
                                                 Forgot password?
@@ -126,11 +143,11 @@ const SignInForm = () => {
                                             type="submit"
                                             color="primary"
                                             size="lg"
-                                            isLoading={isLoading || isSubmitting}
-                                            disabled={isLoading || isSubmitting}
+                                            isLoading={isPending}
+                                            disabled={isPending}
                                             className="w-full font-medium py-3 transition-all duration-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                                         >
-                                            {isLoading || isSubmitting ? "Signing In..." : "Sign In"}
+                                            {isPending ? "Signing In..." : "Sign In"}
                                         </Button>
 
                                         {/* Register Link */}
@@ -138,8 +155,8 @@ const SignInForm = () => {
                                             <span className="text-gray-600 text-sm sm:text-base">
                                                 Don&apos;t have an account?{" "}
                                             </span>
-                                            <Link 
-                                                href="/signup" 
+                                            <Link
+                                                href="/signup"
                                                 className="text-primary font-medium underline hover:text-primary-600 transition-colors text-sm sm:text-base"
                                             >
                                                 Register now

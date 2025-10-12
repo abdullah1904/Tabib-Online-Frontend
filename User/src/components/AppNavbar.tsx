@@ -15,12 +15,13 @@ import {
   DropdownItem,
 } from "@heroui/react";
 import { Bot, Hospital, LogIn, LogOut, Stethoscope, User } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 
 const AppNavbar = () => {
+  const {data: session} = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLogin] = useState(true);
 
   const menuItems = [
     {
@@ -39,6 +40,9 @@ const AppNavbar = () => {
       "icon": <Bot className="size-4" />
     }
   ];
+  const handleSignOut =  () => {
+    signOut();
+  }
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen} maxWidth="full" className="flex items-center bg-primary text-white">
       <NavbarContent className="mx-auto" justify="start">
@@ -66,7 +70,7 @@ const AppNavbar = () => {
         ))}
       </NavbarContent>
       <NavbarContent className={`sm:flex gap-4`} justify="end">
-        {isLogin ? (
+        {session?.user ? (
           <NavbarItem>
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
@@ -88,6 +92,7 @@ const AppNavbar = () => {
                   key="signOut"
                   color="danger"
                   startContent={<LogOut className="size-4" />}
+                  onPress={handleSignOut}
                 >
                   Sign Out
                 </DropdownItem>

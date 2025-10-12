@@ -1,18 +1,26 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
+import { AccountStatus, Gender, UserVerificationDocumentType } from "@/utils/constants";
 
 interface User {
-        id: string;
-        imageURL?: string;
-        fullName: string;
-        email: string;
-        phone: string;
-        privilegeLevel: number;
-        recoveryEmail?: string;
-        status: number;
-        accessToken: string;
-        refreshToken: string;
+    id: number;
+    imageURL?: string | null;
+    fullName: string;
+    age: number;
+    gender: Gender;
+    email: string;
+    address: string;
+    phoneNumber: string;
+    emergencyContactNumber: string;
+    emergencyContactName: string;
+    verificationDocumentType: UserVerificationDocumentType;
+    verificationDocumentNumber: string;
+    verificationDocumentURL: string;
+    status: AccountStatus;
+    verifiedAt?: Date | null;
+    accessToken: string;
+    refreshToken: string;
 }
 
 export const authOptions: NextAuthOptions = {
@@ -29,20 +37,27 @@ export const authOptions: NextAuthOptions = {
                         email: credentials?.email,
                         password: credentials?.password,
                     });
-                    const user = response.data;
-                    if (user && response.status === 200) {
+                    const data = response.data;
+                    if (data && response.status === 200) {
                         return {
-                            id: user.admin.id,
-                            imageURL: user.admin.imageURL,
-                            fullName: user.admin.fullName,
-                            email: user.admin.email,
-                            phone: user.admin.phone,
-                            privilegeLevel: user.admin.privilegeLevel,
-                            recoveryEmail: user.admin.recoveryEmail,
-                            status: user.admin.status,
-                            accessToken: user.admin.accessToken,
-                            refreshToken: user.admin.refreshToken
-                        };
+                            id: data.user.id,
+                            imageURL: data.user.imageURL,
+                            fullName: data.user.fullName,
+                            age: data.user.age,
+                            gender: data.user.gender,
+                            email: data.user.email,
+                            address: data.user.address,
+                            phoneNumber: data.user.phoneNumber,
+                            emergencyContactNumber: data.user.emergencyContactNumber,
+                            emergencyContactName: data.user.emergencyContactName,
+                            verificationDocumentType: data.user.verificationDocumentType,
+                            verificationDocumentNumber: data.user.verificationDocumentNumber,
+                            verificationDocumentURL: data.user.verificationDocumentURL,
+                            status: data.user.status,
+                            verifiedAt: data.user.verifiedAt,
+                            accessToken: data.accessToken,
+                            refreshToken: data.refreshToken,
+                        }
                     }
                     return null;
                 } catch (error) {

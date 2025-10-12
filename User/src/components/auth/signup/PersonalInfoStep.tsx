@@ -9,10 +9,9 @@ import { useForm } from 'react-hook-form';
 interface PersonalInfoStepProps {
     formData: PersonalInfoFormData | null;
     onSubmit: (data: PersonalInfoFormData) => Promise<void>;
-    isLoading: boolean;
 }
 
-const PersonalInfoStep = ({ isLoading, onSubmit, formData }: PersonalInfoStepProps) => {
+const PersonalInfoStep = ({ onSubmit, formData }: PersonalInfoStepProps) => {
     const personalInfoForm = useForm<PersonalInfoFormData>({
         resolver: zodResolver(personalInfoFormSchema),
         mode: "onBlur",
@@ -187,11 +186,11 @@ const PersonalInfoStep = ({ isLoading, onSubmit, formData }: PersonalInfoStepPro
                         type="submit"
                         color="primary"
                         size="lg"
-                        isLoading={isLoading || personalInfoForm.formState.isSubmitting}
-                        disabled={isLoading || personalInfoForm.formState.isSubmitting}
+                        isLoading={personalInfoForm.formState.isSubmitting}
+                        disabled={personalInfoForm.formState.isSubmitting}
                         className="w-full font-medium py-3 transition-all duration-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                     >
-                        {isLoading || personalInfoForm.formState.isSubmitting ? "Processing..." : "Continue"}
+                        {personalInfoForm.formState.isSubmitting ? "Processing..." : "Continue"}
                     </Button>
 
                     <div className="text-center pt-4">

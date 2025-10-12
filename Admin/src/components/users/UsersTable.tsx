@@ -16,103 +16,20 @@ import { toast } from "sonner"
 import { Input } from "../ui/input"
 import { Tooltip, TooltipContent } from "../ui/tooltip"
 import { TooltipTrigger } from "@radix-ui/react-tooltip"
-
-const usersData = [
-    {
-        id: 1,
-        avatar: undefined,
-        fullName: "Ahmed Ali Khan",
-        email: "ahmed.ali@email.com",
-        phone: "+92 300 1234567",
-        location: "Lahore",
-        status: "active",
-    },
-    {
-        id: 2,
-        avatar: undefined,
-        fullName: "Fatima Sheikh",
-        email: "fatima.sheikh@email.com",
-        phone: "+92 321 2345678",
-        location: "Karachi",
-        status: "inactive",
-    },
-    {
-        id: 3,
-        avatar: undefined,
-        fullName: "Muhammad Hassan",
-        email: "m.hassan@email.com",
-        phone: "+92 333 3456789",
-        location: "Islamabad",
-        status: "suspended",
-    },
-    {
-        id: 4,
-        avatar: undefined,
-        fullName: "Ayesha Malik",
-        email: "ayesha.malik@email.com",
-        phone: "+92 301 4567890",
-        location: "Faisalabad",
-        status: "active",
-    },
-    {
-        id: 5,
-        avatar: undefined,
-        fullName: "Tariq Ahmad",
-        email: "tariq.ahmad@email.com",
-        phone: "+92 322 5678901",
-        location: "Rawalpindi",
-        status: "inactive",
-    },
-    {
-        id: 6,
-        avatar: undefined,
-        fullName: "Zainab Nawaz",
-        email: "zainab.nawaz@email.com",
-        phone: "+92 334 6789012",
-        location: "Multan",
-        status: "suspended",
-    },
-    {
-        id: 7,
-        avatar: undefined,
-        fullName: "Usman Qureshi",
-        email: "usman.qureshi@email.com",
-        phone: "+92 302 7890123",
-        location: "Lahore",
-        status: "active",
-    },
-    {
-        id: 8,
-        avatar: undefined,
-        fullName: "Sara Iqbal",
-        email: "sara.iqbal@email.com",
-        phone: "+92 323 8901234",
-        location: "Peshawar",
-        status: "inactive",
-    },
-    {
-        id: 9,
-        avatar: undefined,
-        fullName: "Bilal Ahmed",
-        email: "bilal.ahmed@email.com",
-        phone: "+92 335 9012345",
-        location: "Quetta",
-        status: "suspended",
-    },
-    {
-        id: 10,
-        avatar: undefined,
-        fullName: "Mariam Khan",
-        email: "mariam.khan@email.com",
-        phone: "+92 303 0123456",
-        location: "Sialkot",
-        status: "active",
-    }
-]
+import { useQuery } from "@tanstack/react-query"
+import { listUsers } from "@/services/users.service"
+import { getAccountStatusText, getAvatarFallbackText } from "@/utils"
+import { Spinner } from "../ui/spinner"
+import { Badge } from "../ui/badge"
+import { AccountStatus } from "@/utils/constants"
 
 
 const UsersTable = () => {
     const router = useRouter();
+    const { data: usersData, isLoading, isError, error } = useQuery({
+        queryKey: ['users'],
+        queryFn: listUsers,
+    })
     const handleView = (userId: number) => {
         router.push(`/users/${userId}`);
     }
@@ -124,13 +41,27 @@ const UsersTable = () => {
         console.log(`User with ID ${userId} has been banned.`);
         toast.success("User banned successfully");
     }
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-40 text-gray-600 gap-2">
+                <Spinner className="size-6" /> Loading users...
+            </div>
+        );
+    }
+    if (isError) {
+        return (
+            <div className="flex items-center justify-center h-40 text-red-500">
+                Error loading users: {(error as Error).message}
+            </div>
+        );
+    }
     return (
         <div className="py-2">
             <div className='flex justify-between pb-3'>
                 <h2 className='text-2xl'>Users</h2>
-                <Input 
+                <Input
                     placeholder="Search users..."
-                    className="w-3xs sm:w-2xs md:w-xs lg:w-sm" 
+                    className="w-3xs sm:w-2xs md:w-xs lg:w-sm"
                 />
             </div>
             <Table>
@@ -139,35 +70,36 @@ const UsersTable = () => {
                         <TableHead>Full Name</TableHead>
                         <TableHead className="hidden sm:table-cell">Email</TableHead>
                         <TableHead className="hidden md:table-cell">Phone</TableHead>
-                        <TableHead className="hidden lg:table-cell">Location</TableHead>
                         <TableHead className="hidden lg:table-cell">Status</TableHead>
                         <TableHead>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {usersData.map(user => (
+                    {usersData?.map(user => (
                         <TableRow key={user.id}>
                             <TableCell className="flex items-center gap-2">
                                 <Avatar className="h-8 w-8 rounded-lg">
-                                    <AvatarImage src={user.avatar} alt={user.fullName} />
-                                    <AvatarFallback className="rounded-lg">{user.fullName.charAt(0)}</AvatarFallback>
+                                    <AvatarImage src={user.imageURL!} alt={user.fullName} />
+                                    <AvatarFallback className="rounded-lg">{getAvatarFallbackText(user.fullName)}</AvatarFallback>
                                 </Avatar>
                                 {user.fullName}
                                 <Tooltip>
                                     <TooltipTrigger className="sm:hidden">
-                                        <Info className="size-4"/>
+                                        <Info className="size-4" />
                                     </TooltipTrigger>
                                     <TooltipContent>
                                         <p>Email: {user.email}</p>
-                                        <p>Phone: {user.phone}</p>
-                                        <p>Location: {user.location}</p>
+                                        <p>Phone: {user.phoneNumber}</p>
                                     </TooltipContent>
                                 </Tooltip>
                             </TableCell>
                             <TableCell className="hidden sm:table-cell">{user.email}</TableCell>
-                            <TableCell className="hidden md:table-cell">{user.phone}</TableCell>
-                            <TableCell className="hidden lg:table-cell">{user.location}</TableCell>
-                            <TableCell className="hidden lg:table-cell">{user.status}</TableCell>
+                            <TableCell className="hidden md:table-cell">{user.phoneNumber}</TableCell>
+                            <TableCell className="hidden lg:table-cell">
+                                <Badge variant={user.status === AccountStatus.SUSPENDED ? 'destructive' : 'default'}>
+                                    {getAccountStatusText(user.status)}
+                                </Badge>
+                            </TableCell>
                             <TableCell>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger>

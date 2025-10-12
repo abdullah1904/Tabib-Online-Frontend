@@ -1,3 +1,4 @@
+
 import { GenderOptions, VerificationDocumentOptions } from "@/utils/constants";
 import z from "zod";
 
@@ -30,7 +31,7 @@ export const personalInfoFormSchema = z.object({
         .number("Age is required")
         .min(0, "Age must be a positive number")
         .max(120, "Age must be less than or equal to 120"),
-    gender: z.enum(GenderOptions.map(option => option.value), 'Gender is required'),
+    gender: z.enum(GenderOptions.map(option => String(option.value)) as [string, ...string[]], { message: 'Gender is required' }),
     email: z
         .string()
         .min(1, "Email is required")
@@ -71,7 +72,7 @@ export const medicalInfoFormSchema = z.object({
 });
 
 export const verificationFormSchema = z.object({
-    verificationType: z.enum(VerificationDocumentOptions.map(option => option.value), 'Verification type is required'),
+    verificationType: z.enum(VerificationDocumentOptions.map(option => String(option.value)), 'Verification type is required'),
     verificationNumber: z.string().min(1, "Verification number is required"),
     verificationDocument: z.instanceof(File, { message: "Verification document is required" })
 })
@@ -112,13 +113,25 @@ export const emailFormSchema = z.object({
         .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address"),
 });
 
+// VerifyAccountForm validation schema and types
+export const verifyAccountFormSchema = z.object({
+    otp: z
+        .string()
+        .min(1, "OTP is required")
+        .length(6, "OTP must be exactly 6 digits")
+        .regex(/^\d{6}$/, "OTP must contain only numbers"),
+});
+
+export type VerifyAccountFormData = z.infer<typeof verifyAccountFormSchema>;
+
+// PasswordResetForm validation schema and types
 export const passwordResetFormSchema = z.object({
     otp: z
         .string()
         .min(1, "OTP is required")
         .length(6, "OTP must be exactly 6 digits")
         .regex(/^\d{6}$/, "OTP must contain only numbers"),
-    password: z
+    newPassword: z
         .string()
         .min(1, "Password is required")
         .min(8, "Password must be at least 8 characters long")
@@ -126,12 +139,6 @@ export const passwordResetFormSchema = z.object({
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
             "Password must contain at least one uppercase letter, one lowercase letter, and one number"
         ),
-    confirmPassword: z
-        .string()
-        .min(1, "Please confirm your password"),
-}).refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
 });
 
 export type EmailFormData = z.infer<typeof emailFormSchema>;

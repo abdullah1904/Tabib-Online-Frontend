@@ -1,6 +1,5 @@
 import { DefaultSession } from "next-auth";
 
-// Extend the `Session` interface
 declare module "next-auth" {
     interface Session {
         user: {
@@ -14,10 +13,8 @@ declare module "next-auth" {
             status: number;
             accessToken: string;
             refreshToken: string;
-        } & DefaultSession["user"];  // Include all other properties of the default user
+        } & DefaultSession["user"];
     }
-
-    // Extend the `User` interface
     interface User {
         id: string;
         imageURL?: string;
@@ -32,7 +29,6 @@ declare module "next-auth" {
     }
 }
 
-// Extend the `JWT` interface in `next-auth/jwt`
 declare module "next-auth/jwt" {
     interface JWT {
         id: string;

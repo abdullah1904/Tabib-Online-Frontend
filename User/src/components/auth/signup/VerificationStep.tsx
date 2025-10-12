@@ -10,10 +10,9 @@ import { useForm } from 'react-hook-form';
 interface VerificationStepProps {
     formData: VerificationFormData | null;
     onSubmit: (data: VerificationFormData) => Promise<void>;
-    isLoading: boolean;
 }
 
-const VerificationStep = ({ formData, isLoading, onSubmit }: VerificationStepProps) => {
+const VerificationStep = ({ formData, onSubmit }: VerificationStepProps) => {
     const verificationForm = useForm<VerificationFormData>({
         resolver: zodResolver(verificationFormSchema),
         mode: "onBlur",
@@ -91,25 +90,25 @@ const VerificationStep = ({ formData, isLoading, onSubmit }: VerificationStepPro
                             }}
                         />
                         <div className='md:col-span-2'>
-                        <FileUpload
-                            name="verificationDocument"
-                            control={verificationForm.control}
-                            rules={{ required: "Verification document is required" }}
-                            label="Upload Verification Document"
-                            errorMessage={verificationForm.formState.errors.verificationDocument?.message}
+                            <FileUpload
+                                name="verificationDocument"
+                                control={verificationForm.control}
+                                rules={{ required: "Verification document is required" }}
+                                label="Upload Verification Document"
+                                errorMessage={verificationForm.formState.errors.verificationDocument?.message}
                             />
-                            </div>
+                        </div>
                     </div>
 
                     <Button
                         type="submit"
                         color="primary"
                         size="lg"
-                        isLoading={isLoading || verificationForm.formState.isSubmitting}
-                        disabled={isLoading || verificationForm.formState.isSubmitting}
+                        isLoading={verificationForm.formState.isSubmitting}
+                        disabled={verificationForm.formState.isSubmitting}
                         className="w-full font-medium py-3 transition-all duration-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                     >
-                        {isLoading || verificationForm.formState.isSubmitting ? "Processing..." : "Continue"}
+                        {verificationForm.formState.isSubmitting ? "Processing..." : "Continue"}
                     </Button>
 
                     <div className="text-center pt-4">

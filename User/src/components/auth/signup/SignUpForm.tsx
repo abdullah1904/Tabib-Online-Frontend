@@ -10,12 +10,13 @@ import MedicalInfoStep from "./MedicalInfoStep";
 import VerificationStep from "./VerificationStep";
 import ConsentStep from "./ConsentStep";
 import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { signUp } from "@/services/auth.service";
 
 
 const SignUpForm = () => {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<{
     personalInfoData: PersonalInfoFormData | null,
     medicalInfoData: MedicalInfoFormData | null,
@@ -23,67 +24,57 @@ const SignUpForm = () => {
     consentData: ConsentFormData | null
   }>({ medicalInfoData: null, personalInfoData: null, verificationData: null, consentData: null });
 
-  const onPersonalInfoSubmit = async (data: PersonalInfoFormData) => {
-    setIsLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log("Personal Info Submitted:", data);
-      setFormData(prev => ({ ...prev, personalInfoData: data }));
-      setCurrentStep(2);
-      showToast("Personal Info submitted successfully!", "success");
-    } catch (error) {
-      console.error("Personal Info submission failed:", error);
-      showToast("Invalid Personal Info. Please try again.", "error");
-    } finally {
-      setIsLoading(false);
+  const { mutate, isPending } = useMutation({
+    mutationFn: signUp,
+    onSuccess: () => {
+      showToast("Sign Up successful! Please verify your account.", "success");
+      router.push(`/verify-account?email=${formData.personalInfoData?.email}`);
+    },
+    onError: (error) => {
+      showToast(error.message || "Sign Up failed. Please try again.", "error");
     }
+  });
+
+  const onPersonalInfoSubmit = async (data: PersonalInfoFormData) => {
+    setFormData(prev => ({ ...prev, personalInfoData: data }));
+    setCurrentStep(2);
   };
   const onMedicalInfoSubmit = async (data: MedicalInfoFormData) => {
-    setIsLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log("Medical Info Submitted:", data);
-      setFormData(prev => ({ ...prev, medicalInfoData: data }));
-      setCurrentStep(3);
-      showToast("Medical Info submitted successfully!", "success");
-    } catch (error) {
-      console.error("Medical Info submission failed:", error);
-      showToast("Invalid Medical Info. Please try again.", "error");
-    } finally {
-      setIsLoading(false);
-    }
+    setFormData(prev => ({ ...prev, medicalInfoData: data }));
+    setCurrentStep(3);
   };
 
   const onVerificationSubmit = async (data: VerificationFormData) => {
-    setIsLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log("Medical Info Submitted:", data);
-      setFormData(prev => ({ ...prev, verificationData: data }));
-      setCurrentStep(4);
-      showToast("Verification Info submitted successfully!", "success");
-    } catch (error) {
-      console.error("Verification submission failed:", error);
-      showToast("Invalid Verification Info. Please try again.", "error");
-    } finally {
-      setIsLoading(false);
-    }
+    setFormData(prev => ({ ...prev, verificationData: data }));
+    setCurrentStep(4);
   };
   const onConsentSubmit = async (data: ConsentFormData) => {
-    setIsLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log("Consent Info Submitted:", data);
-      setFormData(prev => ({ ...prev, consentData: data }));
-      setCurrentStep(4);
-      showToast("Consent Info submitted successfully!", "success");
-      router.push("/doctors");
-    } catch (error) {
-      console.error("Consent submission failed:", error);
-      showToast("Invalid Consent Info. Please try again.", "error");
-    } finally {
-      setIsLoading(false);
-    }
+    setFormData(prev => ({ ...prev, consentData: data }));
+    setCurrentStep(4);
+    const userData = new FormData();
+    userData.append('fullName', formData.personalInfoData?.fullName || '');
+    userData.append('age', String(formData.personalInfoData?.age || 0));
+    userData.append('gender', String(formData.personalInfoData?.gender || 0));
+    userData.append('email', formData.personalInfoData?.email || '');
+    userData.append('phone', formData.personalInfoData?.phoneNumber || '');
+    userData.append('address', formData.personalInfoData?.address || '');
+    userData.append('emergencyContactNumber', formData.personalInfoData?.emergencyPhoneNumber || '');
+    userData.append('emergencyContactName', formData.personalInfoData?.emergencyContactName || '');
+    userData.append('bloodType', formData.medicalInfoData?.bloodType || '');
+    userData.append('height', String(formData.medicalInfoData?.height || 0));
+    userData.append('weight', String(formData.medicalInfoData?.weight || 0));
+    userData.append('allergies', formData.medicalInfoData?.knownAllergies || '');
+    userData.append('currentMedications', formData.medicalInfoData?.currentMedications || '');
+    userData.append('familyMedicalHistory', formData.medicalInfoData?.familyMedicalHistory || '');
+    userData.append('pastMedicalHistory', formData.medicalInfoData?.pastMedicalHistory || '');
+    userData.append('verificationDocumentType', formData.verificationData?.verificationType || '');
+    userData.append('verificationDocumentNumber', formData.verificationData?.verificationNumber || '');
+    userData.append('image', formData.verificationData?.verificationDocument || '');
+    userData.append('password', formData.consentData?.password || '');
+    userData.append('treatmentConsent', formData.consentData?.treatmentConsent ? 'true' : 'false');
+    userData.append('healthInfoDisclosureConsent', formData.consentData?.healthInfoDisclosure ? 'true' : 'false');
+    userData.append('privacyPolicyConsent', formData.consentData?.privacyPolicyAgreement ? 'true' : 'false');
+    mutate(userData);
   }
 
   const goBack = () => {
@@ -94,15 +85,15 @@ const SignUpForm = () => {
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1:
-        return <PersonalInfoStep onSubmit={onPersonalInfoSubmit} isLoading={isLoading} formData={formData.personalInfoData} />;
+        return <PersonalInfoStep onSubmit={onPersonalInfoSubmit} formData={formData.personalInfoData} />;
       case 2:
-        return <MedicalInfoStep onSubmit={onMedicalInfoSubmit} isLoading={isLoading} formData={formData.medicalInfoData} />;
+        return <MedicalInfoStep onSubmit={onMedicalInfoSubmit} formData={formData.medicalInfoData} />;
       case 3:
-        return <VerificationStep onSubmit={onVerificationSubmit} isLoading={isLoading} formData={formData.verificationData} />;
+        return <VerificationStep onSubmit={onVerificationSubmit} formData={formData.verificationData} />;
       case 4:
-        return <ConsentStep onSubmit={onConsentSubmit} isLoading={isLoading} formData={formData.consentData} />;
+        return <ConsentStep onSubmit={onConsentSubmit} isLoading={isPending} formData={formData.consentData} />;
       default:
-        return <PersonalInfoStep onSubmit={onPersonalInfoSubmit} isLoading={isLoading} formData={formData.personalInfoData} />;
+        return <PersonalInfoStep onSubmit={onPersonalInfoSubmit} formData={formData.personalInfoData} />;
     }
   };
   return (

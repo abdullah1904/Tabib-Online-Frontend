@@ -28,7 +28,7 @@ const FileUpload = <
     control,
     label,
     errorMessage,
-    accept = "image/svg+xml,image/png,image/jpeg,image/gif",
+    accept = "image/png,image/jpeg,image/jpg,image/heic,image/heif",
     maxSize,
     onChange,
 }: FileUploadProps<TFieldValues, TName>) => {
@@ -154,7 +154,7 @@ const FileUpload = <
                                         Click to upload or drag and drop
                                     </p>
                                     <p className="text-primary text-sm text-center mt-2">
-                                        SVG, PNG, JPG or GIF {maxSize ? `(max ${Math.round(maxSize / (1024 * 1024))}MB)` : '(max 800x400)'}
+                                        PNG, JPG or HEIC/HEIF {maxSize ? `(max ${Math.round(maxSize / (1024 * 1024))}MB)` : '(max 800x400)'}
                                     </p>
                                 </div>
                             )}
