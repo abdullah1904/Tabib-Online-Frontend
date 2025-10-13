@@ -20,7 +20,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 const AppNavbar = () => {
-  const {data: session} = useSession();
+  const { data: session } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const menuItems = [
@@ -40,7 +40,7 @@ const AppNavbar = () => {
       "icon": <Bot className="size-4" />
     }
   ];
-  const handleSignOut =  () => {
+  const handleSignOut = () => {
     signOut();
   }
   return (
@@ -80,6 +80,14 @@ const AppNavbar = () => {
                 />
               </DropdownTrigger>
               <DropdownMenu>
+                <DropdownItem
+                  key="info"
+                  className="h-14 gap-2"
+                >
+                  <p className="font-semibold">Signed in as</p>
+                  <p className="font-semibold">{session.user.email}</p>
+                </DropdownItem>
+                {/* <Divider/> */}
                 <DropdownItem
                   key="profile"
                   startContent={<User className="size-4" />}

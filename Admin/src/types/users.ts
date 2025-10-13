@@ -1,5 +1,18 @@
 import { AccountStatus, Gender, UserVerificationDocumentType } from "@/utils/constants";
 
+
+export interface AdminUser {
+    id: string;
+    imageURL?: string;
+    fullName: string;
+    email: string;
+    phone: string;
+    privilegeLevel: number;
+    recoveryEmail?: string;
+    status: number;
+    accessToken: string;
+    refreshToken: string;
+}
 export interface User {
     id: number;
     imageURL?: string | null;

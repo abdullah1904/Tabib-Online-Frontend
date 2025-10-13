@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import {
   Ban,
   EllipsisVertical,
@@ -39,12 +39,14 @@ import { getAccountStatusText, getAvatarFallbackText } from "@/utils";
 import { Spinner } from "../ui/spinner";
 import { Badge } from "../ui/badge";
 import { AccountStatus } from "@/utils/constants";
+import { useDebounce } from "use-debounce";
 
 const UsersTable = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [value] = useDebounce(searchTerm, 1000);
 
   const {
     data: usersData = [],
@@ -52,8 +54,8 @@ const UsersTable = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["users"],
-    queryFn: listUsers,
+    queryKey: ["users", value],
+    queryFn: () => listUsers(value),
   });
 
   const { mutate: activateMutate, isPending: isActivating } = useMutation({
@@ -117,24 +119,6 @@ const UsersTable = () => {
     banMutate(userId);
   };
 
-  const filteredUsers = useMemo(() => {
-    const term = searchTerm.toLowerCase();
-    return usersData.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(term) ||
-        user.email.toLowerCase().includes(term) ||
-        user.phoneNumber.toLowerCase().includes(term)
-    );
-  }, [usersData, searchTerm]);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-40 text-gray-600 gap-2">
-        <Spinner className="size-6" /> Loading users...
-      </div>
-    );
-  }
-
   if (isError) {
     return (
       <div className="flex items-center justify-center h-40 text-red-500">
@@ -165,31 +149,40 @@ const UsersTable = () => {
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
-
         <TableBody>
-          {filteredUsers.length > 0 ? (
-            filteredUsers.map((user) => (
+          {isLoading ? (
+            <TableRow>
+              <TableCell
+                colSpan={5}
+                className="text-center text-gray-500 py-6"
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <Spinner className="size-6" /> Loading users...
+                </div>
+              </TableCell>
+            </TableRow>
+          ) : usersData.length > 0 ? (
+            usersData.map((user) => (
               <TableRow key={user.id}>
-                <TableCell className="flex items-center gap-2">
-                  <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage
-                      src={user.imageURL ?? ""}
-                      alt={user.fullName}
-                    />
-                    <AvatarFallback className="rounded-lg">
-                      {getAvatarFallbackText(user.fullName)}
-                    </AvatarFallback>
-                  </Avatar>
-                  {user.fullName}
-                  <Tooltip>
-                    <TooltipTrigger className="sm:hidden">
-                      <Info className="size-4" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Email: {user.email}</p>
-                      <p>Phone: {user.phoneNumber}</p>
-                    </TooltipContent>
-                  </Tooltip>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-8 w-8 rounded-lg">
+                      <AvatarImage src={user.imageURL ?? ""} alt={user.fullName} />
+                      <AvatarFallback className="rounded-lg">
+                        {getAvatarFallbackText(user.fullName)}
+                      </AvatarFallback>
+                    </Avatar>
+                    {user.fullName}
+                    <Tooltip>
+                      <TooltipTrigger className="sm:hidden">
+                        <Info className="size-4" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Email: {user.email}</p>
+                        <p>Phone: {user.phoneNumber}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
                 </TableCell>
 
                 <TableCell className="hidden sm:table-cell">
@@ -224,6 +217,7 @@ const UsersTable = () => {
                       >
                         <Eye /> View
                       </DropdownMenuItem>
+
                       {user.status === AccountStatus.SUSPENDED && (
                         <DropdownMenuItem
                           onClick={() => handleActivate(user.id)}
@@ -233,14 +227,13 @@ const UsersTable = () => {
                           <ShieldCheck /> Activate
                         </DropdownMenuItem>
                       )}
+
                       {user.status === AccountStatus.ACTIVE && (
                         <>
                           <DropdownMenuItem
                             onClick={() => handleSuspend(user.id)}
                             className="cursor-pointer"
-                            disabled={
-                              isSuspending && selectedUserId === user.id
-                            }
+                            disabled={isSuspending && selectedUserId === user.id}
                           >
                             <OctagonPause /> Suspend
                           </DropdownMenuItem>
@@ -261,7 +254,10 @@ const UsersTable = () => {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={5} className="text-center text-gray-500 py-6">
+              <TableCell
+                colSpan={5}
+                className="text-center text-gray-500 py-6"
+              >
                 No users found.
               </TableCell>
             </TableRow>

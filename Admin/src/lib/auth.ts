@@ -3,16 +3,16 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
 
 interface User {
-        id: string;
-        imageURL?: string;
-        fullName: string;
-        email: string;
-        phone: string;
-        privilegeLevel: number;
-        recoveryEmail?: string;
-        status: number;
-        accessToken: string;
-        refreshToken: string;
+    id: string;
+    imageURL?: string;
+    fullName: string;
+    email: string;
+    phone: string;
+    privilegeLevel: number;
+    recoveryEmail?: string;
+    status: number;
+    accessToken: string;
+    refreshToken: string;
 }
 
 export const authOptions: NextAuthOptions = {
@@ -29,19 +29,19 @@ export const authOptions: NextAuthOptions = {
                         email: credentials?.email,
                         password: credentials?.password,
                     });
-                    const user = response.data;
-                    if (user && response.status === 200) {
+                    const data = response.data;
+                    if (data && response.status === 200) {
                         return {
-                            id: user.admin.id,
-                            imageURL: user.admin.imageURL,
-                            fullName: user.admin.fullName,
-                            email: user.admin.email,
-                            phone: user.admin.phone,
-                            privilegeLevel: user.admin.privilegeLevel,
-                            recoveryEmail: user.admin.recoveryEmail,
-                            status: user.admin.status,
-                            accessToken: user.admin.accessToken,
-                            refreshToken: user.admin.refreshToken
+                            id: data.admin.id,
+                            imageURL: data.admin.imageURL,
+                            fullName: data.admin.fullName,
+                            email: data.admin.email,
+                            phone: data.admin.phone,
+                            privilegeLevel: data.admin.privilegeLevel,
+                            recoveryEmail: data.admin.recoveryEmail,
+                            status: data.admin.status,
+                            accessToken: data.admin.accessToken,
+                            refreshToken: data.admin.refreshToken
                         };
                     }
                     return null;
@@ -56,19 +56,24 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     callbacks: {
-        jwt: async ({ token, user }) => {
-            if (user) {
-                token = { ...token, ...(user as User) };
-            }
-            return token;
-        },
-        session: async ({ session, token }) => {
-            if (session.user && token) {
-                session.user = { ...session.user, ...(token as User) };
-            }
-            return session;
-        },
+    jwt: async ({ token, user, trigger, session }) => {
+        if (user) {
+            token = { ...token, ...(user as User) };
+        }
+        
+        if (trigger === "update" && session) {
+            token = { ...token, ...session };
+            console.log("Updated");
+        }
+        return token;
     },
+    session: async ({ session, token }) => {
+        if (session.user && token) {
+            session.user = { ...session.user, ...(token as User) };
+        }
+        return session;
+    },
+},
     pages: {
         signIn: "/signin",
         error: "/signin",

@@ -60,7 +60,7 @@ const UserInfo = ({ id }: Props) => {
             <div className="text-center sm:text-left space-y-1">
               <div className="flex gap-2">
                 <h2 className="text-2xl font-semibold">{userData.fullName}</h2>
-                <Badge variant={userData.status === AccountStatus.SUSPENDED ? 'destructive' : 'default'}>
+                <Badge variant={userData.status === AccountStatus.BANNED ? 'destructive' : 'default'}>
                   {getAccountStatusText(userData.status)}
                 </Badge>
               </div>

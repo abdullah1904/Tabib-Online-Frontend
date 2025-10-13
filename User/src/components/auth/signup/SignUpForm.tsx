@@ -70,10 +70,10 @@ const SignUpForm = () => {
     userData.append('verificationDocumentType', formData.verificationData?.verificationType || '');
     userData.append('verificationDocumentNumber', formData.verificationData?.verificationNumber || '');
     userData.append('image', formData.verificationData?.verificationDocument || '');
-    userData.append('password', formData.consentData?.password || '');
-    userData.append('treatmentConsent', formData.consentData?.treatmentConsent ? 'true' : 'false');
-    userData.append('healthInfoDisclosureConsent', formData.consentData?.healthInfoDisclosure ? 'true' : 'false');
-    userData.append('privacyPolicyConsent', formData.consentData?.privacyPolicyAgreement ? 'true' : 'false');
+    userData.append('password', data.password);
+    userData.append('treatmentConsent', data.treatmentConsent ? 'true' : 'false');
+    userData.append('healthInfoDisclosureConsent', data.healthInfoDisclosure ? 'true' : 'false');
+    userData.append('privacyPolicyConsent', data.privacyPolicyAgreement ? 'true' : 'false');
     mutate(userData);
   }
 

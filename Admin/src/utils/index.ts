@@ -21,9 +21,9 @@ const getAccountStatusText = (status: number) => {
         case 1:
             return "Active";
         case 2:
-            return "Deactivated";
-        case 3:
             return "Suspended";
+        case 3:
+            return "Banned";
 
     }
 }

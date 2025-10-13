@@ -1,10 +1,10 @@
 import { generateRequest } from "@/lib/api-client";
 import { User } from "@/types/users";
 
-export const listUsers = async () => {
+export const listUsers = async (query: string) => {
     const response = await generateRequest({
         method: "GET",
-        url: "/users",
+        url: query !== '' ? `/users?query=${query}` : '/users',
         isProtected: true
     });
     return response.users as User[];

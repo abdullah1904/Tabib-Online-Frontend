@@ -15,3 +15,15 @@ export enum AccountStatus {
     SUSPENDED = 2,
     BANNED = 3
 }
+
+export enum AdminPrivilege {
+    SUPER = 1,
+    WRITE = 2,
+    READ = 3
+}
+
+export const AdminPrivilegeOptions = [
+    {label: 'Super Admin', value: "1"},
+    {label: 'Write Access', value: "2"},
+    {label: 'Read Only', value: "3"},
+]
