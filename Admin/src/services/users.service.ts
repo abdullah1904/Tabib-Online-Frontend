@@ -27,3 +27,21 @@ export const activateUser = async (userId: number) => {
     });
     return response;
 }
+
+export const suspendUser = async (userId: number) => {
+    const response = await generateRequest({
+        method: 'PATCH',
+        url: `/users/${userId}/suspend`,
+        isProtected: true
+    });
+    return response;
+}
+
+export const banUser = async (userId: number) => {
+    const response = await generateRequest({
+        method: 'PATCH',    
+        url: `/users/${userId}/ban`,
+        isProtected: true
+    });
+    return response;
+}
