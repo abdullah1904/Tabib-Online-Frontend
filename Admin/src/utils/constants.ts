@@ -12,6 +12,6 @@ export enum UserVerificationDocumentType {
 export enum AccountStatus {
     PENDING = 0,
     ACTIVE = 1,
-    DEACTIVATED = 2,
-    SUSPENDED = 3
+    SUSPENDED = 2,
+    BANNED = 3
 }

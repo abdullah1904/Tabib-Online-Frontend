@@ -121,26 +121,26 @@ const data = {
             ],
         },
         {
-            title: "Settings",
+            title: " System Settings",
             url: "#",
             icon: Settings,
             items: [
                 {
-                    title: "General",
+                    title: "Admin Users",
                     url: "#",
                 },
-                {
-                    title: "Team",
-                    url: "#",
-                },
-                {
-                    title: "Billing",
-                    url: "#",
-                },
-                {
-                    title: "Limits",
-                    url: "#",
-                },
+                // {
+                //     title: "Team",
+                //     url: "#",
+                // },
+                // {
+                //     title: "Billing",
+                //     url: "#",
+                // },
+                // {
+                //     title: "Limits",
+                //     url: "#",
+                // },
             ],
         },
     ],

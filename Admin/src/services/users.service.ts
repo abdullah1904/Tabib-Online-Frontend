@@ -18,3 +18,12 @@ export const getUser = async (userId: string) => {
     });
     return response.user as User;
 }
+
+export const activateUser = async (userId: number) => {
+    const response = await generateRequest({
+        method: 'PATCH',
+        url: `/users/${userId}/activate`,
+        isProtected: true
+    });
+    return response;
+}

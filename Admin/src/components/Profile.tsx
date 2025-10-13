@@ -51,8 +51,6 @@ const Profile = () => {
                     <h2 className="text-xl font-semibold">Password Security</h2>
                 </CardHeader>
                 <CardContent className="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <div className="col-span-1 md:col-span-2">   
-                    </div>
                     <div className="space-y-2">
                         <Label>Current Password</Label>
                         <PasswordInput placeholder="Current Password" />
