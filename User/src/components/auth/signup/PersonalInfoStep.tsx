@@ -59,7 +59,6 @@ const PersonalInfoStep = ({ onSubmit, formData }: PersonalInfoStepProps) => {
                 </div>
             </div>
 
-
             <form onSubmit={personalInfoForm.handleSubmit(onSubmit)} noValidate>
                 <div className="space-y-6 mx-auto">
                     <div className='grid md:grid-cols-2 gap-4'>

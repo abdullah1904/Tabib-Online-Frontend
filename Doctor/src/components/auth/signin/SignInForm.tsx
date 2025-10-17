@@ -96,9 +96,22 @@ const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
                                                 </Link>
                                             </div>
                                         </div>
-                                        <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
-                                            {isLoading ? "Loading..." : "Login"}
-                                        </Button>
+                                        <div className="grid grid-cols-1 gap-3">
+                                            <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
+                                                {isLoading ? "Loading..." : "Login"}
+                                            </Button>
+                                            <div className="text-center mt-2">
+                                                <span className="text-sm">
+                                                    Don&apos;t have an account?{" "}
+                                                    <Link
+                                                        href="/signup"
+                                                        className="ml-auto text-sm underline-offset-2 hover:underline"
+                                                    >
+                                                        Create new
+                                                    </Link>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </form>
                             </Form>

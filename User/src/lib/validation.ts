@@ -105,14 +105,6 @@ export type MedicalInfoFormData = z.infer<typeof medicalInfoFormSchema>;
 export type VerificationFormData = z.infer<typeof verificationFormSchema>;
 export type ConsentFormData = z.infer<typeof consentFormSchema>;
 
-// ForgetPasswordForm validation schema and types
-export const emailFormSchema = z.object({
-    email: z
-        .string()
-        .min(1, "Email is required")
-        .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address"),
-});
-
 // VerifyAccountForm validation schema and types
 export const verifyAccountFormSchema = z.object({
     otp: z
@@ -123,6 +115,15 @@ export const verifyAccountFormSchema = z.object({
 });
 
 export type VerifyAccountFormData = z.infer<typeof verifyAccountFormSchema>;
+
+
+// ForgetPasswordForm validation schema and types
+export const emailFormSchema = z.object({
+    email: z
+    .string()
+    .min(1, "Email is required")
+    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address"),
+});
 
 // PasswordResetForm validation schema and types
 export const passwordResetFormSchema = z.object({
@@ -143,3 +144,31 @@ export const passwordResetFormSchema = z.object({
 
 export type EmailFormData = z.infer<typeof emailFormSchema>;
 export type PasswordResetFormData = z.infer<typeof passwordResetFormSchema>;
+
+export const updateProfilePersonalInfoFormSchema = z.object({
+    fullName: z
+        .string("Full name is required")
+        .min(2, "Full name must be at least 2 characters long")
+        .max(100, "Full name must be less than or equal to 100 characters"),
+    age: z
+        .number("Age is required")
+        .min(0, "Age must be a positive number")
+        .max(120, "Age must be less than or equal to 120"),
+    gender: z.enum(GenderOptions.map(option => String(option.value)) as [string, ...string[]], { message: 'Gender is required' }),
+    address: z
+        .string("Address is required")
+        .min(5, "Address must be at least 5 characters long")
+        .max(200, "Address must be less than or equal to 200 characters"),
+    emergencyContactName: z
+        .string("Full name is required")
+        .min(2, "Full name must be at least 2 characters long")
+        .max(100, "Full name must be less than or equal to 100 characters"),
+    emergencyPhoneNumber: z
+        .string("Phone Number is required")
+        .regex(
+            /^\+[1-9]\d{1,14}$/,
+            "Phone number must be in international format (e.g., +923001234567)"
+        ),
+});
+
+export type UpdateProfilePersonalInfoFormData = z.infer<typeof updateProfilePersonalInfoFormSchema>;
