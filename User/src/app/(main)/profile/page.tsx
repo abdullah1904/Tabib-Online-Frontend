@@ -1,3 +1,4 @@
+import Profile from "@/components/Profile";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
 
 const ProfilePage = () => {
   return (
-    <div>ProfilePage</div>
+    <Profile/>
   )
 }
 

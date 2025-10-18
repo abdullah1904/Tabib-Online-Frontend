@@ -87,14 +87,14 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                                 {item.items?.length ? (
                                     <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
                                         {item.items.map((subItem) => {
-                                                const isActive = pathname === subItem.url
-                                                return (
-                                                    <SidebarMenuSubItem key={subItem.title}>
-                                                        <SidebarMenuSubButton asChild isActive={isActive}>
-                                                            <Link href={subItem.url}>{subItem.title}</Link>
-                                                            </SidebarMenuSubButton>
-                                                        </SidebarMenuSubItem>
-                                                )
+                                            const isActive = pathname === subItem.url
+                                            return (
+                                                <SidebarMenuSubItem key={subItem.title}>
+                                                    <SidebarMenuSubButton asChild isActive={isActive}>
+                                                        <Link href={subItem.url}>{subItem.title}</Link>
+                                                    </SidebarMenuSubButton>
+                                                </SidebarMenuSubItem>
+                                            )
                                         })}
                                     </SidebarMenuSub>
                                 ) : null}

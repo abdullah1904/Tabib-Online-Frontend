@@ -27,3 +27,108 @@ export const AdminPrivilegeOptions = [
     {label: 'Write Access', value: "2"},
     {label: 'Read Only', value: "3"},
 ]
+
+export enum MedicalDegree {
+    MBBS = 1,
+    BDS = 2,
+    DVM = 3,
+    PHARM_D = 4,
+    DPT = 5,
+    BEMS = 6,
+    BUMS = 7,
+    DHMS = 8
+}
+
+export enum PostGraduateDegree {
+    NONE = 0,
+    FCPS = 1,
+    MCPS = 2,
+    MD = 3,
+    MS = 4,
+    MDS = 5,
+    MPhil = 6,
+    MPH = 7,
+    PhD = 8
+}
+
+export enum Specialization {
+    // --- General & Family Practice ---
+    GeneralPhysician = 1,
+    FamilyMedicine = 2,
+    InternalMedicine = 3,
+    GeneralSurgeon = 4,
+
+    // --- Internal Medicine Subspecialties ---
+    Cardiologist = 5,
+    Dermatologist = 6,
+    Endocrinologist = 7,
+    Gastroenterologist = 8,
+    Hematologist = 9,
+    Nephrologist = 10,
+    Neurologist = 11,
+    Oncologist = 12,
+    Pulmonologist = 13,
+    Rheumatologist = 14,
+    InfectiousDiseaseSpecialist = 15,
+
+    // --- Surgical Specialties ---
+    OrthopedicSurgeon = 16,
+    Neurosurgeon = 17,
+    CardiothoracicSurgeon = 18,
+    PlasticSurgeon = 19,
+    PediatricSurgeon = 20,
+    Urologist = 21,
+    VascularSurgeon = 22,
+    LaparoscopicSurgeon = 23,
+
+    // --- Women & Child Health ---
+    Gynecologist = 24,
+    Obstetrician = 25,
+    Pediatrician = 26,
+    Neonatologist = 27,
+
+    // --- Eye, ENT, Dental ---
+    Ophthalmologist = 28,
+    ENT_Specialist = 29,
+    Dentist = 30,
+    Orthodontist = 31,
+    OralSurgeon = 32,
+    Periodontist = 33,
+    Prosthodontist = 34,
+    Endodontist = 35,
+
+    // --- Mental Health ---
+    Psychiatrist = 36,
+    Psychologist = 37,
+    ClinicalPsychologist = 38,
+
+    // --- Diagnostic & Lab ---
+    Radiologist = 39,
+    Pathologist = 40,
+    NuclearMedicineSpecialist = 41,
+
+    // --- Emergency & Intensive Care ---
+    Anesthesiologist = 42,
+    EmergencyMedicine = 43,
+    CriticalCareSpecialist = 44,
+    PainManagementSpecialist = 45,
+
+    // --- Public & Preventive Health ---
+    PublicHealthSpecialist = 46,
+    Epidemiologist = 47,
+    CommunityMedicine = 48,
+    OccupationalHealth = 49,
+
+    // --- Rehab & Allied Medicine ---
+    Physiotherapist = 50,
+    Nutritionist = 51,
+    Dietitian = 52,
+    SpeechTherapist = 53,
+    Chiropractor = 54,
+
+    // --- Cosmetic & Misc ---
+    CosmeticSurgeon = 55,
+    SportsMedicine = 56,
+    SleepMedicineSpecialist = 57,
+    SexualHealthSpecialist = 58
+}

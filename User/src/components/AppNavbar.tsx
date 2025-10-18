@@ -76,7 +76,7 @@ const AppNavbar = () => {
               <DropdownTrigger>
                 <Avatar
                   showFallback
-                  src="https://images.unsplash.com/broken"
+                  src={session.user.imageURL ?? undefined}
                 />
               </DropdownTrigger>
               <DropdownMenu>

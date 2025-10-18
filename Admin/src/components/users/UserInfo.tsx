@@ -73,7 +73,6 @@ const UserInfo = ({ id }: Props) => {
           <Tabs defaultValue="profile" className="w-full">
             <TabsList className="w-full mx-auto">
               <TabsTrigger value="profile">Personal Info</TabsTrigger>
-              <TabsTrigger value="settings">Medical Info</TabsTrigger>
               <TabsTrigger value="appointments">Appointments Info</TabsTrigger>
             </TabsList>
             <TabsContent value="profile" className="space-y-6">
@@ -156,10 +155,6 @@ const UserInfo = ({ id }: Props) => {
                 </div>
               </div>
 
-            </TabsContent>
-            <TabsContent value="settings">
-              {/* Medical Info content goes here */}
-              <div>Medical Info not available.</div>
             </TabsContent>
             <TabsContent value="appointments">
               {/* Appointments Info content goes here */}

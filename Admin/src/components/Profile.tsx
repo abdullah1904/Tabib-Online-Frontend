@@ -38,16 +38,23 @@ const UpdateProfileCard = () => {
                 fullName: session.user.fullName || '',
                 email: session.user.email || '',
                 phoneNumber: session.user.phone || '',
-                privilege: String(session.user.privilegeLevel),
+                privilege: session.user.privilegeLevel.toString() || undefined,
                 recoveryEmail: session.user.recoveryEmail || '',
             });
         }
-    }, [session, updateProfileForm.reset]);
+    }, [session, updateProfileForm]);
 
     const { mutate, isPending } = useMutation({
         mutationFn: updateProfile,
         onSuccess: async (data) => {
-            updateProfileForm.reset();
+            updateProfileForm.reset({
+                profilePicture: undefined,
+                fullName: data.fullName,
+                email: data.email,
+                phoneNumber: data.phone,
+                privilege: data.privilegeLevel.toString() || undefined,
+                recoveryEmail: data.recoveryEmail,
+            });
             await update({
                 imageURL: data.imageURL,
                 fullName: data.fullName,
@@ -83,7 +90,13 @@ const UpdateProfileCard = () => {
                                 name="profilePicture"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Profile Picture</FormLabel>
+                                        <FormLabel>Profile Picture 
+                                            {session?.user?.imageURL && (
+                                                <a href={session.user.imageURL} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-500">
+                                                    (View Current)
+                                                </a>
+                                            )}
+                                        </FormLabel>
                                         <FormControl>
                                             <Input
                                                 type="file"
@@ -93,6 +106,7 @@ const UpdateProfileCard = () => {
                                                 }}
                                                 name={field.name}
                                                 ref={field.ref}
+                                                key={session?.user?.imageURL || 'profile-picture'}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -137,12 +151,10 @@ const UpdateProfileCard = () => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Privilege</FormLabel>
-                                        <Select onValueChange={field.onChange} value={field.value} disabled={true}>
-                                            <FormControl>
-                                                <SelectTrigger className="w-full">
-                                                    <SelectValue placeholder="Select a privilege" />
-                                                </SelectTrigger>
-                                            </FormControl>
+                                        <Select value={field.value} disabled={true}>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Select a privilege" />
+                                            </SelectTrigger>
                                             <SelectContent>
                                                 {AdminPrivilegeOptions.map((option) => (
                                                     <SelectItem key={option.value} value={option.value}>
