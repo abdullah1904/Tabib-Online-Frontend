@@ -109,19 +109,19 @@ export const consentFormSchema = z.object({
         ),
     authenticInformationConsent: z.boolean()
         .refine((value) => value === true, {
-            message: "You must consent to receive treatment to proceed"
+            message: "You must agree that the information provided is authentic to proceed"
         }),
-    licenseVerification: z.boolean()
+    licenseVerificationConsent: z.boolean()
         .refine((value) => value === true, {
-            message: "You must consent to receive treatment to proceed"
+            message: "You must agree to license verification to proceed"
         }),
-    termsAgreement: z.boolean()
+    termsAgreementConsent: z.boolean()
         .refine((value) => value === true, {
-            message: "You must consent to receive treatment to proceed"
+            message: "You must agree to the terms and conditions to proceed"
         }),
     dataUsageConsent: z.boolean()
         .refine((value) => value === true, {
-            message: "You must consent to receive treatment to proceed"
+            message: "You must agree to data usage policy to proceed"
         }),
 });
 

@@ -21,9 +21,9 @@ const ConsentStep = ({ formData, isLoading, onSubmit }: ConsentStepProps) => {
         defaultValues: {
             password: formData?.password || '',
             authenticInformationConsent: formData?.authenticInformationConsent || false,
-            termsAgreement: formData?.termsAgreement || false,
             dataUsageConsent: formData?.dataUsageConsent || false,
-            licenseVerification: formData?.licenseVerification || false,
+            licenseVerificationConsent: formData?.licenseVerificationConsent || false,
+            termsAgreementConsent: formData?.termsAgreementConsent || false,
         }
     });
     return (
@@ -97,7 +97,7 @@ const ConsentStep = ({ formData, isLoading, onSubmit }: ConsentStepProps) => {
                         <div className="space-y-2">
                             <FormField
                                 control={consentForm.control}
-                                name="licenseVerification"
+                                name="licenseVerificationConsent"
                                 render={({ field }) => (
                                     <FormItem>
                                         <div className='flex gap-2'>
@@ -117,7 +117,7 @@ const ConsentStep = ({ formData, isLoading, onSubmit }: ConsentStepProps) => {
                         <div className="space-y-2">
                             <FormField
                                 control={consentForm.control}
-                                name="termsAgreement"
+                                name="termsAgreementConsent"
                                 render={({ field }) => (
                                     <FormItem>
                                         <div className='flex gap-2'>
