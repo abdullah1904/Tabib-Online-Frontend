@@ -249,7 +249,7 @@ const ProfessionalInfoStep = ({ formData, onSubmit }: ProfessionalInfoStepProps)
                                                         className={`${field.value ? "text-foreground" : "text-muted-foreground"} font-normal w-full justify-between`}
                                                     >
                                                         {field.value
-                                                            ? field.value
+                                                            ? SpecializationOptions.find((framework) => String(framework.value) === field.value)?.label
                                                             : "Select Specialization..."}
                                                         <ChevronDown className="opacity-50" />
                                                     </Button>
@@ -314,7 +314,7 @@ const ProfessionalInfoStep = ({ formData, onSubmit }: ProfessionalInfoStepProps)
                         <span className="text-sm">
                             Already have an account?{" "}
                             <Link
-                                href="/signup"
+                                href="/signin"
                                 className="ml-auto text-sm underline-offset-2 hover:underline"
                             >
                                 Sign In

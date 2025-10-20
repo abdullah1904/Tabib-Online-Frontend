@@ -131,6 +131,18 @@ export type ProfessionalVerificationFormData = z.infer<typeof professionalVerifi
 export type VerificationFormData = z.infer<typeof verificationFormSchema>;
 export type ConsentFormData = z.infer<typeof consentFormSchema>;
 
+// VerifyAccountForm validation schema and types
+export const verifyAccountFormSchema = z.object({
+    otp: z
+        .string()
+        .min(1, "OTP is required")
+        .length(6, "OTP must be exactly 6 digits")
+        .regex(/^\d{6}$/, "OTP must contain only numbers"),
+});
+
+export type VerifyAccountFormData = z.infer<typeof verifyAccountFormSchema>;
+
+// ForgotPasswordForm validation schema and types
 export const forgotPasswordFormSchema = z.object({
     email: z
         .string()
@@ -141,11 +153,16 @@ export const forgotPasswordFormSchema = z.object({
 
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordFormSchema>;
 
+// ResetPasswordForm validation schema and types
 export const resetPasswordFormSchema = z.object({
+    email: z
+        .string()
+        .min(1, "Email is required")
+        .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address"),
     otp: z.string().min(6, {
         message: "OTP must be 6 characters.",
     }),
-    password: z
+    newPassword: z
         .string()
         .min(1, "Password is required")
         .min(8, "Password must be at least 8 characters long")

@@ -180,7 +180,7 @@ const PersonalInfoStep = ({ onSubmit, formData }: PersonalInfoStepProps) => {
                         <span className="text-sm">
                             Already have an account?{" "}
                             <Link
-                                href="/signup"
+                                href="/signin"
                                 className="ml-auto text-sm underline-offset-2 hover:underline"
                             >
                                 Sign In

@@ -20,6 +20,13 @@ export const VerificationDocumentOptions = [
     { label: "Other Govt Issued ID", value: 3 }
 ]
 
+export enum AccountStatus {
+    PENDING = 0,
+    ACTIVE = 1,
+    DEACTIVATED = 2,
+    SUSPENDED = 3
+}
+
 export enum MedicalDegree {
     MBBS = 1,
     BDS = 2,

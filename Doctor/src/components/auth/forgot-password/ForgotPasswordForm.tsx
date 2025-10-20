@@ -14,6 +14,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
 import { PasswordInput } from "@/components/ui/password-input";
+import { useMutation } from "@tanstack/react-query";
+import { forgotPassword, resetPassword } from "@/services/auth.service";
 
 
 const ForgotPasswordForm = ({ className, ...props }: React.ComponentProps<"div">) => {
@@ -28,25 +30,44 @@ const ForgotPasswordForm = ({ className, ...props }: React.ComponentProps<"div">
             email: '',
         }
     });
+
+    const { mutate: forgotPasswordMutate, isPending: isForgotPasswordPending } = useMutation({
+        mutationFn: forgotPassword,
+        onSuccess: () => {
+            setStep('RESET');
+            resetPasswordForm.setValue('email', forgotPasswordForm.getValues('email'));
+            toast.success(`OTP sent to your ${forgotPasswordForm.getValues('email')}!`);
+        },
+        onError: (error) => {
+            toast.error(error?.message);
+        }
+    });
+
     const onForgotPasswordSubmit = async (data: ForgotPasswordFormData) => {
-        console.log(data);
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setStep('RESET');
-        toast.success(`OTP sent to your ${data.email}!`);
+        forgotPasswordMutate(data);
     }
     const resetPasswordForm = useForm<ResetPasswordFormData>({
         resolver: zodResolver(resetPasswordFormSchema),
         defaultValues: {
             otp: '',
-            password: '',
+            newPassword: '',
+        }
+    });
+
+    const { mutate: resetPasswordMutate, isPending: isResetPasswordPending } = useMutation({
+        mutationFn: resetPassword,
+        onSuccess: () => {
+            router.push('/signin');
+            toast.success("Password reset successful! Please login with your new password.");
+        },
+        onError: (error) => {
+            toast.error(error?.message);
         }
     });
     const onResetPasswordSubmit = async (data: ResetPasswordFormData) => {
-        console.log(data);
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        toast.success("Password reset successful! Please login with your new password.");
-        router.push('/signin');
+        resetPasswordMutate(data);
     }
+
     return (
         <div className="flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
             <div className="w-full max-w-sm md:max-w-3xl">
@@ -86,8 +107,8 @@ const ForgotPasswordForm = ({ className, ...props }: React.ComponentProps<"div">
                                                     </Link>
                                                 </div>
                                             </div>
-                                            <Button type="submit" className="w-full cursor-pointer" disabled={forgotPasswordForm.formState.isSubmitting}>
-                                                {forgotPasswordForm.formState.isSubmitting ? "Loading..." : "Send Reset OTP"}
+                                            <Button type="submit" className="w-full cursor-pointer" disabled={isForgotPasswordPending}>
+                                                {isForgotPasswordPending ? "Loading..." : "Send Reset OTP"}
                                             </Button>
                                         </div>
                                     </form>
@@ -134,7 +155,7 @@ const ForgotPasswordForm = ({ className, ...props }: React.ComponentProps<"div">
                                                 />
                                                 <FormField
                                                     control={resetPasswordForm.control}
-                                                    name="password"
+                                                    name="newPassword"
                                                     render={({ field }) => (
                                                         <FormItem>
                                                             <FormLabel>New Password</FormLabel>
@@ -155,10 +176,10 @@ const ForgotPasswordForm = ({ className, ...props }: React.ComponentProps<"div">
                                                 </div>
                                             </div>
                                             <div className="grid grid-cols-1 gap-3">
-                                                <Button type="submit" className="w-full cursor-pointer" disabled={resetPasswordForm.formState.isSubmitting}>
-                                                    {resetPasswordForm.formState.isSubmitting ? "Loading..." : "Reset Password"}
+                                                <Button type="submit" className="w-full cursor-pointer" disabled={isResetPasswordPending}>
+                                                    {isResetPasswordPending ? "Loading..." : "Reset Password"}
                                                 </Button>
-                                                <Button type="button" onClick={handleBack} variant='outline' className="w-full cursor-pointer" disabled={resetPasswordForm.formState.isSubmitting}>
+                                                <Button type="button" onClick={handleBack} variant='outline' className="w-full cursor-pointer" disabled={isResetPasswordPending}>
                                                     Change Email
                                                 </Button>
                                             </div>
