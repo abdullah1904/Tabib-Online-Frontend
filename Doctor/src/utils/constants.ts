@@ -20,6 +20,13 @@ export const VerificationDocumentOptions = [
     { label: "Other Govt Issued ID", value: 3 }
 ]
 
+export enum AccountStatus {
+    PENDING = 0,
+    ACTIVE = 1,
+    DEACTIVATED = 2,
+    SUSPENDED = 3
+}
+
 export enum MedicalDegree {
     MBBS = 1,
     BDS = 2,
@@ -230,3 +237,36 @@ export const SpecializationOptions = [
     { label: "Sexual Health Specialist", value: 58 }
 ];
 
+export enum DoctorPrefix {
+  Dr = 1,
+  Prof = 2,
+  ProfDr = 3,
+  MrDr = 4,
+  MsDr = 5,
+  MrsDr = 6,
+  MxDr = 7,
+  AssocProf = 8,
+  AsstProf = 9,
+  AssocProfDr = 10,
+  AsstProfDr = 11,
+  RevDr = 12,
+  Consultant = 13,
+  Surgeon = 14,
+}
+
+export const DoctorPrefixOptions = [
+    { label: "Dr", value: 1 },
+    { label: "Prof", value: 2 },
+    { label: "Prof Dr", value: 3 },
+    { label: "Mr Dr", value: 4 },
+    { label: "Ms Dr", value: 5 },
+    { label: "Mrs Dr", value: 6 },
+    { label: "Mx Dr", value: 7 },
+    { label: "Assoc Prof", value: 8 },
+    { label: "Asst Prof", value: 9 },
+    { label: "Assoc Prof Dr", value: 10 },
+    { label: "Asst Prof Dr", value: 11 },
+    { label: "Rev Dr", value: 12 },
+    { label: "Consultant", value: 13 },
+    { label: "Surgeon", value: 14 }   
+]

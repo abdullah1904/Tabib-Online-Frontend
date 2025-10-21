@@ -1,4 +1,4 @@
-import { AccountStatus, Gender, UserVerificationDocumentType } from "@/utils/constants";
+import { AccountStatus, Gender, VerificationDocumentType } from "@/utils/constants";
 import { DefaultSession } from "next-auth";
 
 declare module "next-auth" {
@@ -14,7 +14,7 @@ declare module "next-auth" {
             phoneNumber: string;
             emergencyContactNumber: string;
             emergencyContactName: string;
-            verificationDocumentType: UserVerificationDocumentType;
+            verificationDocumentType: VerificationDocumentType;
             verificationDocumentNumber: string;
             verificationDocumentURL: string;
             status: AccountStatus;
@@ -34,7 +34,7 @@ declare module "next-auth" {
         phoneNumber: string;
         emergencyContactNumber: string;
         emergencyContactName: string;
-        verificationDocumentType: UserVerificationDocumentType;
+        verificationDocumentType: VerificationDocumentType;
         verificationDocumentNumber: string;
         verificationDocumentURL: string;
         status: AccountStatus;
@@ -56,7 +56,7 @@ declare module "next-auth/jwt" {
         phoneNumber: string;
         emergencyContactNumber: string;
         emergencyContactName: string;
-        verificationDocumentType: UserVerificationDocumentType;
+        verificationDocumentType: VerificationDocumentType;
         verificationDocumentNumber: string;
         verificationDocumentURL: string;
         status: AccountStatus;

@@ -110,10 +110,6 @@ const VerificationStep = ({ formData, onSubmit }: VerificationStepProps) => {
                                         <FormControl>
                                             <FileUpload
                                                 {...field}
-                                                accept="image/*"
-                                                maxSize={5 * 1024 * 1024}
-                                                minSize={100 * 1024}
-                                                label="Upload your document"
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -130,7 +126,7 @@ const VerificationStep = ({ formData, onSubmit }: VerificationStepProps) => {
                         <span className="text-sm">
                             Already have an account?{" "}
                             <Link
-                                href="/signup"
+                                href="/signin"
                                 className="ml-auto text-sm underline-offset-2 hover:underline"
                             >
                                 Sign In

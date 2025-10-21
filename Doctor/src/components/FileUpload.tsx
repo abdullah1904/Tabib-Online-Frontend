@@ -26,7 +26,7 @@ const FileUpload = React.forwardRef<HTMLInputElement, FileUploadProps>(
             disabled = false,
             accept = "image/*",
             maxSize = 5 * 1024 * 1024, // 5MB default
-            minSize = 100 * 1024, // 100KB default
+            minSize = 10 * 1024, // 10KB default
             label = "Upload a file",
         },
         ref

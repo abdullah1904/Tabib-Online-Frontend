@@ -21,12 +21,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { signOut, useSession } from "next-auth/react";
+import { toast } from "sonner";
+import { getAvatarFallbackText, getDoctorPrefixText } from "@/utils";
 const data = {
-    user: {
-        name: "Abdullah Al Mamun",
-        email: "doctor@gmail.com",
-        avatar: "/avatars/shadcn.jpg"
-    },
     navMain: [
         {
             title: "Appointments",
@@ -43,15 +41,17 @@ const data = {
 
 
 const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
-    const { isMobile } = useSidebar()
-    const router = useRouter()
-    const pathname = usePathname()
+    const { isMobile } = useSidebar();
+    const { data: session } = useSession();
+    const router = useRouter();
+    const pathname = usePathname();
 
     const handleLogoClick = () => {
         router.push("/")
     }
     const handleLogOut = () => {
-        router.push("/signin")
+        signOut();
+        toast.success("Logged out successfully");
     }
     return (
         <Sidebar variant="floating" {...props}>
@@ -113,12 +113,12 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                                     className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                                 >
                                     <Avatar className="h-8 w-8 rounded-lg">
-                                        <AvatarImage src={data.user.avatar} alt={data.user.name} />
-                                        <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                                        <AvatarImage src={session?.user.imageURL} alt={session?.user.fullName} />
+                                        <AvatarFallback className="rounded-lg">{getAvatarFallbackText(session?.user.fullName)}</AvatarFallback>
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
-                                        <span className="truncate font-medium">{data.user.name}</span>
-                                        <span className="truncate text-xs">{data.user.email}</span>
+                                        <span className="truncate font-medium">{getDoctorPrefixText(session?.user.doctorPrefix ?? 0)} {session?.user.fullName}</span>
+                                        <span className="truncate text-xs">{session?.user.email}</span>
                                     </div>
                                     <ChevronsUpDown className="ml-auto size-4" />
                                 </SidebarMenuButton>
@@ -132,12 +132,12 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                                 <DropdownMenuLabel className="p-0 font-normal">
                                     <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                                         <Avatar className="h-8 w-8 rounded-lg">
-                                            <AvatarImage src={data.user.avatar} alt={data.user.name} />
-                                            <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                                            <AvatarImage src={session?.user.imageURL} alt={session?.user.fullName} />
+                                            <AvatarFallback className="rounded-lg">{getAvatarFallbackText(session?.user.fullName)}</AvatarFallback>
                                         </Avatar>
                                         <div className="grid flex-1 text-left text-sm leading-tight">
-                                            <span className="truncate font-medium">{data.user.name}</span>
-                                            <span className="truncate text-xs">{data.user.email}</span>
+                                            <span className="truncate font-medium">{getDoctorPrefixText(session?.user.doctorPrefix ?? 0)} {session?.user.fullName}</span>
+                                            <span className="truncate text-xs">{session?.user.email}</span>
                                         </div>
                                     </div>
                                 </DropdownMenuLabel>

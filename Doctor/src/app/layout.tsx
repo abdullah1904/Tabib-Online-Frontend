@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "sonner";
+import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
+import TanStackQueryProvider from "@/providers/TanStackQueryProvider";
 
 export const metadata: Metadata = {
   title: "Doctor | Tabib Online",
@@ -18,7 +20,11 @@ export default function RootLayout({
         className={`bg-muted antialiased custom-scrollbar`}
         suppressHydrationWarning={true}
       >
-        {children}
+        <NextAuthSessionProvider>
+          <TanStackQueryProvider>
+            {children}
+          </TanStackQueryProvider>
+        </NextAuthSessionProvider>
         <Toaster />
       </body>
     </html>

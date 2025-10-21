@@ -1,6 +1,6 @@
-import { showToast } from "@/utils";
 import axios, { isAxiosError } from "axios";
 import { getSession, signOut } from "next-auth/react";
+import { toast } from "sonner";
 
 const axiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -27,7 +27,6 @@ export const generateRequest = async ({ method, url, data, isFormData = false, i
             ...(isProtected && session?.user.accessToken ? { Authorization: `Bearer ${session?.user.accessToken}` } : {}),
         },
     };
-    console.log(session);
     try {
         let response;
         switch (method) {
@@ -60,7 +59,7 @@ export const generateRequest = async ({ method, url, data, isFormData = false, i
             const statusCode = error.response.status;
             const errorMessage = error.response.data?.error || error.response.data.message || "An error occurred";
             if (statusCode === 401) {
-                showToast(errorMessage || "Unauthorized. Please log in again.", "error")
+                toast.error(errorMessage || "Unauthorized. Please log in again.");
                 signOut();
             }
             return Promise.reject(new Error(errorMessage));

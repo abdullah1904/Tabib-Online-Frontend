@@ -1,20 +1,18 @@
 "use client"
-import { Button, Card, CardBody, CardHeader } from '@heroui/react'
+import { Button, Card, CardBody, CardHeader, Spinner } from '@heroui/react'
 import { BadgeCheck, FileBadge, Hospital, MessageCircle, Phone, Star, Video, } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react'
 import ConsultationDetailModel from './ConsultationDetailModel';
+import { useQuery } from '@tanstack/react-query';
+import { getDoctor } from '@/services/doctors.service';
+import { getDoctorPrefixText, getSpecializationText } from '@/utils';
 
 type Props = {
-  userId: string
+  doctorId: string
 }
 
 const doctor = {
-  "name": "Dr. Jane Smith",
-  "specialization": "Cardiologist",
-  "isVerified": true,
-  "qualification": ["MBBS", "MCPS", "FCPS"],
-  "experience": "10 years",
   "totalReviews": 200,
   "overAllRating": 4.8,
   "consultationType": [
@@ -51,9 +49,15 @@ const doctor = {
 
 }
 
-const DoctorProfile = ({ }: Props) => {
+const DoctorProfile = ({ doctorId }: Props) => {
   const [showModel, setShowModel] = useState<'Appointment' | 'Review' | 'Complaint' | null>(null);
   const [selectedConsultation, setSelectedConsultation] = useState<string | null>(null);
+
+  const { data: doctorData, isLoading, isError, error } = useQuery({
+    queryKey: ['doctor', doctorId],
+    queryFn: () => getDoctor(doctorId)
+  });
+
   const renderStars = (rating: number) => {
     const stars = [];
     const fullStars = Math.floor(rating);
@@ -91,6 +95,20 @@ const DoctorProfile = ({ }: Props) => {
     setShowModel('Appointment');
     setSelectedConsultation(type);
   }
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center min-h-[91vh]  text-red-500">
+        Error loading doctor: {error.message}
+      </div>
+    );
+  }
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[91vh]  gap-2 text-primary">
+        <Spinner /> Loading doctor...
+      </div>
+    )
+  }
   return (
     <>
       <div className='w-full flex flex-col justify-start items-center p-2 md:p-10 gap-2 min-h-[91vh] relative bg-foreground'>
@@ -98,7 +116,7 @@ const DoctorProfile = ({ }: Props) => {
           <CardBody className='flex w-full flex-col md:flex-row items-center sm:items-start gap-4'>
             <div className="flex-shrink-0">
               <Image
-                src={`/assets/Doctor1.png`}
+                src={doctorData?.imageURL ?? `/assets/Doctor1.png`}
                 alt="Doctor"
                 width={50}
                 height={50}
@@ -112,22 +130,22 @@ const DoctorProfile = ({ }: Props) => {
                   {/* Name + Badge */}
                   <div className="flex flex-col sm:flex-row items-center sm:items-center justify-center sm:justify-start gap-2 mb-2">
                     <h3 className="text-primary-dark text-xl sm:text-2xl font-semibold">
-                      {doctor.name}
+                      {getDoctorPrefixText(doctorData?.doctorPrefix ?? 0)} {doctorData?.fullName}
                     </h3>
-                    {doctor.isVerified && (
+                    {doctorData?.pmdcVerifiedAt && (
                       <BadgeCheck className="w-5 h-5 text-primary" />
                     )}
                   </div>
 
                   {/* Specialization */}
                   <p className="text-base sm:text-lg text-gray-700">
-                    {doctor.specialization}
+                    {getSpecializationText(doctorData?.specialization ?? 0)}
                   </p>
 
                   {/* Qualification */}
-                  <p className="text-sm sm:text-base text-gray-600 mb-3">
-                    {doctor.qualification.join(", ")}
-                  </p>
+                  {/* <p className="text-sm sm:text-base text-gray-600 mb-3">
+                    {doctorData?.qualification.join(", ")}
+                  </p> */}
 
                   {/* Stats */}
                   <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-6 mt-2">
@@ -151,7 +169,7 @@ const DoctorProfile = ({ }: Props) => {
                     <div className="flex items-center justify-center sm:justify-start gap-1">
                       <FileBadge className="w-4 h-4 text-primary" />
                       <span className="text-sm text-gray-600">
-                        {doctor.experience} Experience
+                        {doctorData?.yearsOfExperience} years Experience
                       </span>
                     </div>
                   </div>

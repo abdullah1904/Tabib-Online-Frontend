@@ -1,6 +1,6 @@
 "use client";
 
-import { ConsentFormData, PersonalInfoFormData, ProfessionalInfoFormData, ProfessionalVerificationFormData, VerificationFormData } from "@/lib/validation";
+import { ConsentFormData, PersonalInfoFormData, personalInfoFormSchema, ProfessionalInfoFormData, professionalInfoFormSchema, ProfessionalVerificationFormData, professionalVerificationFormSchema, VerificationFormData, verificationFormSchema } from "@/lib/validation";
 import { useState } from "react";
 import PersonalInfoStep from "./PersonalInfoStep";
 import { cn } from "@/lib/utils";
@@ -10,9 +10,14 @@ import ProfessionalInfoStep from "./ProfessionalInfoStep";
 import VerificationStep from "./VerificationStep";
 import ProfessionalVerificationStep from "./ProfessionalVerificationStep";
 import ConsentStep from "./ConsentStep";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { signUp } from "@/services/auth.service";
 
 const SignUpForm = ({ className, ...props }: React.ComponentProps<"div">) => {
-    const [currentStep, setCurrentStep] = useState(5);
+    const router = useRouter();
+    const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState<{
         personalInfoData: PersonalInfoFormData | null;
         professionalInfoData: ProfessionalInfoFormData | null;
@@ -20,11 +25,22 @@ const SignUpForm = ({ className, ...props }: React.ComponentProps<"div">) => {
         verificationData: VerificationFormData | null;
         consentData: ConsentFormData | null;
     }>({
-        personalInfoData: null, 
-        professionalInfoData: null, 
+        personalInfoData: null,
+        professionalInfoData: null,
         professionalVerificationData: null,
         verificationData: null,
         consentData: null,
+    });
+
+    const { mutate, isPending } = useMutation({
+        mutationFn: signUp,
+        onSuccess: () => {
+            toast.success("Sign Up successful! Please verify your email.");
+            router.push(`/verify-account?email=${formData.personalInfoData?.email}`);
+        },
+        onError: (error) => {
+            toast.error(error.message || "Sign Up failed. Please try again.");
+        }
     });
 
     const onPersonalInfoSubmit = async (data: PersonalInfoFormData): Promise<void> => {
@@ -64,7 +80,53 @@ const SignUpForm = ({ className, ...props }: React.ComponentProps<"div">) => {
             ...prev,
             consentData: data,
         }));
-        setCurrentStep(5);
+        const personalInfoDataResult = personalInfoFormSchema.safeParse(formData.personalInfoData);
+        const professionalInfoDataResult = professionalInfoFormSchema.safeParse(formData.professionalInfoData);
+        const professionalVerificationDataResult = professionalVerificationFormSchema.safeParse(formData.professionalVerificationData);
+        const verificationDataResult = verificationFormSchema.safeParse(formData.verificationData);
+        if (!personalInfoDataResult.success) {
+            toast.error("Invalid personal information data. Please review your inputs.");
+            setCurrentStep(1);
+            return;
+        }
+        if (!professionalInfoDataResult.success) {
+            toast.error("Invalid professional information data. Please review your inputs.");
+            setCurrentStep(2);
+            return;
+        }
+        if (!professionalVerificationDataResult.success) {
+            toast.error("Invalid professional verification data. Please review your inputs.");
+            setCurrentStep(3);
+            return;
+        }
+        if (!verificationDataResult.success) {
+            toast.error("Invalid verification data. Please review your inputs.");
+            setCurrentStep(4);
+            return;
+        }
+        const doctorData = new FormData();
+        doctorData.append('fullName', formData.personalInfoData?.fullName || '');
+        doctorData.append('age', String(formData.personalInfoData?.age || 0));
+        doctorData.append('gender', String(formData.personalInfoData?.gender || 0));
+        doctorData.append('email', formData.personalInfoData?.email || '');
+        doctorData.append('phone', formData.personalInfoData?.phoneNumber || '');
+        doctorData.append('address', formData.personalInfoData?.address || '');
+        doctorData.append('pmdcRedgNo', formData.professionalInfoData?.pmdcRedgNo || '');
+        doctorData.append('pmdcRedgDate', formData.professionalInfoData?.pmdcRedgDate?.toISOString() || '');
+        doctorData.append('medicalDegree', String(formData.professionalInfoData?.medicalDegree || 0));
+        doctorData.append('postGraduateDegree', String(formData.professionalInfoData?.postgraduateDegree || 0));
+        doctorData.append('specialization', String(formData.professionalInfoData?.specialization || 0));
+        doctorData.append('yearsOfExperience', String(formData.professionalInfoData?.yearsOfExperience || 0));
+        doctorData.append('image1', formData.professionalVerificationData?.pmdcLicenseDocument || '');
+        doctorData.append('verificationDocumentType', String(formData.verificationData?.verificationType || 0));
+        doctorData.append('verificationDocumentNumber', formData.verificationData?.verificationNumber || '');
+        doctorData.append('image2', formData.verificationData?.verificationDocument || '');
+        doctorData.append('password', data.password);
+        doctorData.append('authenticInformationConsent', data.authenticInformationConsent ? 'true' : 'false');
+        doctorData.append('licenseVerificationConsent', data.licenseVerificationConsent ? 'true' : 'false');
+        doctorData.append('termsAgreementConsent', data.termsAgreementConsent ? 'true' : 'false');
+        doctorData.append('dataUsageConsentConsent', data.dataUsageConsent ? 'true' : 'false');
+        mutate(doctorData);
     };
 
     const goBack = () => {
@@ -100,7 +162,7 @@ const SignUpForm = ({ className, ...props }: React.ComponentProps<"div">) => {
                 return <ConsentStep
                     onSubmit={onConsentSubmit}
                     formData={formData.consentData}
-                    isLoading={false}
+                    isLoading={isPending}
                 />;
             default:
                 return <PersonalInfoStep

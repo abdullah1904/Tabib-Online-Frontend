@@ -163,7 +163,7 @@ const ConsentStep = ({ formData, isLoading, onSubmit }: ConsentStepProps) => {
                         <span className="text-sm">
                             Already have an account?{" "}
                             <Link
-                                href="/signup"
+                                href="/signin"
                                 className="ml-auto text-sm underline-offset-2 hover:underline"
                             >
                                 Sign In

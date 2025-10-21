@@ -2,7 +2,6 @@
 
 import { SignInFormData, signInFormSchema } from "@/lib/validation";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,11 +13,12 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/ui/password-input";
+import { useMutation } from "@tanstack/react-query";
+import { signIn } from "next-auth/react";
 
 
 const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
 
     const form = useForm<SignInFormData>({
         resolver: zodResolver(signInFormSchema),
@@ -29,19 +29,35 @@ const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
         }
     });
 
-    const onSubmit = async (data: SignInFormData) => {
-        setIsLoading(true);
-        try {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            console.log("Login successful!", data);
+    const { mutate, isPending } = useMutation({
+        mutationFn: async (data: SignInFormData) => {
+            try {
+                const res = await signIn("credentials", {
+                    email: data.email,
+                    password: data.password,
+                    redirect: false,
+                });
+                if (res?.ok) {
+                    return res;
+                } else {
+                    throw new Error(res?.error || "Invalid credentials");
+                }
+            }
+            catch (error) {
+                throw error;
+            }
+        },
+        onSuccess: () => {
             toast.success("Login successful!");
             router.push("/");
-        } catch (error) {
-            console.error("Login failed:", error);
-            toast.error("Login failed. Please try again.");
-        } finally {
-            setIsLoading(false);
+        },
+        onError: (error) => {
+            toast.error(error?.message || "Invalid credentials");
         }
+    })
+
+    const onSubmit = async (data: SignInFormData) => {
+        mutate(data);
     };
     return (
         <div className="flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
@@ -97,8 +113,8 @@ const SignInForm = ({ className, ...props }: React.ComponentProps<"div">) => {
                                             </div>
                                         </div>
                                         <div className="grid grid-cols-1 gap-3">
-                                            <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
-                                                {isLoading ? "Loading..." : "Login"}
+                                            <Button type="submit" className="w-full cursor-pointer" disabled={isPending}>
+                                                {isPending ? "Loading..." : "Login"}
                                             </Button>
                                             <div className="text-center mt-2">
                                                 <span className="text-sm">

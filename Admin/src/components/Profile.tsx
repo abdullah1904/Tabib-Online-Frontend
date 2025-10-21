@@ -224,7 +224,6 @@ const ChangePasswordCard = () => {
         onSuccess: () => {
             changePasswordForm.reset();
             toast.success("Password changed successfully!");
-            signOut();
         },
         onError: (error) => {
             toast.error(error.message || "Failed to change password");

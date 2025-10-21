@@ -8,7 +8,7 @@ type Props = {
 const DoctorPage = async ({ params }: Props) => {
   const { id } = await params;
   return (
-    <DoctorProfile userId={id} />
+    <DoctorProfile doctorId={id} />
   )
 }
 
