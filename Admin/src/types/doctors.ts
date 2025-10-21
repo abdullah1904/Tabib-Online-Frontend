@@ -25,6 +25,8 @@ export interface Doctor {
     termsAgreementConsent: boolean
     dataUsageConsentConsent: boolean
     status: AccountStatus;
+    pmdcVerifiedAt: Date | null;
+    doctorPrefix: number;
     verifiedAt?: Date | null;
     createdAt: Date;
     updatedAt: Date;

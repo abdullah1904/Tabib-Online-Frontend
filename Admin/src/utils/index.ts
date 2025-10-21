@@ -1,42 +1,87 @@
 const getAvatarFallbackText = (name: string | undefined, count = 1) => {
-    if (!name) return '';
-    const names = name.trim().split(' ').filter(Boolean);
-    const initials = names.slice(0, count).map(n => n.charAt(0).toUpperCase()).join('');
-    return initials;
+  if (!name) return '';
+  const names = name.trim().split(' ').filter(Boolean);
+  const initials = names.slice(0, count).map(n => n.charAt(0).toUpperCase()).join('');
+  return initials;
 }
 
-const getGenderText = (gender: number)=>{
-    switch (gender) {
-        case 1:
-            return "Male";
-        case 2:
-            return "Female";
-    }
+const getGenderText = (gender: number) => {
+  switch (gender) {
+    case 1:
+      return "Male";
+    case 2:
+      return "Female";
+  }
 }
 
 const getAccountStatusText = (status: number) => {
-    switch (status) {
-        case 0:
-            return "Pending";
-        case 1:
-            return "Active";
-        case 2:
-            return "Suspended";
-        case 3:
-            return "Banned";
+  switch (status) {
+    case 0:
+      return "Pending";
+    case 1:
+      return "Active";
+    case 2:
+      return "Suspended";
+    case 3:
+      return "Banned";
 
-    }
+  }
 }
 
 const getVerificationDocumentTypeText = (type: number) => {
-    switch (type) {
-        case 1:
-            return "National ID Card";
-        case 2:
-            return "Passport";
-        case 3:
-            return "Other Govt ID";
-    }
+  switch (type) {
+    case 1:
+      return "National ID Card";
+    case 2:
+      return "Passport";
+    case 3:
+      return "Other Govt ID";
+  }
+}
+
+
+const getMedicalDegreeText = (degree: number) => {
+  switch (degree) {
+    case 1:
+      return "MBBS";
+    case 2:
+      return "BDS";
+    case 3:
+      return "DVM";
+    case 4:
+      return "Pharm-D";
+    case 5:
+      return "DPT";
+    case 6:
+      return "BEMS";
+    case 7:
+      return "BUMS";
+    case 8:
+      return "DHMS";
+  }
+}
+
+const getPostGraduateDegreeText = (degree: number) => {
+  switch (degree) {
+    case 0:
+      return "None";
+    case 1:
+      return "FCPS";  
+    case 2:
+      return "MCPS";
+    case 3:
+      return "MD";
+    case 4:
+      return "MS";
+    case 5:
+      return "MDS";
+    case 6:
+      return "MPhil";
+    case 7:
+      return "MPH";
+    case 8:
+      return "PhD";
+  }
 }
 
 const getSpecializationText = (value: number) => {
@@ -181,10 +226,46 @@ const getSpecializationText = (value: number) => {
   }
 };
 
+const getDoctorPrefixText = (value: number) => {
+  switch (value) {
+    case 1:
+      return "Dr.";
+    case 2:
+      return "Prof.";
+    case 3:
+      return "Prof. Dr.";
+    case 4:
+      return "Mr. Dr.";
+    case 5:
+      return "Ms. Dr.";
+    case 6:
+      return "Mrs. Dr.";
+    case 7:
+      return "Mx. Dr.";
+    case 8:
+      return "Assoc. Prof.";
+    case 9:
+      return "Asst. Prof.";
+    case 10:
+      return "Assoc. Prof. Dr.";
+    case 11:
+      return "Asst. Prof. Dr.";
+    case 12:
+      return "Rev. Dr.";
+    case 13:
+      return "Consultant";
+    case 14:
+      return "Surgeon";
+  }
+}
+
 export {
-    getAvatarFallbackText,
-    getAccountStatusText,
-    getGenderText,
-    getVerificationDocumentTypeText,
-    getSpecializationText
+  getAvatarFallbackText,
+  getAccountStatusText,
+  getGenderText,
+  getVerificationDocumentTypeText,
+  getMedicalDegreeText,
+  getPostGraduateDegreeText,
+  getSpecializationText,
+  getDoctorPrefixText
 }

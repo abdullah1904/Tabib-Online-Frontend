@@ -21,7 +21,7 @@ import { useState } from "react"
 import { useDebounce } from "use-debounce"
 import { activateDoctor, banDoctor, listDoctors, suspendDoctor } from "@/services/doctors.service"
 import { Spinner } from "../ui/spinner"
-import { getAccountStatusText, getAvatarFallbackText, getSpecializationText } from "@/utils"
+import { getAccountStatusText, getAvatarFallbackText, getDoctorPrefixText, getSpecializationText } from "@/utils"
 import { Badge } from "../ui/badge"
 import { AccountStatus } from "@/utils/constants"
 
@@ -154,7 +154,7 @@ const DoctorsTable = () => {
                                                 {getAvatarFallbackText(doctor.fullName)}
                                             </AvatarFallback>
                                         </Avatar>
-                                        {doctor.fullName}
+                                        {getDoctorPrefixText(doctor.doctorPrefix)} {doctor.fullName}
                                         <Tooltip>
                                             <TooltipTrigger className="sm:hidden">
                                                 <Info className="size-4" />
