@@ -4,15 +4,16 @@ import Link from "next/link"
 import { Star, BadgeCheck } from "lucide-react"
 
 type DoctorCardProps = {
-    id: string;
-    name: string;
-    designation: string;
+    id: number;
+    doctorPrefix: string;
+    fullName: string;
+    specialization: string;
     rating: number;
     isVerified: boolean;
-    image?: string;
+    image: string | null;
 }
 
-const DoctorCard = ({name, designation, image, rating, isVerified, id}:DoctorCardProps) => {
+const DoctorCard = ({doctorPrefix,fullName, specialization, image, rating, isVerified, id}:DoctorCardProps) => {
     const renderStars = () => {
         const stars = [];
         const fullStars = Math.floor(rating);
@@ -52,7 +53,7 @@ const DoctorCard = ({name, designation, image, rating, isVerified, id}:DoctorCar
             <CardBody>
                 <div className="relative inline-block mx-auto">
                     <Image
-                        src={`/assets/${image}`}
+                        src={image ?? `/assets/Doctor1.png`}
                         alt="Doctor"
                         width={100}
                         height={100}
@@ -61,7 +62,7 @@ const DoctorCard = ({name, designation, image, rating, isVerified, id}:DoctorCar
                 </div>
                 
                 <div className="flex items-center justify-center gap-1">
-                    <h3 className="text-primary-dark text-lg font-semibold text-center">{name}</h3>
+                    <h3 className="text-primary-dark text-lg font-semibold text-center">{doctorPrefix} {fullName}</h3>
                     {/* Alternative verification tick next to name */}
                     {isVerified && (
                         <BadgeCheck className="w-5 h-5 text-primary" />
@@ -69,7 +70,7 @@ const DoctorCard = ({name, designation, image, rating, isVerified, id}:DoctorCar
                 </div>
                 
                 <p className="text-primary text-center mb-2">
-                    {designation}
+                    {specialization}
                 </p>
                 
                 {/* Rating Section */}

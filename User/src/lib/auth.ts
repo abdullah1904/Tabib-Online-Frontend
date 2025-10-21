@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
-import { AccountStatus, Gender, UserVerificationDocumentType } from "@/utils/constants";
+import { AccountStatus, Gender, VerificationDocumentType } from "@/utils/constants";
 
 interface User {
     id: number;
@@ -14,7 +14,7 @@ interface User {
     phoneNumber: string;
     emergencyContactNumber: string;
     emergencyContactName: string;
-    verificationDocumentType: UserVerificationDocumentType;
+    verificationDocumentType: VerificationDocumentType;
     verificationDocumentNumber: string;
     verificationDocumentURL: string;
     status: AccountStatus;
@@ -55,8 +55,8 @@ export const authOptions: NextAuthOptions = {
                             verificationDocumentURL: data.user.verificationDocumentURL,
                             status: data.user.status,
                             verifiedAt: data.user.verifiedAt,
-                            accessToken: data.accessToken,
-                            refreshToken: data.refreshToken,
+                            accessToken: data.user.accessToken,
+                            refreshToken: data.user.refreshToken,
                         }
                     }
                     return null;

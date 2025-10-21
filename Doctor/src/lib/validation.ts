@@ -1,4 +1,4 @@
-import { GenderOptions, MedicalDegreeOptions, PostGraduateDegreeOptions, SpecializationOptions, VerificationDocumentOptions } from "@/utils/constants";
+import { DoctorPrefixOptions, GenderOptions, MedicalDegreeOptions, PostGraduateDegreeOptions, SpecializationOptions, VerificationDocumentOptions } from "@/utils/constants";
 import { z } from "zod";
 
 export const signInFormSchema = z.object({
@@ -173,3 +173,64 @@ export const resetPasswordFormSchema = z.object({
 });
 
 export type ResetPasswordFormData = z.infer<typeof resetPasswordFormSchema>;
+
+export const changePasswordFormSchema = z.object({
+    currentPassword: z.string()
+        .min(1, "Password is required")
+        .min(8, "Password must be at least 8 characters long")
+        .regex(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+            "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+        ),
+    newPassword: z.string()
+        .min(1, "Password is required")
+        .min(8, "Password must be at least 8 characters long")
+        .regex(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+            "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+        )
+});
+
+export type ChangePasswordFormData = z.infer<typeof changePasswordFormSchema>;
+
+export const updatePersonalProfileFormSchema = z.object({
+    profilePicture: z
+        .instanceof(File)
+        .optional()
+        .refine(
+            (file) => !file || file.size <= 5 * 1024 * 1024,
+            'File size must be less than 5MB'
+        )
+        .refine(
+            (file) => !file || ['image/jpeg', 'image/png', 'image/heic', 'image/heif'].includes(file.type),
+            'Only JPEG, PNG, HEIC, and HEIF images are allowed'
+        ),
+    fullName: z
+        .string("Full name is required")
+        .min(2, "Full name must be at least 2 characters long")
+        .max(100, "Full name must be less than or equal to 100 characters"),
+    age: z
+        .number("Age is required")
+        .min(0, "Age must be a positive number")
+        .max(120, "Age must be less than or equal to 120"),
+    gender: z.enum(GenderOptions.map(option => String(option.value)) as [string, ...string[]], { message: 'Gender is required' }),
+    address: z
+        .string("Address is required")
+        .min(5, "Address must be at least 5 characters long")
+        .max(200, "Address must be less than or equal to 200 characters"),
+});
+
+export type UpdatePersonalProfileFormData = z.infer<typeof updatePersonalProfileFormSchema>;
+
+export const updateProfessionalProfileFormSchema = z.object({
+    medicalDegree: z.enum(MedicalDegreeOptions.map(option => String(option.value)) as [string, ...string[]], { message: 'Medical Degree is required' }),
+    postGraduateDegree: z.enum(PostGraduateDegreeOptions.map(option => String(option.value)) as [string, ...string[]], { message: 'Postgraduate Degree is required' }),
+    specialization: z.enum(SpecializationOptions.map(option => String(option.value)) as [string, ...string[]], { message: 'Specialization is required' }),
+    yearsOfExperience: z
+        .number("Years of Experience is required")
+        .min(0, "Years of Experience must be a positive number")
+        .max(60, "Years of Experience must be less than or equal to 60"),
+    doctorPrefix: z.enum(DoctorPrefixOptions.map(option => String(option.value)) as [string, ...string[]], { message: 'Doctor Prefix is required' }),
+});
+
+export type UpdateProfessionalProfileFormData = z.infer<typeof updateProfessionalProfileFormSchema>;

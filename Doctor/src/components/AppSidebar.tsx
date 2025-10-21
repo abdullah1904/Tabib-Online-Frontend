@@ -23,7 +23,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { signOut, useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { getAvatarFallbackText } from "@/utils";
+import { getAvatarFallbackText, getDoctorPrefixText } from "@/utils";
 const data = {
     navMain: [
         {
@@ -117,7 +117,7 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                                         <AvatarFallback className="rounded-lg">{getAvatarFallbackText(session?.user.fullName)}</AvatarFallback>
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
-                                        <span className="truncate font-medium">{session?.user.fullName}</span>
+                                        <span className="truncate font-medium">{getDoctorPrefixText(session?.user.doctorPrefix ?? 0)} {session?.user.fullName}</span>
                                         <span className="truncate text-xs">{session?.user.email}</span>
                                     </div>
                                     <ChevronsUpDown className="ml-auto size-4" />
@@ -136,7 +136,7 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                                             <AvatarFallback className="rounded-lg">{getAvatarFallbackText(session?.user.fullName)}</AvatarFallback>
                                         </Avatar>
                                         <div className="grid flex-1 text-left text-sm leading-tight">
-                                            <span className="truncate font-medium">{session?.user.fullName}</span>
+                                            <span className="truncate font-medium">{getDoctorPrefixText(session?.user.doctorPrefix ?? 0)} {session?.user.fullName}</span>
                                             <span className="truncate text-xs">{session?.user.email}</span>
                                         </div>
                                     </div>

@@ -27,6 +27,7 @@ export const generateRequest = async ({ method, url, data, isFormData = false, i
             ...(isProtected && session?.user.accessToken ? { Authorization: `Bearer ${session?.user.accessToken}` } : {}),
         },
     };
+    console.log(session);
     try {
         let response;
         switch (method) {

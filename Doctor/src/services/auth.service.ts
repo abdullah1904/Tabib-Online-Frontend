@@ -45,3 +45,13 @@ export const resetPassword = async (data: { email: string, otp: string, newPassw
     })
     return response;
 }
+
+export const changePassword = async (data: { currentPassword: string, newPassword: string }) => {
+    const response = await generateRequest({
+        method: "PUT",
+        url: "/auth/change-password",
+        data,
+        isProtected: true
+    });
+    return response;
+}

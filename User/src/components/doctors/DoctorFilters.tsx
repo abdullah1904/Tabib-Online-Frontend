@@ -63,6 +63,7 @@ const DoctorFilters = () => {
 
     return (
         <Card className='flex-1 w-full shadow-lg rounded-lg p-2'>
+            <CardBody className='text-primary flex flex-col gap-4'>
             <Accordion selectedKeys={selectedKeys} onSelectionChange={setSelectedKeys}>
                 <AccordionItem
                     key='filters'
@@ -75,7 +76,6 @@ const DoctorFilters = () => {
                     startContent={<Filter className="text-primary" />}
                     isCompact={true}
                 >
-                    <CardBody className='text-primary flex flex-col gap-4'>
                         <div>
                             <Input
                                 label='Search Doctors'
@@ -140,7 +140,6 @@ const DoctorFilters = () => {
                                 ))}
                             </Select>
                         </div>
-                    </CardBody>
                     <Divider className="w-[90%] mx-auto bg-primary" />
                     <CardFooter className='flex justify-end p-4'>
                         <Button color="primary" className='w-full'>
@@ -149,6 +148,7 @@ const DoctorFilters = () => {
                     </CardFooter>
                 </AccordionItem>
             </Accordion>
+                    </CardBody>
         </Card>
     )
 }

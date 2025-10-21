@@ -1,22 +1,30 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
-import { AccountStatus, Gender, VerificationDocumentType } from "@/utils/constants";
+import { AccountStatus, Gender, MedicalDegree, PostGraduateDegree, Specialization, VerificationDocumentType } from "@/utils/constants";
 
 interface User {
     id: number;
-    imageURL?: string | null;
+    imageURL?: string;
     fullName: string;
     age: number;
     gender: Gender;
     email: string;
     address: string;
     phoneNumber: string;
+    pmdcRedgNo: string;
+    pmdcRedgDate: Date;
+    medicalDegree: MedicalDegree;
+    postGraduateDegree: PostGraduateDegree;
+    specialization: Specialization;
+    yearsOfExperience: number;
+    pmdcLicenseDocumentURL: string,
     verificationDocumentType: VerificationDocumentType;
     verificationDocumentNumber: string;
     verificationDocumentURL: string;
     status: AccountStatus;
     pmdcVerifiedAt?: Date | null;
+    doctorPrefix: number;
     verifiedAt?: Date | null;
     accessToken: string;
     refreshToken: string;
@@ -47,10 +55,19 @@ export const authOptions: NextAuthOptions = {
                             email: data.doctor.email,
                             address: data.doctor.address,
                             phoneNumber: data.doctor.phoneNumber,
+                            pmdcRedgNo: data.doctor.pmdcRedgNo,
+                            pmdcRedgDate: data.doctor.pmdcRedgDate,
+                            medicalDegree: data.doctor.medicalDegree,
+                            postGraduateDegree: data.doctor.postGraduateDegree,
+                            specialization: data.doctor.specialization,
+                            yearsOfExperience: data.doctor.yearsOfExperience,
+                            pmdcLicenseDocumentURL: data.doctor.pmdcLicenseDocumentURL,
                             verificationDocumentType: data.doctor.verificationDocumentType,
                             verificationDocumentNumber: data.doctor.verificationDocumentNumber,
                             verificationDocumentURL: data.doctor.verificationDocumentURL,
                             status: data.doctor.status,
+                            pmdcVerifiedAt: data.doctor.pmdcVerifiedAt,
+                            doctorPrefix: data.doctor.doctorPrefix,
                             verifiedAt: data.doctor.verifiedAt,
                             accessToken: data.doctor.accessToken,
                             refreshToken: data.doctor.refreshToken,
@@ -68,9 +85,12 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     callbacks: {
-        jwt: async ({ token, user }) => {
+        jwt: async ({ token, user, trigger, session }) => {
             if (user) {
                 token = { ...token, ...(user as User) };
+            }
+            if (trigger === "update" && session) {
+                token = { ...token, ...session };
             }
             return token;
         },
