@@ -5,10 +5,14 @@ import React from 'react'
 import { Spinner } from '../ui/spinner';
 import { Card, CardContent, CardHeader } from '../ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { getAccountStatusText, getAvatarFallbackText } from '@/utils';
+import { getAccountStatusText, getAvatarFallbackText, getDoctorPrefixText, getGenderText, getMedicalDegreeText, getPostGraduateDegreeText, getSpecializationText, getVerificationDocumentTypeText } from '@/utils';
 import { Badge } from '../ui/badge';
 import { AccountStatus } from '@/utils/constants';
-import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Separator } from '../ui/separator';
+import { Label } from '../ui/label';
+import Image from 'next/image';
+import {formatDate} from "date-fns"
 
 type Props = {
     id: string;
@@ -56,7 +60,7 @@ const DoctorInfo = ({ id }: Props) => {
                         </Avatar>
                         <div className="text-center sm:text-left space-y-1">
                             <div className="flex gap-2">
-                                <h2 className="text-2xl font-semibold">{doctorData.fullName}</h2>
+                                <h2 className="text-2xl font-semibold">{getDoctorPrefixText(doctorData.doctorPrefix)} {doctorData.fullName}</h2>
                                 <Badge variant={doctorData.status === AccountStatus.BANNED ? 'destructive' : 'default'}>
                                     {getAccountStatusText(doctorData.status)}
                                 </Badge>
@@ -73,6 +77,121 @@ const DoctorInfo = ({ id }: Props) => {
                             <TabsTrigger value="profession">Professional Info</TabsTrigger>
                             <TabsTrigger value="appointments">Appointments Info</TabsTrigger>
                         </TabsList>
+                        <TabsContent value="profile" className="space-y-6">
+                            <Separator />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+                                <div>
+                                    <Label className="text-sm text-muted-foreground">Full Name</Label>
+                                    <div className="text-base font-medium">{doctorData.fullName}</div>
+                                </div>
+
+                                <div>
+                                    <Label className="text-sm text-muted-foreground">Age</Label>
+                                    <div className="text-base font-medium">{doctorData.age}</div>
+                                </div>
+
+                                <div>
+                                    <Label className="text-sm text-muted-foreground">Gender</Label>
+                                    <div className="text-base font-medium capitalize">{getGenderText(doctorData.gender)}</div>
+                                </div>
+
+                                <div>
+                                    <Label className="text-sm text-muted-foreground">Email</Label>
+                                    <div className="text-base font-medium">{doctorData.email}</div>
+                                </div>
+
+                                <div>
+                                    <Label className="text-sm text-muted-foreground">Phone Number</Label>
+                                    <div className="text-base font-medium">{doctorData.phoneNumber}</div>
+                                </div>
+
+                                <div>
+                                    <Label className="text-sm text-muted-foreground">Address</Label>
+                                    <div className="text-base font-medium">{doctorData.address}</div>
+                                </div>
+
+                                <div>
+                                    <Label className="text-sm text-muted-foreground">Verification Document Type</Label>
+                                    <div className="text-base font-medium">
+                                        {getVerificationDocumentTypeText(doctorData.verificationDocumentType)}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <Label className="text-sm text-muted-foreground">Verification Document Number</Label>
+                                    <div className="text-base font-medium">
+                                        {doctorData.verificationDocumentNumber}
+                                    </div>
+                                </div>
+
+                                <div className="sm:col-span-2">
+                                    <Label className="text-sm text-muted-foreground">Verification Document</Label>
+                                    <div className="text-base font-medium flex justify-center items-center p-4">
+                                        {doctorData.verificationDocumentURL ? (
+                                            <Image
+                                                src={`${doctorData.verificationDocumentURL}`}
+                                                alt="Verification Document"
+                                                width={200}
+                                                height={150}
+                                                className="w-96 h-auto rounded-md border"
+                                            />
+                                        ) : (
+                                            <div>No Verification Document Available</div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="profession" className="space-y-6">
+                            <Separator />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+                                <div>
+                                    <Label className="text-sm text-muted-foreground">PMDC Redg. No.</Label>
+                                    <div className="text-base font-medium">{doctorData.pmdcRedgNo}</div>
+                                </div>
+
+                                <div>
+                                    <Label className="text-sm text-muted-foreground">PMDC Redg. Date</Label>
+                                    <div className="text-base font-medium">{formatDate(doctorData.pmdcRedgDate, "dd/MM/yyyy")}</div>
+                                </div>
+
+                                <div>
+                                    <Label className="text-sm text-muted-foreground">Medical Degree</Label>
+                                    <div className="text-base font-medium">{getMedicalDegreeText(doctorData.medicalDegree)}</div>
+                                </div>
+
+                                <div>
+                                    <Label className="text-sm text-muted-foreground">Postgraduate Degree</Label>
+                                    <div className="text-base font-medium">{getPostGraduateDegreeText(doctorData.postGraduateDegree)}</div>
+                                </div>
+
+                                <div>
+                                    <Label className="text-sm text-muted-foreground">Specialization</Label>
+                                    <div className="text-base font-medium">{getSpecializationText(doctorData.specialization)}</div>
+                                </div>
+
+                                <div>
+                                    <Label className="text-sm text-muted-foreground">Years of Experience</Label>
+                                    <div className="text-base font-medium">{doctorData.yearsOfExperience}</div>
+                                </div>
+                                <div className="sm:col-span-2">
+                                    <Label className="text-sm text-muted-foreground">PMDC License Document</Label>
+                                    <div className="text-base font-medium flex justify-center items-center p-4">
+                                        {doctorData.pmdcLicenseDocumentURL ? (
+                                            <Image
+                                                src={`${doctorData.pmdcLicenseDocumentURL}`}
+                                                alt="PMDC License Document"
+                                                width={200}
+                                                height={150}
+                                                className="w-96 h-auto rounded-md border"
+                                            />
+                                        ) : (
+                                            <div>No PMDC License Document Available</div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </TabsContent>
                     </Tabs>
                 </CardContent>
             </Card>

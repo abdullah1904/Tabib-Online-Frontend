@@ -132,3 +132,20 @@ export enum Specialization {
     SleepMedicineSpecialist = 57,
     SexualHealthSpecialist = 58
 }
+
+export enum DoctorPrefix {
+  Dr = 1,
+  Prof = 2,
+  ProfDr = 3,
+  MrDr = 4,
+  MsDr = 5,
+  MrsDr = 6,
+  MxDr = 7,
+  AssocProf = 8,
+  AsstProf = 9,
+  AssocProfDr = 10,
+  AsstProfDr = 11,
+  RevDr = 12,
+  Consultant = 13,
+  Surgeon = 14,
+}
