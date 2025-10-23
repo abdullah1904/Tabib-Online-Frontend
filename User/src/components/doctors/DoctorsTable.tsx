@@ -47,7 +47,7 @@ const DoctorsTable = () => {
               fullName={doctor.fullName}
               specialization={getSpecializationText(doctor.specialization)!}
               image={doctor.imageURL!}
-              rating={3}
+              ratings={doctor.ratings}
               isVerified={doctor.pmdcVerifiedAt !== null}
             />
           ))}

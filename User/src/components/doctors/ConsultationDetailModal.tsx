@@ -2,19 +2,19 @@ import { Button, Checkbox, DatePicker, Modal, ModalBody, ModalContent, ModalFoot
 import React from 'react'
 
 type Props = {
-    showModel: string,
-    setShowModel: (value: null) => void
+    showModal: string,
+    setShowModal: (value: null) => void
     consultationType: string | null
     setConsultationType: (type: string | null) => void
 }
 
-const ConsultationDetailModel = ({ showModel, setShowModel, consultationType, setConsultationType }: Props) => {
+const ConsultationDetailModal = ({ showModal, setShowModal, consultationType, setConsultationType }: Props) => {
     const handleClose = () => {
-        setShowModel(null)
+        setShowModal(null)
         setConsultationType(null);
     }
     return (
-        <Modal isOpen={!!showModel} onClose={handleClose} size='lg' placement='center'>
+        <Modal isOpen={!!showModal} onClose={handleClose} size='lg' placement='center'>
             <ModalContent>
                 <ModalHeader className="border-b pb-3">
                     <h2 className="text-xl font-semibold text-primary-dark">
@@ -163,4 +163,4 @@ const ConsultationDetailModel = ({ showModel, setShowModel, consultationType, se
     )
 }
 
-export default ConsultationDetailModel
+export default ConsultationDetailModal

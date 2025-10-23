@@ -8,16 +8,16 @@ type DoctorCardProps = {
     doctorPrefix: string;
     fullName: string;
     specialization: string;
-    rating: number;
+    ratings: number;
     isVerified: boolean;
     image: string | null;
 }
 
-const DoctorCard = ({doctorPrefix,fullName, specialization, image, rating, isVerified, id}:DoctorCardProps) => {
+const DoctorCard = ({doctorPrefix,fullName, specialization, image, ratings, isVerified, id}:DoctorCardProps) => {
     const renderStars = () => {
         const stars = [];
-        const fullStars = Math.floor(rating);
-        const hasHalfStar = rating % 1 !== 0;
+        const fullStars = Math.floor(ratings);
+        const hasHalfStar = ratings % 1 !== 0;
         
         // Render full stars
         for (let i = 0; i < fullStars; i++) {
@@ -38,7 +38,7 @@ const DoctorCard = ({doctorPrefix,fullName, specialization, image, rating, isVer
         }
         
         // Render empty stars
-        const emptyStars = 5 - Math.ceil(rating);
+        const emptyStars = 5 - Math.ceil(ratings);
         for (let i = 0; i < emptyStars; i++) {
             stars.push(
                 <Star key={`empty-${i}`} className="w-4 h-4 text-gray-300" />
@@ -77,7 +77,7 @@ const DoctorCard = ({doctorPrefix,fullName, specialization, image, rating, isVer
                 <div className="flex items-center justify-center gap-1 mb-2">
                     {renderStars()}
                     <span className="text-sm text-gray-600 ml-1">
-                        ({rating.toFixed(1)})
+                        ({ratings.toFixed(1)})
                     </span>
                 </div>
             </CardBody>

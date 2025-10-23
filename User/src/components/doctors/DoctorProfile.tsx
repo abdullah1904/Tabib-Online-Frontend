@@ -3,54 +3,27 @@ import { Button, Card, CardBody, CardHeader, Spinner } from '@heroui/react'
 import { BadgeCheck, FileBadge, Hospital, MessageCircle, Phone, Star, Video, } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react'
-import ConsultationDetailModel from './ConsultationDetailModel';
+import ConsultationDetailModel from './ConsultationDetailModal';
 import { useQuery } from '@tanstack/react-query';
 import { getDoctor } from '@/services/doctors.service';
 import { getDoctorPrefixText, getSpecializationText } from '@/utils';
+import {formatDate} from 'date-fns';
+import ReviewModal from './ReviewModal';
 
 type Props = {
   doctorId: string
 }
 
 const doctor = {
-  "totalReviews": 200,
-  "overAllRating": 4.8,
   "consultationType": [
     "In-person",
     "Video Call",
     "Audio Call",
   ],
-  "reviews": [
-    {
-      "username": "Ali Khan",
-      "rating": 5,
-      "comment": "Excellent consultation, very professional and helpful!",
-      "date": "2025-08-10"
-    },
-    {
-      "username": "Sara Ahmed",
-      "rating": 4,
-      "comment": "Good experience overall, but waiting time was a bit long.",
-      "date": "2025-08-15"
-    },
-    {
-      "username": "Usman Tariq",
-      "rating": 5,
-      "comment": "Doctor explained everything clearly. Highly recommended.",
-      "date": "2025-08-18"
-    },
-    {
-      "username": "Fatima Noor",
-      "rating": 3,
-      "comment": "Consultation was fine, but could be more detailed.",
-      "date": "2025-08-20"
-    }
-  ]
-
 }
 
 const DoctorProfile = ({ doctorId }: Props) => {
-  const [showModel, setShowModel] = useState<'Appointment' | 'Review' | 'Complaint' | null>(null);
+  const [showModal, setShowModal] = useState<'Appointment' | 'Review' | 'Complaint' | null>(null);
   const [selectedConsultation, setSelectedConsultation] = useState<string | null>(null);
 
   const { data: doctorData, isLoading, isError, error } = useQuery({
@@ -92,8 +65,11 @@ const DoctorProfile = ({ doctorId }: Props) => {
     return stars;
   };
   const handleConsultationClick = (type: string) => {
-    setShowModel('Appointment');
+    setShowModal('Appointment');
     setSelectedConsultation(type);
+  }
+  const handleReviewClick = () => {
+    setShowModal('Review');
   }
   if (isError) {
     return (
@@ -151,9 +127,9 @@ const DoctorProfile = ({ doctorId }: Props) => {
                   <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-6 mt-2">
                     {/* Rating */}
                     <div className="flex items-center justify-center sm:justify-start gap-1">
-                      {renderStars(doctor.overAllRating)}
+                      {renderStars(doctorData?.ratings ?? 0)}
                       <span className="text-sm text-gray-600 ml-1">
-                        ({doctor.overAllRating.toFixed(1)})
+                        ({doctorData?.ratings.toFixed(1)})
                       </span>
                     </div>
 
@@ -161,7 +137,7 @@ const DoctorProfile = ({ doctorId }: Props) => {
                     <div className="flex items-center justify-center sm:justify-start gap-1">
                       <MessageCircle className="w-4 h-4 text-primary" />
                       <span className="text-sm text-gray-600">
-                        {doctor.totalReviews} Reviews
+                        {doctorData?.reviewsCount} Reviews
                       </span>
                     </div>
 
@@ -217,7 +193,7 @@ const DoctorProfile = ({ doctorId }: Props) => {
         </Card>
         <Card className='w-full max-w-4xl lg:w-3/4 p-2'>
           <CardBody className='grid grid-cols-2 items-center gap-2'>
-            <Button className="w-full" size="md" color="primary">
+            <Button className="w-full" size="md" color="primary" onPress={handleReviewClick}>
               Give Review
             </Button>
             <Button className="w-full" size="md" color="danger" >
@@ -230,21 +206,18 @@ const DoctorProfile = ({ doctorId }: Props) => {
             <h3 className="text-primary-dark text-xl font-semibold">Reviews</h3>
           </CardHeader>
           <CardBody className="space-y-4">
-            {doctor.reviews.map((review, index) => (
+            {doctorData?.reviews.map((review, index) => (
               <div
                 key={index}
                 className="border rounded-xl p-4 shadow-sm hover:shadow-md transition"
               >
-                {/* Top Row: Username + Rating + Date */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-gray-800">{review.username}</span>
-                    <div className="flex">{renderStars(review.rating)}</div>
+                    <span className="font-semibold text-gray-800">{review.userFullName}</span>
+                    <div className="flex">{renderStars(review.ratings)}</div>
                   </div>
-                  <span className="text-xs text-gray-500">{review.date}</span>
+                  <span className="text-xs text-gray-500">{formatDate(review.createdAt, 'dd/MM/yyyy')}</span>
                 </div>
-
-                {/* Comment */}
                 <p className="text-sm text-gray-600">{review.comment}</p>
               </div>
             ))}
@@ -252,13 +225,20 @@ const DoctorProfile = ({ doctorId }: Props) => {
         </Card>
 
       </div>
-      {showModel == 'Appointment' && selectedConsultation && (
+      {showModal == 'Appointment' && selectedConsultation && (
         <ConsultationDetailModel
-          showModel={showModel}
-          setShowModel={setShowModel}
+          showModal={showModal}
+          setShowModal={setShowModal}
           consultationType={selectedConsultation}
           setConsultationType={setSelectedConsultation}
 
+        />
+      )}
+      {showModal == 'Review' && (
+        <ReviewModal
+          doctorId={doctorId}
+          showModal={showModal}
+          setShowModal={setShowModal}
         />
       )}
     </>

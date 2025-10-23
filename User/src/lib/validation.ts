@@ -172,3 +172,9 @@ export const updateProfilePersonalInfoFormSchema = z.object({
 });
 
 export type UpdateProfilePersonalInfoFormData = z.infer<typeof updateProfilePersonalInfoFormSchema>;
+
+export const reviewFormSchema = z.object({
+    comment: z.string().min(10, "Comment must be at least 10 characters long").max(500, "Comment must be less than or equal to 500 characters long"),
+});
+
+export type ReviewFormData = z.infer<typeof reviewFormSchema>;

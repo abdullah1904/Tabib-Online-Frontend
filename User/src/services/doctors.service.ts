@@ -1,5 +1,6 @@
 import { generateRequest } from "@/lib/api-client";
 import { Doctor } from "@/types/doctors";
+import { Review } from "@/types/review";
 
 export const listDoctors = async (query: string) => {
     const response = await generateRequest({
@@ -16,5 +17,15 @@ export const getDoctor = async (doctorId: string) => {
         url: `/doctors/${doctorId}`,
         isProtected: true
     });
-    return response.doctor as Doctor;
+    return response.doctor as Doctor & { reviewsCount: number, reviews: Review[] };
+}
+
+export const doctorReview = async ({doctorId, comment}: {doctorId: string, comment: string}) => {
+    const response = await generateRequest({
+        method: "POST",
+        url: `/doctors/${doctorId}/review`,
+        isProtected: true,
+        data: { comment }
+    });
+    return response;
 }
