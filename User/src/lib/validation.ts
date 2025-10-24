@@ -178,3 +178,9 @@ export const reviewFormSchema = z.object({
 });
 
 export type ReviewFormData = z.infer<typeof reviewFormSchema>;
+
+export const chatbotFormSchema = z.object({
+    query: z.string().min(1, "Message cannot be empty").max(500, "Message must be less than or equal to 500 characters long")
+});
+
+export type ChatbotFormData = z.infer<typeof chatbotFormSchema>;
