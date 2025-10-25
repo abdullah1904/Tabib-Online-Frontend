@@ -7,7 +7,7 @@ const axiosInstance = axios.create({
     headers: {
         "Content-Type": "application/json",
     },
-    timeout: 300000,
+    timeout: 30000,
 });
 
 type GenerateRequestParams<T = unknown> = {
@@ -27,7 +27,6 @@ export const generateRequest = async ({ method, url, data, isFormData = false, i
             ...(isProtected && session?.user.accessToken ? { Authorization: `Bearer ${session?.user.accessToken}` } : {}),
         },
     };
-    console.log(session);
     try {
         let response;
         switch (method) {
@@ -49,13 +48,11 @@ export const generateRequest = async ({ method, url, data, isFormData = false, i
             default:
                 throw new Error("Invalid method");
         }
-        console.log("API Response:", response);
         return response.data;
     }
 
     catch (error: unknown) {
         console.log("API Error:", error);
-
         if (isAxiosError(error) && error.response) {
             const statusCode = error.response.status;
             const errorMessage = error.response.data?.error || error.response.data.message || "An error occurred";

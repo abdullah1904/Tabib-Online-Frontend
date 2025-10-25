@@ -27,6 +27,7 @@ export interface Doctor {
     pmdcVerifiedAt: Date | null;
     doctorPrefix: DoctorPrefix;
     status: AccountStatus;
+    ratings: number;
     verifiedAt?: Date | null;
     createdAt: Date;
     updatedAt: Date;

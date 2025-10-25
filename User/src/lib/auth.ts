@@ -71,9 +71,12 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     callbacks: {
-        jwt: async ({ token, user }) => {
+        jwt: async ({ token, user, trigger, session }) => {
             if (user) {
                 token = { ...token, ...(user as User) };
+            }
+            if (trigger === "update" && session) {
+                token = { ...token, ...session };
             }
             return token;
         },

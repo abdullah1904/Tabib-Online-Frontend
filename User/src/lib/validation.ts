@@ -120,9 +120,9 @@ export type VerifyAccountFormData = z.infer<typeof verifyAccountFormSchema>;
 // ForgetPasswordForm validation schema and types
 export const emailFormSchema = z.object({
     email: z
-    .string()
-    .min(1, "Email is required")
-    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address"),
+        .string()
+        .min(1, "Email is required")
+        .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Please enter a valid email address"),
 });
 
 // PasswordResetForm validation schema and types
@@ -145,7 +145,18 @@ export const passwordResetFormSchema = z.object({
 export type EmailFormData = z.infer<typeof emailFormSchema>;
 export type PasswordResetFormData = z.infer<typeof passwordResetFormSchema>;
 
-export const updateProfilePersonalInfoFormSchema = z.object({
+export const updatePersonalProfileFormSchema = z.object({
+    profilePicture: z
+        .instanceof(File)
+        .optional()
+        .refine(
+            (file) => !file || file.size <= 5 * 1024 * 1024,
+            'File size must be less than 5MB'
+        )
+        .refine(
+            (file) => !file || ['image/jpeg', 'image/png', 'image/heic', 'image/heif'].includes(file.type),
+            'Only JPEG, PNG, HEIC, and HEIF images are allowed'
+        ),
     fullName: z
         .string("Full name is required")
         .min(2, "Full name must be at least 2 characters long")
@@ -171,4 +182,17 @@ export const updateProfilePersonalInfoFormSchema = z.object({
         ),
 });
 
-export type UpdateProfilePersonalInfoFormData = z.infer<typeof updateProfilePersonalInfoFormSchema>;
+export type UpdatePersonalProfileFormData = z.infer<typeof updatePersonalProfileFormSchema>;
+
+
+export const reviewFormSchema = z.object({
+    comment: z.string().min(10, "Comment must be at least 10 characters long").max(500, "Comment must be less than or equal to 500 characters long"),
+});
+
+export type ReviewFormData = z.infer<typeof reviewFormSchema>;
+
+export const chatbotFormSchema = z.object({
+    query: z.string().min(1, "Message cannot be empty").max(500, "Message must be less than or equal to 500 characters long")
+});
+
+export type ChatbotFormData = z.infer<typeof chatbotFormSchema>;

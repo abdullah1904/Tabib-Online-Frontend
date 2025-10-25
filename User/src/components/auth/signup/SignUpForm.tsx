@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react";
 import PersonalInfoStep from "./PersonalInfoStep";
-import { ConsentFormData, MedicalInfoFormData, PersonalInfoFormData, VerificationFormData } from "@/lib/validation";
+import { ConsentFormData, MedicalInfoFormData, medicalInfoFormSchema, PersonalInfoFormData, personalInfoFormSchema, VerificationFormData, verificationFormSchema } from "@/lib/validation";
 import { showToast } from "@/utils";
 import MedicalInfoStep from "./MedicalInfoStep";
 import VerificationStep from "./VerificationStep";
@@ -51,6 +51,24 @@ const SignUpForm = () => {
   const onConsentSubmit = async (data: ConsentFormData) => {
     setFormData(prev => ({ ...prev, consentData: data }));
     setCurrentStep(4);
+    const personalInfoDataResult = personalInfoFormSchema.safeParse(formData.personalInfoData);
+    const medicalInfoDataResult = medicalInfoFormSchema.safeParse(formData.medicalInfoData);
+    const verificationDataResult = verificationFormSchema.safeParse(formData.verificationData);
+    if (!personalInfoDataResult.success) {
+      showToast("Invalid personal information data. Please review your inputs.","error");
+      setCurrentStep(1);
+      return;
+    }
+    if (!medicalInfoDataResult.success) {
+      showToast("Invalid medical information data. Please review your inputs.","error");
+      setCurrentStep(2);
+      return;
+    }
+    if (!verificationDataResult.success) {
+      showToast("Invalid verification data. Please review your inputs.","error");
+      setCurrentStep(3);
+      return;
+    }
     const userData = new FormData();
     userData.append('fullName', formData.personalInfoData?.fullName || '');
     userData.append('age', String(formData.personalInfoData?.age || 0));

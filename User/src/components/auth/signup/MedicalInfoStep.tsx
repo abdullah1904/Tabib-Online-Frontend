@@ -1,6 +1,7 @@
 import { MedicalInfoFormData, medicalInfoFormSchema } from '@/lib/validation';
-import { Button, Input, NumberInput, Textarea } from '@heroui/react';
+import { Button, Input, NumberInput, Textarea, Tooltip } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Info } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react'
 import { useForm } from 'react-hook-form';
@@ -111,6 +112,22 @@ const MedicalInfoStep = ({ onSubmit, formData }: MedicalInfoStepProps) => {
                             isInvalid={!!medicalInfoForm.formState.errors.knownAllergies}
                             errorMessage={medicalInfoForm.formState.errors.knownAllergies?.message}
                             minRows={2}
+                            maxRows={2}
+                            endContent={
+                                <Tooltip
+                                    content={
+                                        <div className='text-primary'>
+                                            <p>List any medications, foods, or substances that cause allergic reactions.</p>
+                                            <p>Include the type of reaction (rash, swelling, difficulty breathing) </p>
+                                            <p>to help avoid potentially dangerous interactions.</p>
+                                        </div>
+                                    }
+                                    showArrow={true}
+                                    placement='top'
+                                >
+                                    <Info className='text-primary size-4'/>
+                                </Tooltip>
+                            }
                             classNames={{
                                 base: "w-full",
                                 input: "text-base",
@@ -125,6 +142,21 @@ const MedicalInfoStep = ({ onSubmit, formData }: MedicalInfoStepProps) => {
                             isInvalid={!!medicalInfoForm.formState.errors.currentMedications}
                             errorMessage={medicalInfoForm.formState.errors.currentMedications?.message}
                             minRows={2}
+                            maxRows={2}
+                            endContent={
+                                <Tooltip
+                                    content={
+                                        <div className='text-primary'>
+                                            <p>Include all medications you&apos;re currently taking - prescription drugs, over-the-counter medicines, vitamins, and supplements.</p>
+                                            <p>This prevents harmful drug interactions and ensures safe advice.</p>
+                                        </div>
+                                    }
+                                    showArrow={true}
+                                    placement='top'
+                                >
+                                    <Info className='text-primary size-4'/>
+                                </Tooltip>
+                            }
                             classNames={{
                                 base: "w-full",
                                 input: "text-base",
@@ -139,6 +171,21 @@ const MedicalInfoStep = ({ onSubmit, formData }: MedicalInfoStepProps) => {
                             isInvalid={!!medicalInfoForm.formState.errors.familyMedicalHistory}
                             errorMessage={medicalInfoForm.formState.errors.familyMedicalHistory?.message}
                             minRows={2}
+                            maxRows={2}
+                            endContent={
+                                <Tooltip
+                                    content={
+                                        <div className='text-primary'>
+                                            <p>Note any significant health conditions that run in your family (heart disease, diabetes, cancer, etc.).</p>
+                                            <p>Genetic factors can influence your health risks and help with preventive care guidance.</p>
+                                        </div>
+                                    }
+                                    showArrow={true}
+                                    placement='top'
+                                >
+                                    <Info className='text-primary size-4'/>
+                                </Tooltip>
+                            }
                             classNames={{
                                 base: "w-full",
                                 input: "text-base",
@@ -153,6 +200,21 @@ const MedicalInfoStep = ({ onSubmit, formData }: MedicalInfoStepProps) => {
                             isInvalid={!!medicalInfoForm.formState.errors.pastMedicalHistory}
                             errorMessage={medicalInfoForm.formState.errors.pastMedicalHistory?.message}
                             minRows={2}
+                            maxRows={2}
+                            endContent={
+                                <Tooltip
+                                    content={
+                                        <div className='text-primary'>
+                                            <p>Record any previous illnesses, surgeries, or chronic conditions you&apos;ve been diagnosed with.</p>
+                                            <p>This helps provide context for your current health and guides appropriate recommendations.</p>
+                                        </div>
+                                    }
+                                    showArrow={true}
+                                    placement='top'
+                                >
+                                    <Info className='text-primary size-4'/>
+                                </Tooltip>
+                            }
                             classNames={{
                                 base: "w-full",
                                 input: "text-base",
