@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 
 export const metadata: Metadata = {
-  title: "Hospitals | Tabib Online",
+  title: "Tabib Chatbot | Tabib Online",
 };
 
 

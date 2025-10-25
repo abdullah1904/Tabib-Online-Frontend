@@ -1,6 +1,6 @@
 "use client"
 import { useRef, useEffect, useState, useMemo } from 'react';
-import { Button, Card, CardBody, Input } from "@heroui/react";
+import { Button, Card, CardBody, Textarea } from "@heroui/react";
 import { Bot, Send, User } from "lucide-react";
 import { useQuery } from '@tanstack/react-query';
 import { getChatHistory } from '@/services/chatbot.service';
@@ -14,7 +14,6 @@ import { useSession } from 'next-auth/react';
 
 const TabibBot = () => {
     const { data: session } = useSession();
-    // const queryClient = useQueryClient();
     const socketRef = useRef<Socket | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [realtimeMessages, setRealtimeMessages] = useState<Message[]>([]);
@@ -55,9 +54,8 @@ const TabibBot = () => {
             console.log("Socket connected:", socket.id);
         });
 
-        socket.on("response", (content: string) => {
+        socket.on("response", ({ content }) => {
             console.log("Received AI response:", content);
-            // Add AI message to real-time messages
             setRealtimeMessages((prev) => [
                 ...prev,
                 { role: "AIMessage", content }
@@ -111,13 +109,13 @@ const TabibBot = () => {
 
     return (
         <div className='w-full flex flex-col md:flex-row justify-center items-start p-2 md:p-10 gap-2 min-h-[91vh] relative bg-foreground'>
-            <Card className='w-[80%] md:w-3/4 h-[80vh] mx-auto'>
+            <Card className='w-[95%] md:w-3/4 h-[80vh] mx-auto'>
                 {/* Chat Messages */}
                 <CardBody className="p-0 flex-1 flex flex-col">
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
                         {messages?.map((message: Message, index: number) => (
                             <div
-                                key={index}
+                                key={message.role + index}
                                 className={`flex ${message.role === 'AIMessage' ? 'justify-start' : 'justify-end'}`}
                             >
                                 <div
@@ -158,17 +156,19 @@ const TabibBot = () => {
                     {/* Chat Input */}
                     <div className="p-4 border-t border-gray-200">
                         <form onSubmit={chatBotForm.handleSubmit(onSubmit)}>
-                            <div className="flex gap-2">
-                                <Input
+                            <div className="flex gap-2 items-center">
+                                <Textarea
                                     {...chatBotForm.register('query')}
                                     placeholder="Type your message..."
                                     className="flex-1"
-                                    size="sm"
+                                    size="lg"
+                                    minRows={2}
+                                    maxRows={2}
                                 />
                                 <Button
                                     isIconOnly
                                     color="primary"
-                                    size="sm"
+                                    size="lg"
                                     className="flex-shrink-0"
                                     type='submit'
                                     isDisabled={!socketRef.current?.connected}

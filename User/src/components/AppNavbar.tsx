@@ -14,12 +14,14 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "@heroui/react";
-import { Bot, Hospital, LogIn, LogOut, Stethoscope, User } from "lucide-react";
+import { Bot, LogIn, LogOut, Stethoscope, User } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const AppNavbar = () => {
+  const router = useRouter();
   const { data: session } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -29,11 +31,11 @@ const AppNavbar = () => {
       "link": "/doctors",
       "icon": <Stethoscope className="size-4" />
     },
-    {
-      "name": "Hospitals",
-      "link": "/hospitals",
-      "icon": <Hospital className="size-4" />
-    },
+    // {
+    //   "name": "Hospitals",
+    //   "link": "/hospitals",
+    //   "icon": <Hospital className="size-4" />
+    // },
     {
       "name": "Tabib Bot",
       "link": "tabib-bot",
@@ -42,6 +44,9 @@ const AppNavbar = () => {
   ];
   const handleSignOut = () => {
     signOut();
+  }
+  const handlePress = (link: string) => {
+    router.push(link);
   }
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen} maxWidth="full" className="flex items-center bg-primary text-white">
@@ -57,7 +62,7 @@ const AppNavbar = () => {
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         {menuItems.map((item, index) => (
-          <NavbarItem key={`${item.name}-${index}`}>
+          <NavbarItem key={`${item.name}-${index}`} onClick={()=> handlePress(item.link)}>
             <Link
               className="w-full flex items-center justify-start gap-2 text-secondary"
               color="secondary"
@@ -65,7 +70,6 @@ const AppNavbar = () => {
             >
               {item.icon} {item.name}
             </Link>
-
           </NavbarItem>
         ))}
       </NavbarContent>
@@ -91,10 +95,9 @@ const AppNavbar = () => {
                 <DropdownItem
                   key="profile"
                   startContent={<User className="size-4" />}
+                  onPress={() => handlePress('/profile')}
                 >
-                  <Link href={'/profile'}>
-                    Profile
-                  </Link>
+                  Profile
                 </DropdownItem>
                 <DropdownItem
                   key="signOut"
