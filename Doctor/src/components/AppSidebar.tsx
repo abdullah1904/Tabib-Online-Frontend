@@ -24,20 +24,23 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { signOut, useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { getAvatarFallbackText, getDoctorPrefixText } from "@/utils";
-const data = {
-    navMain: [
-        {
-            title: "Appointments",
-            url: "#",
-            items: [
-                {
-                    title: "Project Structure",
-                    url: "#",
-                },
-            ],
-        },
-    ],
+
+type NavItem = {
+    title: string;
+    url: string;
+    items?: NavItem[];
 }
+
+const navMain: NavItem[] = [
+    {
+        title: "Dashboard",
+        url: "/",
+    },
+    {
+        title: "Offered Services",
+        url: "/services",
+    }
+]
 
 
 const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
@@ -77,14 +80,14 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
             <SidebarContent className="custom-scrollbar">
                 <SidebarGroup>
                     <SidebarMenu className="gap-2">
-                        {data.navMain.map((item) => (
+                        {navMain.map((item) => (
                             <SidebarMenuItem key={item.title}>
                                 <SidebarMenuButton asChild>
                                     <a href={item.url} className="font-medium">
                                         {item.title}
                                     </a>
                                 </SidebarMenuButton>
-                                {item.items?.length ? (
+                                {item.items && item.items.length > 0 ? (
                                     <SidebarMenuSub className="ml-0 border-l-0 px-1.5">
                                         {item.items.map((subItem) => {
                                             const isActive = pathname === subItem.url

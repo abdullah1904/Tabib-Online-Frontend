@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { showToast } from '@/utils';
 import { io, Socket } from 'socket.io-client';
 import { useSession } from 'next-auth/react';
+import Markdown from "react-markdown";
 
 const TabibBot = () => {
     const { data: session } = useSession();
@@ -109,7 +110,7 @@ const TabibBot = () => {
 
     return (
         <div className='w-full flex flex-col md:flex-row justify-center items-start p-2 md:p-10 gap-2 min-h-[91vh] relative bg-foreground'>
-            <Card className='w-[95%] md:w-3/4 h-[80vh] mx-auto'>
+            <Card className='w-[95%] md:w-4/5 h-[80vh] mx-auto'>
                 {/* Chat Messages */}
                 <CardBody className="p-0 flex-1 flex flex-col">
                     <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
@@ -143,9 +144,19 @@ const TabibBot = () => {
                                             : 'bg-primary text-white'
                                             }`}
                                     >
-                                        <p className="text-sm whitespace-pre-wrap break-words">
-                                            {message.content}
-                                        </p>
+                                        {message.role === 'AIMessage' ? (
+                                            <div className='prose prose-headings:text-primary'>
+                                                <Markdown>
+                                                    {message.content}
+                                                </Markdown>
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                <p className="whitespace-pre-wrap break-words">
+                                                    {message.content}
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
