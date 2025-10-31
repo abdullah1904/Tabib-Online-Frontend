@@ -1,4 +1,5 @@
 import { addToast } from "@heroui/react"
+import { format } from "date-fns"
 
 const showToast = (message: string, type: 'success' | 'error' | 'warning') => {
   if (type == 'success') {
@@ -26,6 +27,11 @@ const showToast = (message: string, type: 'success' | 'error' | 'warning') => {
     })
   }
 }
+
+const formatTime = (timeStr: string) => {
+  const date = new Date(`2000-01-01T${timeStr}`);
+  return format(date, 'hh:mm a');
+};
 
 
 const getSpecializationText = (value: number) => {
@@ -203,8 +209,54 @@ const getDoctorPrefixText = (value: number) => {
   }
 }
 
+
+const getDoctorServiceTypeText = (value: number) => {
+  switch (value) {
+    case 1:
+      return "In-Person";
+    case 2:
+      return "Audio Call";
+    case 3:
+      return "Video Call";
+  }
+}
+
+const getDoctorServiceDurationText = (value: number) => {
+  switch (value) {
+    case 1:
+      return "30 Minutes";
+    case 2:
+      return "45 Minutes";
+    case 3:
+      return "60 Minutes";
+  }
+}
+
+const getDayText = (day: number)=>{
+  switch(day){
+    case 0:
+      return "Sunday";
+    case 1:
+      return "Monday";
+    case 2:
+      return "Tuesday";
+    case 3:
+      return "Wednesday";
+    case 4:
+      return "Thursday";
+    case 5:
+      return "Friday";
+    case 6:
+      return "Saturday";
+  }
+}
+
 export {
   showToast,
+  formatTime,
   getSpecializationText,
-  getDoctorPrefixText
+  getDoctorPrefixText,
+  getDoctorServiceTypeText,
+  getDoctorServiceDurationText,
+  getDayText
 }

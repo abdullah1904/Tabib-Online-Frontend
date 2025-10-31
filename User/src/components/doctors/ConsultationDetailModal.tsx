@@ -1,11 +1,13 @@
+import { getDoctorServiceTypeText } from '@/utils'
+import { DoctorServiceType } from '@/utils/constants'
 import { Button, Checkbox, DatePicker, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, TimeInput } from '@heroui/react'
 import React from 'react'
 
 type Props = {
     showModal: string,
     setShowModal: (value: null) => void
-    consultationType: string | null
-    setConsultationType: (type: string | null) => void
+    consultationType: DoctorServiceType | null
+    setConsultationType: (type: DoctorServiceType | null) => void
 }
 
 const ConsultationDetailModal = ({ showModal, setShowModal, consultationType, setConsultationType }: Props) => {
@@ -18,7 +20,7 @@ const ConsultationDetailModal = ({ showModal, setShowModal, consultationType, se
             <ModalContent>
                 <ModalHeader className="border-b pb-3">
                     <h2 className="text-xl font-semibold text-primary-dark">
-                        {consultationType} Consultation Details
+                        {getDoctorServiceTypeText(consultationType!)} Consultation Details
                     </h2>
                 </ModalHeader>
 

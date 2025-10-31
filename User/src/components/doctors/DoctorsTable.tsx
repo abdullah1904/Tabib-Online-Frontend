@@ -37,7 +37,7 @@ const DoctorsTable = () => {
   return (
     <div className='w-full flex flex-col md:flex-row justify-center items-start p-2 md:p-10 gap-2 h-[91vh] relative bg-foreground'>
       <DoctorFilters />
-      <Card className='flex-3 w-full'>
+      <Card className='flex-3 w-full h-auto'>
         <CardBody className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-primary'>
           {doctorsData.map((doctor) => (
             <DoctorCard

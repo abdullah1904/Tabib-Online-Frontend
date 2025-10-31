@@ -1,7 +1,7 @@
 "use client"
 import { useRef, useEffect, useState, useMemo } from 'react';
 import { Button, Card, CardBody, Textarea } from "@heroui/react";
-import { Bot, Send, User } from "lucide-react";
+import { Bot, Send, User, Wrench } from "lucide-react";
 import { useQuery } from '@tanstack/react-query';
 import { getChatHistory } from '@/services/chatbot.service';
 import { Message } from '@/types/chatbot';
@@ -18,6 +18,8 @@ const TabibBot = () => {
     const socketRef = useRef<Socket | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [realtimeMessages, setRealtimeMessages] = useState<Message[]>([]);
+    const [activeToolName, setActiveToolName] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const chatBotForm = useForm<ChatbotFormData>({
         resolver: zodResolver(chatbotFormSchema),
@@ -29,6 +31,9 @@ const TabibBot = () => {
     const { data: serverMessages } = useQuery({
         queryKey: ['chatHistory'],
         queryFn: getChatHistory,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        staleTime: Infinity,
     });
 
     // Combine server messages with real-time messages
@@ -55,8 +60,16 @@ const TabibBot = () => {
             console.log("Socket connected:", socket.id);
         });
 
+        socket.on("toolCall", ({ toolName }) => {
+            console.log("Tool called:", toolName);
+            setActiveToolName(toolName);
+            setIsLoading(true);
+        });
+
         socket.on("response", ({ content }) => {
             console.log("Received AI response:", content);
+            setActiveToolName(null);
+            setIsLoading(false);
             setRealtimeMessages((prev) => [
                 ...prev,
                 { role: "AIMessage", content }
@@ -65,15 +78,20 @@ const TabibBot = () => {
 
         socket.on("error", (error: Error) => {
             console.error("Socket error:", error);
+            setActiveToolName(null);
+            setIsLoading(false);
             showToast('Connection error. Please try again.', 'error');
         });
 
         socket.on("disconnect", (reason: string) => {
             console.log("Socket disconnected:", reason);
+            setActiveToolName(null);
+            setIsLoading(false);
         });
 
         return () => {
             socket.off("connect");
+            socket.off("toolCall");
             socket.off("response");
             socket.off("error");
             socket.off("disconnect");
@@ -82,10 +100,10 @@ const TabibBot = () => {
         };
     }, [session?.user?.id]);
 
-    // Auto-scroll when messages change
+    // Auto-scroll when messages change or tool is active
     useEffect(() => {
         scrollToBottom();
-    }, [messages]);
+    }, [messages, activeToolName]);
 
     const onSubmit = (data: ChatbotFormData) => {
         if (!socketRef.current?.connected) {
@@ -93,25 +111,30 @@ const TabibBot = () => {
             return;
         }
 
-        // Add user message to real-time messages immediately
         setRealtimeMessages((prev) => [
             ...prev,
             { role: "HumanMessage", content: data.query }
         ]);
 
-        // Send message to server
+        setIsLoading(true);
+
         socketRef.current.emit("message", {
             query: data.query,
         });
 
-        // Reset form
         chatBotForm.reset();
     }
+
+    const formatToolName = (toolName: string) => {
+        return toolName
+            .replace(/([A-Z])/g, ' $1')
+            .replace(/^./, (str) => str.toUpperCase())
+            .trim();
+    };
 
     return (
         <div className='w-full flex flex-col md:flex-row justify-center items-start p-2 md:p-10 gap-2 min-h-[91vh] relative bg-foreground'>
             <Card className='w-[95%] md:w-4/5 h-[80vh] mx-auto'>
-                {/* Chat Messages */}
                 <CardBody className="p-0 flex-1 flex flex-col">
                     <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
                         {messages?.map((message: Message, index: number) => (
@@ -161,6 +184,52 @@ const TabibBot = () => {
                                 </div>
                             </div>
                         ))}
+
+                        {/* Tool Call Indicator */}
+                        {activeToolName && (
+                            <div className="flex justify-start">
+                                <div className="flex items-end gap-2 max-w-[80%]">
+                                    {/* Avatar */}
+                                    <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-primary text-white">
+                                        <Bot className="size-5 text-secondary" />
+                                    </div>
+
+                                    {/* Tool Call Bubble */}
+                                    <div className="rounded-lg p-3 bg-gray-100 text-gray-800">
+                                        <div className="flex items-center gap-2">
+                                            <Wrench className="size-4 text-primary animate-pulse" />
+                                            <span className="text-sm font-medium">
+                                                Using {formatToolName(activeToolName)}...
+                                            </span>
+                                            <div className="flex gap-1">
+                                                <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                                                <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                                                <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Typing Indicator (when no tool is active but AI is processing) */}
+                        {isLoading && !activeToolName && (
+                            <div className="flex justify-start">
+                                <div className="flex items-end gap-2 max-w-[80%]">
+                                    <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-primary text-white">
+                                        <Bot className="size-5 text-secondary" />
+                                    </div>
+                                    <div className="rounded-lg p-3 bg-gray-100">
+                                        <div className="flex gap-1">
+                                            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                                            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                                            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         <div ref={messagesEndRef} />
                     </div>
 
@@ -182,7 +251,7 @@ const TabibBot = () => {
                                     size="lg"
                                     className="flex-shrink-0"
                                     type='submit'
-                                    isDisabled={!socketRef.current?.connected}
+                                    isDisabled={!socketRef.current?.connected || isLoading}
                                 >
                                     <Send className="w-4 h-4" />
                                 </Button>

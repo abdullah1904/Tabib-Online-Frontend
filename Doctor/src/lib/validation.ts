@@ -1,4 +1,4 @@
-import { DoctorPrefixOptions, GenderOptions, MedicalDegreeOptions, PostGraduateDegreeOptions, SpecializationOptions, VerificationDocumentOptions } from "@/utils/constants";
+import { DayOfWeekOptions, DoctorPrefixOptions, DoctorServiceDurationOptions, DoctorServiceType, DoctorServiceTypeOptions, GenderOptions, MedicalDegreeOptions, PostGraduateDegreeOptions, SpecializationOptions, VerificationDocumentOptions } from "@/utils/constants";
 import { z } from "zod";
 
 export const signInFormSchema = z.object({
@@ -234,3 +234,28 @@ export const updateProfessionalProfileFormSchema = z.object({
 });
 
 export type UpdateProfessionalProfileFormData = z.infer<typeof updateProfessionalProfileFormSchema>;
+
+export const serviceFormSchema = z.object({
+    title: z.string().min(1, "Title is required").max(100, "Title must be at most 100 characters"),
+    type: z.enum(DoctorServiceTypeOptions.map(option => String(option.value)) as [string, ...string[]], { message: "Service type is required" }),
+    duration: z.enum(DoctorServiceDurationOptions.map(option => String(option.value)) as [string, ...string[]], { message: "Duration is required" }),
+    price: z.number("Price is required").int().min(0, "Price must be 0 or more"),
+    time: z.string()
+        .regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Time must be in HH:MM format"),
+    availableDays: z.array(z.enum(DayOfWeekOptions.map(option => String(option.value)) as [string, ...string[]])).min(1, "At least one available day is required"),
+    location: z.string().max(200).optional(),
+    allowCustom: z.boolean(),
+}).refine(
+  (data) => {
+    if (data.type === DoctorServiceType.IN_PERSON.toString()) {
+      return !!data.location && data.location.trim().length > 0;
+    }
+    return true;
+  },
+  {
+    message: "Location is required for in-person services",
+    path: ["location"],
+  }
+);
+
+export type ServiceFormData = z.infer<typeof serviceFormSchema>;

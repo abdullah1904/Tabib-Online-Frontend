@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react"
-import { ChevronsUpDown, LogOut, Stethoscope, User } from "lucide-react"
+import { Briefcase, ChevronsUpDown, LogOut, Stethoscope, User } from "lucide-react"
 import {
     Sidebar,
     SidebarContent,
@@ -28,17 +28,15 @@ import { getAvatarFallbackText, getDoctorPrefixText } from "@/utils";
 type NavItem = {
     title: string;
     url: string;
+    icon: React.ReactNode
     items?: NavItem[];
 }
 
 const navMain: NavItem[] = [
     {
-        title: "Dashboard",
-        url: "/",
-    },
-    {
         title: "Offered Services",
         url: "/services",
+        icon: <Briefcase />
     }
 ]
 
@@ -83,9 +81,9 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
                         {navMain.map((item) => (
                             <SidebarMenuItem key={item.title}>
                                 <SidebarMenuButton asChild>
-                                    <a href={item.url} className="font-medium">
-                                        {item.title}
-                                    </a>
+                                    <Link href={item.url} className="font-medium">
+                                        {item.icon} {item.title}
+                                    </Link>
                                 </SidebarMenuButton>
                                 {item.items && item.items.length > 0 ? (
                                     <SidebarMenuSub className="ml-0 border-l-0 px-1.5">

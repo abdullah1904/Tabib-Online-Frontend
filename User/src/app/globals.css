@@ -33,7 +33,7 @@ body{
 
 @utility custom-scrollbar {
   &::-webkit-scrollbar {
-    @apply size-1.5;
+    @apply size-0;
   }
 
   &::-webkit-scrollbar-track {
@@ -41,6 +41,6 @@ body{
   }
 
   &::-webkit-scrollbar-thumb {
-    @apply bg-gray-200 rounded-full dark:bg-gray-700;
+    @apply bg-none rounded-full dark:bg-gray-700;
   }
 }

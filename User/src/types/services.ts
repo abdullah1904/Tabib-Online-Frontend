@@ -6,7 +6,6 @@ export interface Service {
   duration: number
   time: string
   location: string | null
-  allowCustom: boolean
   doctor: number
   createdAt: string
   updatedAt: string

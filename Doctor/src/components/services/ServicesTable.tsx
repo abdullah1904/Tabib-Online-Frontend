@@ -1,13 +1,16 @@
 "use client";
-import { PlusCircle, Trash } from "lucide-react"
+import { Info, PlusCircle, Trash } from "lucide-react"
 import { Button } from "../ui/button"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { deleteService, listServices } from "@/services/services.service";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { useState } from "react";
 import { toast } from "sonner";
 import ServiceFormModal from "./ServiceFormModal";
+import { formatTime, getDayText, getDoctorServiceDurationText, getDoctorServiceTypeText } from "@/utils";
+import { DoctorServiceType } from "@/utils/constants";
+import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 
 const ServicesTable = () => {
     const queryClient = useQueryClient();
@@ -60,25 +63,38 @@ const ServicesTable = () => {
                     <p>Loading services...</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch my-4">
                     {servicesData?.map(service => (
-                        <Card key={service.id} >
+                        <Card key={service.id} className="flex flex-col">
                             <CardHeader>
                                 <CardTitle>
-                                    {service.title}
+                                    {service.title} {service.allowCustom && "(Custom Appointments Allowed)"}
                                 </CardTitle>
-                                <CardDescription>
-                                    {service.description}
-                                </CardDescription>
                             </CardHeader>
-                            <CardContent className="grid grid-cols-2">
+                            <CardContent className="grid grid-cols-2 gap-2">
+                                <span className="flex gap-2">
+                                    <p>
+                                        Type: {getDoctorServiceTypeText(service.type)}
+                                    </p>
+                                    {service.type === DoctorServiceType.IN_PERSON && (
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <Info className="size-4"/>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                {service.location}
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    )}
+                                </span>
+                                <p>Duration: {getDoctorServiceDurationText(service.duration)}</p>
                                 <p>Price: {service.price} PKR</p>
-                                <p>Duration: {service.duration} minutes</p>
-                                <p>Type: {service.type}</p>
-                                <p>Location: {service.location ? service.location : "N/A"}</p>
-                                <Separator />
+                                <p>Time: {formatTime(service.time)}</p>
+                                <Separator className="w-full col-span-2" />
+                                <p className="col-span-2">Availability Days: {service.availableDays.map((day) => getDayText(day)).join(", ")}</p>
+
                             </CardContent>
-                            <CardFooter>
+                            <CardFooter className="mt-auto">
                                 <Button variant="destructive" size="sm" disabled={isDeleting && selectedServiceId === service.id} onClick={() => handleDelete(service.id)}>
                                     <Trash /> Delete Service
                                 </Button>

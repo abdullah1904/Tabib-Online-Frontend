@@ -6,25 +6,18 @@ import React, { useState } from 'react'
 import ConsultationDetailModel from './ConsultationDetailModal';
 import { useQuery } from '@tanstack/react-query';
 import { getDoctor } from '@/services/doctors.service';
-import { getDoctorPrefixText, getSpecializationText } from '@/utils';
-import {formatDate} from 'date-fns';
+import { formatTime, getDayText, getDoctorPrefixText, getDoctorServiceDurationText, getSpecializationText } from '@/utils';
+import { formatDate } from 'date-fns';
 import ReviewModal from './ReviewModal';
+import { DoctorServiceType } from '@/utils/constants';
 
 type Props = {
   doctorId: string
 }
 
-const doctor = {
-  "consultationType": [
-    "In-person",
-    "Video Call",
-    "Audio Call",
-  ],
-}
-
 const DoctorProfile = ({ doctorId }: Props) => {
   const [showModal, setShowModal] = useState<'Appointment' | 'Review' | 'Complaint' | null>(null);
-  const [selectedConsultation, setSelectedConsultation] = useState<string | null>(null);
+  const [selectedConsultation, setSelectedConsultation] = useState<DoctorServiceType | null>(null);
 
   const { data: doctorData, isLoading, isError, error } = useQuery({
     queryKey: ['doctor', doctorId],
@@ -64,7 +57,7 @@ const DoctorProfile = ({ doctorId }: Props) => {
 
     return stars;
   };
-  const handleConsultationClick = (type: string) => {
+  const handleConsultationClick = (type: DoctorServiceType) => {
     setShowModal('Appointment');
     setSelectedConsultation(type);
   }
@@ -161,36 +154,63 @@ const DoctorProfile = ({ doctorId }: Props) => {
           </CardHeader>
           <CardBody>
             <div className="grid gap-6 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-              {doctor.consultationType.map((type, index) => (
+              {doctorData?.services.map((service, index) => (
                 <div
                   key={index}
-                  className="flex flex-col items-center justify-between border rounded-2xl p-6 shadow-sm hover:shadow-md transition bg-white"
+                  className="flex flex-col items-center border rounded-2xl p-6 shadow-sm hover:shadow-md transition bg-white"
                 >
                   {/* Icon */}
-                  {type === "In-person" && (
+                  {service.type === DoctorServiceType.IN_PERSON && (
                     <Hospital className="w-12 h-12 text-primary mb-4" />
                   )}
-                  {type === "Audio Call" && (
+                  {service.type === DoctorServiceType.AUDIO_CALL && (
                     <Phone className="w-12 h-12 text-primary mb-4" />
                   )}
-                  {type === "Video Call" && (
+                  {service.type === DoctorServiceType.VIDEO_CALL && (
                     <Video className="w-12 h-12 text-primary mb-4" />
                   )}
 
                   {/* Title */}
-                  <p className="text-base font-medium text-gray-800 mb-3 text-center">
-                    {type}
+                  <p className="text-base font-semibold text-gray-800 mb-2 text-center">
+                    {service.title}
                   </p>
 
+                  {/* Service Details */}
+                  <div className="w-full space-y-2 mb-4">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Price:</span>
+                      <span className="font-medium text-gray-900">Rs. {service.price}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Duration:</span>
+                      <span className="font-medium text-gray-900">{getDoctorServiceDurationText(service.duration)}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Time:</span>
+                      <span className="font-medium text-gray-900">{formatTime(service.time)}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Availability Days:</span>
+                      <span className="font-medium text-gray-900">{service.availableDays.map((day) => getDayText(day)).join(",")}</span>
+                    </div>
+                  </div>
+
                   {/* Button */}
-                  <Button className="w-full" size="sm" color="primary" onPress={() => handleConsultationClick(type)}>
-                    Make {type} Appointment
+                  <Button
+                    className="w-full"
+                    size="sm"
+                    color="primary"
+                    onPress={() => handleConsultationClick(service.type)}
+                  >
+                    Make Appointment
                   </Button>
                 </div>
               ))}
             </div>
           </CardBody>
-        </Card>
+        </Card >
         <Card className='w-full max-w-4xl lg:w-3/4 p-2'>
           <CardBody className='grid grid-cols-2 items-center gap-2'>
             <Button className="w-full" size="md" color="primary" onPress={handleReviewClick}>
@@ -224,7 +244,7 @@ const DoctorProfile = ({ doctorId }: Props) => {
           </CardBody>
         </Card>
 
-      </div>
+      </div >
       {showModal == 'Appointment' && selectedConsultation && (
         <ConsultationDetailModel
           showModal={showModal}
@@ -234,13 +254,15 @@ const DoctorProfile = ({ doctorId }: Props) => {
 
         />
       )}
-      {showModal == 'Review' && (
-        <ReviewModal
-          doctorId={doctorId}
-          showModal={showModal}
-          setShowModal={setShowModal}
-        />
-      )}
+      {
+        showModal == 'Review' && (
+          <ReviewModal
+            doctorId={doctorId}
+            showModal={showModal}
+            setShowModal={setShowModal}
+          />
+        )
+      }
     </>
   )
 }

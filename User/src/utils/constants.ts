@@ -149,3 +149,15 @@ export enum DoctorPrefix {
   Consultant = 13,
   Surgeon = 14,
 }
+
+export enum DoctorServiceType {
+    IN_PERSON = 1,
+    AUDIO_CALL = 2,
+    VIDEO_CALL = 3,
+}
+
+export enum DoctorServiceDuration {
+    MIN_30 = 1,
+    MIN_45 = 2,
+    MIN_60 = 3,
+}

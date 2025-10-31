@@ -2,7 +2,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Autocomplete, AutocompleteItem, Button, Card, CardBody, CardFooter, Checkbox, Input, RadioGroup, Select, SelectItem, Radio, Divider, AccordionItem, Accordion } from "@heroui/react";
 import { Filter } from "lucide-react";
 import { useEffect, useState } from "react";
-import type {Selection} from "@heroui/react";
+import type { Selection } from "@heroui/react";
 
 
 const gender = [
@@ -63,7 +63,6 @@ const DoctorFilters = () => {
 
     return (
         <Card className='flex-1 w-full shadow-lg rounded-lg p-2'>
-            <CardBody className='text-primary flex flex-col gap-4'>
             <Accordion selectedKeys={selectedKeys} onSelectionChange={setSelectedKeys}>
                 <AccordionItem
                     key='filters'
@@ -76,6 +75,7 @@ const DoctorFilters = () => {
                     startContent={<Filter className="text-primary" />}
                     isCompact={true}
                 >
+                    <CardBody className='text-primary flex flex-col gap-2'>
                         <div>
                             <Input
                                 label='Search Doctors'
@@ -140,15 +140,15 @@ const DoctorFilters = () => {
                                 ))}
                             </Select>
                         </div>
-                    <Divider className="w-[90%] mx-auto bg-primary" />
-                    <CardFooter className='flex justify-end p-4'>
-                        <Button color="primary" className='w-full'>
-                            Apply Filters
-                        </Button>
-                    </CardFooter>
+                        <Divider className="w-[90%] mx-auto bg-primary" />
+                        <CardFooter className='flex justify-end p-4'>
+                            <Button color="primary" className='w-full'>
+                                Apply Filters
+                            </Button>
+                        </CardFooter>
+                    </CardBody>
                 </AccordionItem>
             </Accordion>
-                    </CardBody>
         </Card>
     )
 }

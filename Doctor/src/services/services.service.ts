@@ -1,4 +1,5 @@
 import { generateRequest } from "@/lib/api-client";
+import { ServiceFormData } from "@/lib/validation";
 import { Service } from "@/types/services";
 
 export const listServices = async () => {
@@ -8,6 +9,16 @@ export const listServices = async () => {
         isProtected: true,
     });
     return response.services as Service[];
+}
+
+export const createService = async (serviceData: ServiceFormData) => {
+    const response = await generateRequest({
+        method: "POST",
+        url: "/services",
+        data: serviceData,
+        isProtected: true,
+    });
+    return response;
 }
 
 export const deleteService = async (serviceId: number) => {

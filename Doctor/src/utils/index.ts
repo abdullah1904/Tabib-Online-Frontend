@@ -1,9 +1,16 @@
+import { format } from "date-fns";
+
 const getAvatarFallbackText = (name: string | undefined, count = 1) => {
     if (!name) return '';
     const names = name.trim().split(' ').filter(Boolean);
     const initials = names.slice(0, count).map(n => n.charAt(0).toUpperCase()).join('');
     return initials;
 }
+
+const formatTime = (timeStr: string) => {
+  const date = new Date(`2000-01-01T${timeStr}`);
+  return format(date, 'hh:mm a'); // "09:00 PM"
+};
 
 const getDoctorPrefixText = (value: number)=> {
   switch (value) {
@@ -38,7 +45,51 @@ const getDoctorPrefixText = (value: number)=> {
   }
 }
 
+const getDoctorServiceTypeText = (value: number) => {
+  switch (value) {
+    case 1:
+      return "In-Person";
+    case 2:
+      return "Audio Call";
+    case 3:
+      return "Video Call";
+  }
+}
+
+const getDoctorServiceDurationText = (value: number) => {
+  switch (value) {
+    case 1:
+      return "30 Minutes";
+    case 2:
+      return "45 Minutes";
+    case 3:
+      return "60 Minutes";
+  }
+}
+
+export const getDayText = (day: number)=>{
+  switch(day){
+    case 0:
+      return "Sunday";
+    case 1:
+      return "Monday";
+    case 2:
+      return "Tuesday";
+    case 3:
+      return "Wednesday";
+    case 4:
+      return "Thursday";
+    case 5:
+      return "Friday";
+    case 6:
+      return "Saturday";
+  }
+}
+
 export {
     getAvatarFallbackText,
-    getDoctorPrefixText
+    formatTime,
+    getDoctorPrefixText,
+    getDoctorServiceTypeText,
+    getDoctorServiceDurationText
 }
