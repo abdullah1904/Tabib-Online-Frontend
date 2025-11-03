@@ -38,7 +38,7 @@ const AppNavbar = () => {
     // },
     {
       "name": "Tabib Bot",
-      "link": "tabib-bot",
+      "link": "/tabib-bot",
       "icon": <Bot className="size-4" />
     }
   ];
@@ -46,6 +46,7 @@ const AppNavbar = () => {
     signOut();
   }
   const handlePress = (link: string) => {
+    setIsMenuOpen(false);
     router.push(link);
   }
   return (
@@ -62,7 +63,7 @@ const AppNavbar = () => {
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         {menuItems.map((item, index) => (
-          <NavbarItem key={`${item.name}-${index}`} onClick={()=> handlePress(item.link)}>
+          <NavbarItem key={`${item.name}-${index}`} onClick={() => handlePress(item.link)}>
             <Link
               className="w-full flex items-center justify-start gap-2 text-secondary"
               color="secondary"
@@ -120,7 +121,7 @@ const AppNavbar = () => {
       </NavbarContent>
       <NavbarMenu>
         {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
+          <NavbarMenuItem key={`${item}-${index}`} onClick={() => handlePress(item.link)}>
             <Link
               className="w-full flex items-center justify-start gap-2"
               color="primary"

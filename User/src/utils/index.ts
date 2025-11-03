@@ -1,4 +1,6 @@
 import { addToast } from "@heroui/react"
+import { format } from "date-fns"
+import { DayOfWeek } from "../../../../Tabib-Online-Backend/src/utils/constants"
 
 const showToast = (message: string, type: 'success' | 'error' | 'warning') => {
   if (type == 'success') {
@@ -26,6 +28,11 @@ const showToast = (message: string, type: 'success' | 'error' | 'warning') => {
     })
   }
 }
+
+const formatTime = (timeStr: string) => {
+  const date = new Date(`2000-01-01T${timeStr}`);
+  return format(date, 'hh:mm a');
+};
 
 
 const getSpecializationText = (value: number) => {
@@ -203,8 +210,93 @@ const getDoctorPrefixText = (value: number) => {
   }
 }
 
+
+const getDoctorServiceTypeText = (value: number) => {
+  switch (value) {
+    case 1:
+      return "In-Person";
+    case 2:
+      return "Audio Call";
+    case 3:
+      return "Video Call";
+  }
+}
+
+const getDoctorServiceDurationText = (value: number) => {
+  switch (value) {
+    case 1:
+      return "30 Minutes";
+    case 2:
+      return "45 Minutes";
+    case 3:
+      return "60 Minutes";
+  }
+}
+
+const getDayText = (day: number) => {
+  switch (day) {
+    case 0:
+      return "Sunday";
+    case 1:
+      return "Monday";
+    case 2:
+      return "Tuesday";
+    case 3:
+      return "Wednesday";
+    case 4:
+      return "Thursday";
+    case 5:
+      return "Friday";
+    case 6:
+      return "Saturday";
+  }
+}
+
+// const getUpcomingDateNumbers = (days: DayOfWeek[], count: number = 4): number[] =>{
+//   const today = new Date();
+//   const result: number[] = [];
+
+//   const targetDays = [...new Set(days)].sort((a, b) => a - b);
+
+//   for (let i = 0; i < count * 7; i++) {
+//     const date = new Date(today);
+//     date.setDate(today.getDate() + i);
+//     const day = date.getDay();
+
+//     if (targetDays.includes(day)) {
+//       result.push(date.getDate());
+//     }
+//   }
+
+//   return result;
+// }
+
+const getUpcomingDateNumbers = (days: DayOfWeek[], count: number = 4): number[] => {
+  const today = new Date();
+  const result: number[] = [];
+
+  const targetDays = [...new Set(days)].sort((a, b) => a - b);
+
+  for (let i = 0; i < count * 7; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + i);
+    const day = date.getDay();
+
+    if (targetDays.includes(day)) {
+      result.push(date.getDate());
+    }
+  }
+
+  return result;
+}
+
 export {
   showToast,
+  formatTime,
   getSpecializationText,
-  getDoctorPrefixText
+  getDoctorPrefixText,
+  getDoctorServiceTypeText,
+  getDoctorServiceDurationText,
+  getDayText,
+  getUpcomingDateNumbers
 }

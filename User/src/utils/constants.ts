@@ -149,3 +149,25 @@ export enum DoctorPrefix {
   Consultant = 13,
   Surgeon = 14,
 }
+
+export enum DoctorServiceType {
+    IN_PERSON = 1,
+    AUDIO_CALL = 2,
+    VIDEO_CALL = 3,
+}
+
+export enum DoctorServiceDuration {
+    MIN_30 = 1,
+    MIN_45 = 2,
+    MIN_60 = 3,
+}
+
+export enum DayOfWeek {
+    SUNDAY = 0,
+    MONDAY = 1,
+    TUESDAY = 2,
+    WEDNESDAY = 3,
+    THURSDAY = 4,
+    FRIDAY = 5,
+    SATURDAY = 6,   
+}

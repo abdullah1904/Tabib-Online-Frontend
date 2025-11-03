@@ -6,11 +6,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { SignInFormData, signInFormSchema } from "@/lib/validation";
 import { showToast } from "@/utils";
 import { signIn } from "next-auth/react";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 
 const SignInForm = () => {
@@ -49,8 +49,8 @@ const SignInForm = () => {
             }
         },
         onSuccess: () => {
+            router.push("/");
             showToast("Login successful!", "success");
-            router.push("/doctors");
         },
         onError: (error) => {
             showToast(error?.message || "Invalid credentials", "error");

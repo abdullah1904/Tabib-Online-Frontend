@@ -25,6 +25,8 @@ export default withAuth(
 export const config = {
   matcher: [
     "/",
-    "/profile"
+    "/profile",
+    "/services/:path*",
+    "/verification-applications/:path*"
   ],
 };

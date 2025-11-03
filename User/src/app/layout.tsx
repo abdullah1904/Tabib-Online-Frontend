@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`antialiased`}
+        className={`antialiased overflow-scroll custom-scrollbar`}
         suppressHydrationWarning={true}
       >
         <HeroUIThemeProvider>

@@ -270,3 +270,59 @@ export const DoctorPrefixOptions = [
     { label: "Consultant", value: 13 },
     { label: "Surgeon", value: 14 }   
 ]
+
+export enum DoctorServiceType {
+    IN_PERSON = 1,
+    AUDIO_CALL = 2,
+    VIDEO_CALL = 3,
+}
+
+export const DoctorServiceTypeOptions = [
+    { label: "In-Person", value: 1 },
+    { label: "Audio Call", value: 2 },
+    { label: "Video Call", value: 3 },
+]
+
+export enum DoctorServiceDuration {
+    MIN_30 = 1,
+    MIN_45 = 2,
+    MIN_60 = 3,
+}
+
+export const DoctorServiceDurationOptions = [
+    { label: "30 Minutes", value: 1 },
+    { label: "45 Minutes", value: 2 },
+    { label: "60 Minutes", value: 3 },
+]
+
+export enum DayOfWeek {
+    SUNDAY = 0,
+    MONDAY = 1,
+    TUESDAY = 2,
+    WEDNESDAY = 3,
+    THURSDAY = 4,
+    FRIDAY = 5,
+    SATURDAY = 6,   
+}
+
+export const DayOfWeekOptions = [
+    { label: "Sunday", value: 0 },
+    { label: "Monday", value: 1 },
+    { label: "Tuesday", value: 2 },
+    { label: "Wednesday", value: 3 },
+    { label: "Thursday", value: 4 },
+    { label: "Friday", value: 5 },
+    { label: "Saturday", value: 6 },
+]
+
+export enum DoctorApplicationStatus {
+    PENDING = 0,
+    IN_PROGRESS = 1,
+    COMPLETED = 2,
+    ERROR = 3,
+}
+
+export enum VerificationHandlerType {
+    AGENT = 1,
+    WORKER = 2,
+} 
