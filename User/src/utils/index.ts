@@ -1,5 +1,6 @@
 import { addToast } from "@heroui/react"
 import { format } from "date-fns"
+import { DayOfWeek } from "../../../../Tabib-Online-Backend/src/utils/constants"
 
 const showToast = (message: string, type: 'success' | 'error' | 'warning') => {
   if (type == 'success') {
@@ -232,8 +233,8 @@ const getDoctorServiceDurationText = (value: number) => {
   }
 }
 
-const getDayText = (day: number)=>{
-  switch(day){
+const getDayText = (day: number) => {
+  switch (day) {
     case 0:
       return "Sunday";
     case 1:
@@ -251,6 +252,44 @@ const getDayText = (day: number)=>{
   }
 }
 
+// const getUpcomingDateNumbers = (days: DayOfWeek[], count: number = 4): number[] =>{
+//   const today = new Date();
+//   const result: number[] = [];
+
+//   const targetDays = [...new Set(days)].sort((a, b) => a - b);
+
+//   for (let i = 0; i < count * 7; i++) {
+//     const date = new Date(today);
+//     date.setDate(today.getDate() + i);
+//     const day = date.getDay();
+
+//     if (targetDays.includes(day)) {
+//       result.push(date.getDate());
+//     }
+//   }
+
+//   return result;
+// }
+
+const getUpcomingDateNumbers = (days: DayOfWeek[], count: number = 4): number[] => {
+  const today = new Date();
+  const result: number[] = [];
+
+  const targetDays = [...new Set(days)].sort((a, b) => a - b);
+
+  for (let i = 0; i < count * 7; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + i);
+    const day = date.getDay();
+
+    if (targetDays.includes(day)) {
+      result.push(date.getDate());
+    }
+  }
+
+  return result;
+}
+
 export {
   showToast,
   formatTime,
@@ -258,5 +297,6 @@ export {
   getDoctorPrefixText,
   getDoctorServiceTypeText,
   getDoctorServiceDurationText,
-  getDayText
+  getDayText,
+  getUpcomingDateNumbers
 }

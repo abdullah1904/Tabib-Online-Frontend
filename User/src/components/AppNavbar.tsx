@@ -38,7 +38,7 @@ const AppNavbar = () => {
     // },
     {
       "name": "Tabib Bot",
-      "link": "tabib-bot",
+      "link": "/tabib-bot",
       "icon": <Bot className="size-4" />
     }
   ];

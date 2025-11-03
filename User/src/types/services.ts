@@ -7,6 +7,7 @@ export interface Service {
   time: string
   location: string | null
   doctor: number
+  allowCustom: boolean
   createdAt: string
   updatedAt: string
   availableDays: number[]

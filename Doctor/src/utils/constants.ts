@@ -314,3 +314,15 @@ export const DayOfWeekOptions = [
     { label: "Friday", value: 5 },
     { label: "Saturday", value: 6 },
 ]
+
+export enum DoctorApplicationStatus {
+    PENDING = 0,
+    IN_PROGRESS = 1,
+    COMPLETED = 2,
+    ERROR = 3,
+}
+
+export enum VerificationHandlerType {
+    AGENT = 1,
+    WORKER = 2,
+} 

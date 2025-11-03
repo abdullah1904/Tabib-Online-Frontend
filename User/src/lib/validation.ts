@@ -196,3 +196,26 @@ export const chatbotFormSchema = z.object({
 });
 
 export type ChatbotFormData = z.infer<typeof chatbotFormSchema>;
+
+export const appointmentFormSchema = z.object({
+    appointmentDate: z
+        .string("Appointment date is required")
+        .min(1, "Appointment date is required")
+        .regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format. Expected YYYY-MM-DD"),
+
+    appointmentTime: z
+        .string("Appointment time is required")
+        .min(1, "Appointment time is required")
+        .regex(/^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/, "Invalid time format. Expected HH:MM or HH:MM:SS"),
+
+    additionalNotes: z
+        .string()
+        .max(500, "Additional notes must be less than or equal to 500 characters long"),
+    healthSharingConsent: z
+        .boolean()
+        .refine((value) => value === true, {
+            message: "Health sharing consent is required"
+        }),
+});
+
+export type AppointmentFormData = z.infer<typeof appointmentFormSchema>;

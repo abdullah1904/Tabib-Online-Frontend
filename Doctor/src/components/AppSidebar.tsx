@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react"
-import { Briefcase, ChevronsUpDown, LogOut, Stethoscope, User } from "lucide-react"
+import { BadgeCheck, Briefcase, CalendarCheck, ChevronsUpDown, LogOut, MessageSquareText, Stethoscope, User } from "lucide-react"
 import {
     Sidebar,
     SidebarContent,
@@ -37,6 +37,21 @@ const navMain: NavItem[] = [
         title: "Offered Services",
         url: "/services",
         icon: <Briefcase />
+    },
+    {
+        title: "Appointments",
+        url: "/appointments",
+        icon: <CalendarCheck/>
+    },
+    {
+        title: "Reviews",
+        url: "/reviews",
+        icon: <MessageSquareText/>
+    },
+    {
+        title: "Verification Applications",
+        url: "/verification-applications",
+        icon: <BadgeCheck/>
     }
 ]
 

@@ -26,6 +26,7 @@ export const config = {
   matcher: [
     "/",
     "/profile",
-    "/services/:path*"
+    "/services/:path*",
+    "/verification-applications/:path*"
   ],
 };

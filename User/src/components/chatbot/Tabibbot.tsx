@@ -1,6 +1,6 @@
 "use client"
 import { useRef, useEffect, useState, useMemo } from 'react';
-import { Button, Card, CardBody, Textarea } from "@heroui/react";
+import { Button, Card, CardBody, Spinner, Textarea } from "@heroui/react";
 import { Bot, Send, User, Wrench } from "lucide-react";
 import { useQuery } from '@tanstack/react-query';
 import { getChatHistory } from '@/services/chatbot.service';
@@ -148,7 +148,7 @@ const TabibBot = () => {
                                 >
                                     {/* Avatar */}
                                     <div
-                                        className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${message.role === 'AIMessage'
+                                        className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${message.role === 'AIMessage'
                                             ? 'bg-primary text-white'
                                             : 'bg-gray-200'
                                             }`}
@@ -175,7 +175,7 @@ const TabibBot = () => {
                                             </div>
                                         ) : (
                                             <div>
-                                                <p className="whitespace-pre-wrap break-words">
+                                                <p className="whitespace-pre-wrap wrap-break-words">
                                                     {message.content}
                                                 </p>
                                             </div>
@@ -190,7 +190,7 @@ const TabibBot = () => {
                             <div className="flex justify-start">
                                 <div className="flex items-end gap-2 max-w-[80%]">
                                     {/* Avatar */}
-                                    <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-primary text-white">
+                                    <div className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-primary text-white">
                                         <Bot className="size-5 text-secondary" />
                                     </div>
 
@@ -201,11 +201,7 @@ const TabibBot = () => {
                                             <span className="text-sm font-medium">
                                                 Using {formatToolName(activeToolName)}...
                                             </span>
-                                            <div className="flex gap-1">
-                                                <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                                                <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                                                <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
-                                            </div>
+                                            <Spinner size='sm'/>
                                         </div>
                                     </div>
                                 </div>
@@ -216,15 +212,11 @@ const TabibBot = () => {
                         {isLoading && !activeToolName && (
                             <div className="flex justify-start">
                                 <div className="flex items-end gap-2 max-w-[80%]">
-                                    <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-primary text-white">
+                                    <div className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-primary text-white">
                                         <Bot className="size-5 text-secondary" />
                                     </div>
                                     <div className="rounded-lg p-3 bg-gray-100">
-                                        <div className="flex gap-1">
-                                            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                                            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                                            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
-                                        </div>
+                                        <Spinner size='sm'/>
                                     </div>
                                 </div>
                             </div>
@@ -249,7 +241,7 @@ const TabibBot = () => {
                                     isIconOnly
                                     color="primary"
                                     size="lg"
-                                    className="flex-shrink-0"
+                                    className="shrink-0"
                                     type='submit'
                                     isDisabled={!socketRef.current?.connected || isLoading}
                                 >

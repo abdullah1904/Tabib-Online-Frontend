@@ -10,9 +10,11 @@ import { SignInFormData, signInFormSchema } from "@/lib/validation";
 import { showToast } from "@/utils";
 import { signIn } from "next-auth/react";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 
 const SignInForm = () => {
+    const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = () => {
@@ -47,6 +49,7 @@ const SignInForm = () => {
             }
         },
         onSuccess: () => {
+            router.push("/");
             showToast("Login successful!", "success");
         },
         onError: (error) => {

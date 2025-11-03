@@ -67,7 +67,7 @@ const getDoctorServiceDurationText = (value: number) => {
   }
 }
 
-export const getDayText = (day: number)=>{
+const getDayText = (day: number)=>{
   switch(day){
     case 0:
       return "Sunday";
@@ -86,10 +86,25 @@ export const getDayText = (day: number)=>{
   }
 }
 
+const getApplicationStatusText = (status: number) => {
+  switch (status) {
+    case 0:
+      return "Pending";
+    case 1:
+      return "In Progress";
+    case 2:
+      return "Completed";
+    case 3:
+      return "Error";
+  }
+}
+
 export {
     getAvatarFallbackText,
     formatTime,
     getDoctorPrefixText,
     getDoctorServiceTypeText,
-    getDoctorServiceDurationText
+    getDoctorServiceDurationText,
+    getDayText,
+    getApplicationStatusText
 }

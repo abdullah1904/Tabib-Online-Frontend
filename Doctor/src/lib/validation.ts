@@ -45,33 +45,13 @@ export const personalInfoFormSchema = z.object({
         .max(200, "Address must be less than or equal to 200 characters"),
 });
 
-const pmdcFullLicenseSchema = z.string().regex(
-    /^\d{1,6}-\d{2}-[MDP]$/,
-    'Invalid PMDC full license format. Expected format: XXXXXX-XX-M/D/P'
-);
-
-const pmdcStudentSchema = z.string().regex(
-    /^\d{1,6}-S$/,
-    'Invalid PMDC student format. Expected format: XXXXX-S'
-);
-
-const pmdcTemporarySchema = z.string().regex(
-    /^\d{1,6}-T$/,
-    'Invalid PMDC temporary format. Expected format: XXXXX-T'
-);
-
 export const professionalInfoFormSchema = z.object({
-    pmdcRedgNo: z.union([
-        pmdcFullLicenseSchema,
-        pmdcStudentSchema,
-        pmdcTemporarySchema
-    ]).refine(
+    pmdcRedgNo: z.string().refine(
         val =>
-            /^\d{1,6}-\d{2}-[MDP]$/.test(val) ||
-            /^\d{1,6}-S$/.test(val) ||
-            /^\d{1,6}-T$/.test(val),
+            /^\d{1,6}-\d{2}-.$/.test(val) ||
+            /^\d{1,6}-.$/.test(val),
         {
-            message: 'Invalid PMDC number format. Expected formats: XXXXXX-XX-M/D/P, XXXXX-S, or XXXXX-T'
+            message: 'Invalid PMDC number format. Expected formats: XXXXXX-XX-X or XXXXX-X'
         }
     ),
     pmdcRedgDate: z

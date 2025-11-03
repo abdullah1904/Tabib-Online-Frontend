@@ -3,21 +3,22 @@ import { Button, Card, CardBody, CardHeader, Spinner } from '@heroui/react'
 import { BadgeCheck, FileBadge, Hospital, MessageCircle, Phone, Star, Video, } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react'
-import ConsultationDetailModel from './ConsultationDetailModal';
+import ServiceDetailModal from './ServiceDetailModal';
 import { useQuery } from '@tanstack/react-query';
 import { getDoctor } from '@/services/doctors.service';
 import { formatTime, getDayText, getDoctorPrefixText, getDoctorServiceDurationText, getSpecializationText } from '@/utils';
 import { formatDate } from 'date-fns';
 import ReviewModal from './ReviewModal';
 import { DoctorServiceType } from '@/utils/constants';
+import { Service } from '@/types/services';
 
 type Props = {
   doctorId: string
 }
 
 const DoctorProfile = ({ doctorId }: Props) => {
-  const [showModal, setShowModal] = useState<'Appointment' | 'Review' | 'Complaint' | null>(null);
-  const [selectedConsultation, setSelectedConsultation] = useState<DoctorServiceType | null>(null);
+  const [showModal, setShowModal] = useState<'Service' | 'Review' | 'Complaint' | null>(null);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
 
   const { data: doctorData, isLoading, isError, error } = useQuery({
     queryKey: ['doctor', doctorId],
@@ -57,9 +58,9 @@ const DoctorProfile = ({ doctorId }: Props) => {
 
     return stars;
   };
-  const handleConsultationClick = (type: DoctorServiceType) => {
-    setShowModal('Appointment');
-    setSelectedConsultation(type);
+  const handleServiceClick = (service: Service) => {
+    setShowModal('Service');
+    setSelectedService(service);
   }
   const handleReviewClick = () => {
     setShowModal('Review');
@@ -83,7 +84,7 @@ const DoctorProfile = ({ doctorId }: Props) => {
       <div className='w-full flex flex-col justify-start items-center p-2 md:p-10 gap-2 min-h-[91vh] relative bg-foreground'>
         <Card className='w-full max-w-4xl lg:w-3/4 p-4'>
           <CardBody className='flex w-full flex-col md:flex-row items-center sm:items-start gap-4'>
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <Image
                 src={doctorData?.imageURL ?? `/assets/Doctor1.png`}
                 alt="Doctor"
@@ -202,7 +203,7 @@ const DoctorProfile = ({ doctorId }: Props) => {
                     className="w-full"
                     size="sm"
                     color="primary"
-                    onPress={() => handleConsultationClick(service.type)}
+                    onPress={() => handleServiceClick(service)}
                   >
                     Make Appointment
                   </Button>
@@ -245,12 +246,12 @@ const DoctorProfile = ({ doctorId }: Props) => {
         </Card>
 
       </div >
-      {showModal == 'Appointment' && selectedConsultation && (
-        <ConsultationDetailModel
+      {showModal == 'Service' && selectedService && (
+        <ServiceDetailModal
           showModal={showModal}
           setShowModal={setShowModal}
-          consultationType={selectedConsultation}
-          setConsultationType={setSelectedConsultation}
+          service={selectedService}
+          setService={setSelectedService}
 
         />
       )}
