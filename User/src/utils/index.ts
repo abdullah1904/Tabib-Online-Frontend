@@ -1,6 +1,6 @@
 import { addToast } from "@heroui/react"
 import { format } from "date-fns"
-import { DayOfWeek } from "../../../../Tabib-Online-Backend/src/utils/constants"
+import { DayOfWeek } from "./constants";
 
 const showToast = (message: string, type: 'success' | 'error' | 'warning') => {
   if (type == 'success') {
