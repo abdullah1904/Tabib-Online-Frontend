@@ -2,8 +2,10 @@
   "name": "user",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:https": "next dev --experimental-https",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

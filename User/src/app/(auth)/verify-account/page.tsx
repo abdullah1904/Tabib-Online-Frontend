@@ -7,11 +7,11 @@ export const metadata: Metadata = {
 };
 
 type Props = {
-    searchParams: { email?: string }
+    searchParams: Promise<{ email?: string }>
 }
 
-const VerifyAccountPage = ({ searchParams }: Props) => {
-    const { email } = searchParams;
+const VerifyAccountPage = async ({ searchParams }: Props) => {
+    const { email } = await searchParams;
     if(!email){
         notFound();
     }
