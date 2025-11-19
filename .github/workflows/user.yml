@@ -37,9 +37,9 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            mkdir -p ~/tabib_online/user
+            mkdir -p ~/tabib_online_frontend/user
 
-            echo "${{ secrets.USER_ENV_FILE }}" | base64 -d > ~/tabib_online/user/.env
+            echo "${{ secrets.USER_ENV_FILE }}" | base64 -d > ~/tabib_online_frontend/user/.env
 
             docker stop tabib_online_user || true
             docker rm tabib_online_user || true
@@ -50,6 +50,6 @@ jobs:
             docker run -d \
               --name tabib_online_user \
               -p 3000:3000 \
-              --env-file ~/tabib_online_user/.env \
+              --env-file ~/tabib_online_frontend/user/.env \
               --restart unless-stopped \
               ${{ secrets.DOCKER_USERNAME }}/tabib_online_user:latest
