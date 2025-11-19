@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
  
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Tabib Online',
+    name: 'Tabib Online - AI Enabled Healthcare Platform',
     short_name: 'Tabib Online',
     description: 'AI Enabled Healthcare Platform',
     start_url: '/doctors',
