@@ -61,6 +61,7 @@ export const authOptions: NextAuthOptions = {
                     }
                     return null;
                 } catch (error) {
+                    console.log(error);
                     if (axios.isAxiosError(error)) {
                         throw new Error(error.response?.data?.error || "Login failed");
                     } else {
