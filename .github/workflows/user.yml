@@ -22,7 +22,7 @@ jobs:
       - name: Decode and prepare env file
         working-directory: User
         run: |
-          echo "${{ secrets.USER_ENV_FILE }}" | base64 -d > .env.build
+          echo "${{ secrets.USER_ENV_PUBLIC_FILE }}" | base64 -d > .env.build
 
       - name: Build and Push Docker image
         working-directory: User

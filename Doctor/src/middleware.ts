@@ -27,6 +27,7 @@ export const config = {
     "/",
     "/profile",
     "/services/:path*",
-    "/verification-applications/:path*"
+    "/verification-applications/:path*",
+    "/reviews/:path*",
   ],
 };
