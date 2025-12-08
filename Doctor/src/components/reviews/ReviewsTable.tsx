@@ -60,7 +60,7 @@ const ReviewsTable = () => {
                         reviewsData.map((review) => (
                             <TableRow key={review.id}>
                                 <TableCell>
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 text-wrap">
                                         <Avatar className="h-8 w-8 rounded-lg">
                                             <AvatarImage src={review.user.imageURL ?? ""} alt={review.user.fullName} />
                                             <AvatarFallback className="rounded-lg">
@@ -81,7 +81,7 @@ const ReviewsTable = () => {
                                 </TableCell>
 
 
-                                <TableCell className="hidden lg:table-cell">
+                                <TableCell>
                                     <Badge>
                                         <Star/> {review.ratings} / 5
                                     </Badge>

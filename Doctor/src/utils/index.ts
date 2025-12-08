@@ -99,6 +99,21 @@ const getApplicationStatusText = (status: number) => {
   }
 }
 
+const getAppointmentStatusText = (value: number) => {
+  switch (value) {
+    case 0:
+      return "Pending";
+    case 1:
+      return "Confirmed";
+    case 2:
+      return "Completed";
+    case 3:
+      return "Cancelled";
+    case 4:
+      return "Rescheduled";
+  }
+}
+
 export {
     getAvatarFallbackText,
     formatTime,
@@ -106,5 +121,6 @@ export {
     getDoctorServiceTypeText,
     getDoctorServiceDurationText,
     getDayText,
-    getApplicationStatusText
+    getApplicationStatusText,
+    getAppointmentStatusText
 }

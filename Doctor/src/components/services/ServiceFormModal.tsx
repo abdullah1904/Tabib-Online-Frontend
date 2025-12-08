@@ -85,7 +85,7 @@ const ServiceFormModal = ({ showModal, setShowModal }: Props) => {
         <Form {...serviceForm}>
           <form onSubmit={serviceForm.handleSubmit(onSubmit)}>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
-              <div className='col-end-1 md:col-span-2'>
+              <div className='col-span-1 md:col-span-2'>
                 <FormField
                   control={serviceForm.control}
                   name="title"

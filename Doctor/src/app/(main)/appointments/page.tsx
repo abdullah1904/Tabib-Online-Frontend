@@ -1,8 +1,7 @@
-import ReviewsTable from "@/components/reviews/ReviewsTable"
+import AppointmentsTable from "@/components/appointments/AppointmentsTable"
 import { Breadcrumb, BreadcrumbList, BreadcrumbLink,BreadcrumbItem, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 
-
-const ReviewsPage = () => {
+const AppointmentsPage = () => {
   return (
     <div>
       <Breadcrumb>
@@ -14,13 +13,13 @@ const ReviewsPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator className="hidden md:block" />
           <BreadcrumbItem>
-            <BreadcrumbPage>Reviews</BreadcrumbPage>
+            <BreadcrumbPage>Appointments</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <ReviewsTable />
+      <AppointmentsTable />
     </div>
   )
 }
 
-export default ReviewsPage
+export default AppointmentsPage
