@@ -5,10 +5,17 @@ export const metadata: Metadata = {
   title: "Sign In | Tabib Online",
 };
 
+type Props = {
+  searchParams: Promise<{
+    callbackUrl?: string;
+  }>
+}
 
-const SigninPage = () => {
+
+const SigninPage = async ({searchParams}:Props) => {
+  const {callbackUrl} = await searchParams;
   return (
-    <SignInForm />
+    <SignInForm callbackUrl={callbackUrl}/>
   )
 }
 

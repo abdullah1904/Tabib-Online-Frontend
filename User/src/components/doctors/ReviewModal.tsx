@@ -1,5 +1,5 @@
 import { ReviewFormData, reviewFormSchema } from '@/lib/validation'
-import { doctorReview } from '@/services/doctors.service'
+import { createDoctorReview } from '@/services/doctors.service'
 import { showToast } from '@/utils'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Textarea } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -20,7 +20,7 @@ const ReviewModal = ({ setShowModal, showModal, doctorId }: Props) => {
         resolver: zodResolver(reviewFormSchema)
     });
     const { mutate, isPending } = useMutation({
-        mutationFn: doctorReview,
+        mutationFn: createDoctorReview,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['doctor', doctorId] });
             showToast('Review submitted successfully', 'success');

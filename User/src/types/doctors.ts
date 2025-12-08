@@ -1,4 +1,4 @@
-import { AccountStatus, DoctorPrefix, Gender, MedicalDegree, PostGraduateDegree, Specialization, VerificationDocumentType } from "@/utils/constants";
+import { AccountStatus, AppointmentStatus, DoctorPrefix, Gender, MedicalDegree, PostGraduateDegree, Specialization, VerificationDocumentType } from "@/utils/constants";
 
 export interface Doctor {
     id: number;
@@ -31,4 +31,21 @@ export interface Doctor {
     verifiedAt?: Date | null;
     createdAt: Date;
     updatedAt: Date;
+}
+
+export interface DoctorAppointment {
+    id: number;
+    appointmentDate: string;
+    appointmentTime: string;
+    status: AppointmentStatus;
+    doctor: {
+        id: number;
+        fullName: string;
+        imageURL?: string | null;
+        specialization: Specialization;
+        email: string;  
+        phoneNumber: string;
+    };
+    createdAt: Date;
+    updatedAt: Date;   
 }

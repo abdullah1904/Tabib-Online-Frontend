@@ -1,11 +1,13 @@
 import { AppointmentFormData, appointmentFormSchema } from '@/lib/validation'
 import { Service } from '@/types/services'
-import { getDoctorServiceDurationText, getDoctorServiceTypeText, getUpcomingDateNumbers } from '@/utils'
+import { getDoctorServiceDurationText, getDoctorServiceTypeText, getUpcomingDateNumbers, showToast } from '@/utils'
 import { Button, Checkbox, DatePicker, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, TimeInput } from '@heroui/react'
 import { today, getLocalTimeZone, Time, parseDate } from '@internationalized/date'
 import React from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useMutation } from '@tanstack/react-query'
+import { createDoctorAppointment } from '@/services/doctors.service'
 
 type Props = {
     showModal: string,
@@ -22,7 +24,17 @@ const ServiceDetailModal = ({ showModal, setShowModal, service, setService }: Pr
             appointmentDate: undefined,
             appointmentTime: service?.time || undefined,
             additionalNotes: undefined,
-            healthSharingConsent: false
+            healthInfoSharingConsent: false
+        }
+    });
+    const { mutate, isPending } = useMutation({
+        mutationFn: createDoctorAppointment,
+        onSuccess() {
+            showToast('Appointment booked successfully', 'success');
+            handleClose();
+        },
+        onError(error) {
+            showToast(error.message ?? 'Something went wrong', 'error')
         }
     });
     const handleClose = () => {
@@ -30,7 +42,12 @@ const ServiceDetailModal = ({ showModal, setShowModal, service, setService }: Pr
         setService(null);
     }
     const onSubmit = (data: AppointmentFormData) => {
-        console.log(data)
+        if (!service) return;
+        mutate({
+            doctorId: service.doctor,
+            serviceId: service.id,
+            appointmentData: data
+        });
     }
     return (
         <Modal isOpen={!!showModal} onClose={handleClose} size='lg' placement='center'>
@@ -224,7 +241,7 @@ const ServiceDetailModal = ({ showModal, setShowModal, service, setService }: Pr
                                 }}
                             />
                             <Checkbox
-                                {...appointmentForm.register('healthSharingConsent')}
+                                {...appointmentForm.register('healthInfoSharingConsent')}
                                 color='primary'
                                 classNames={{
                                     label: 'text-primary',
@@ -235,7 +252,7 @@ const ServiceDetailModal = ({ showModal, setShowModal, service, setService }: Pr
                         </div>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color='primary' type='submit'>
+                        <Button color='primary' type='submit' disabled={isPending} isLoading={isPending}>
                             Confirm Appointment
                         </Button>
                     </ModalFooter>

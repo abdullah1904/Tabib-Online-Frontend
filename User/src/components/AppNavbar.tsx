@@ -14,7 +14,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "@heroui/react";
-import { Bot, LogIn, LogOut, Stethoscope, User } from "lucide-react";
+import { Bot, Calendar, CreditCard, LogIn, LogOut, Stethoscope, User } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -99,6 +99,20 @@ const AppNavbar = () => {
                   onPress={() => handlePress('/profile')}
                 >
                   Profile
+                </DropdownItem>
+                <DropdownItem
+                  key="appointments"
+                  startContent={<Calendar className="size-4" />}
+                  onPress={() => handlePress('/profile/appointments')}
+                >
+                  Appointments
+                </DropdownItem>
+                <DropdownItem
+                  key="wallet"
+                  startContent={<CreditCard className="size-4" />}
+                  onPress={() => handlePress('/profile/wallet')}
+                >
+                  Wallet
                 </DropdownItem>
                 <DropdownItem
                   key="signOut"

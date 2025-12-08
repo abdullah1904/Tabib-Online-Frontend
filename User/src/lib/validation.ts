@@ -211,7 +211,7 @@ export const appointmentFormSchema = z.object({
     additionalNotes: z
         .string()
         .max(500, "Additional notes must be less than or equal to 500 characters long"),
-    healthSharingConsent: z
+    healthInfoSharingConsent: z
         .boolean()
         .refine((value) => value === true, {
             message: "Health sharing consent is required"

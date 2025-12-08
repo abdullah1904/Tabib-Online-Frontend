@@ -290,6 +290,21 @@ const getUpcomingDateNumbers = (days: DayOfWeek[], count: number = 4): number[] 
   return result;
 }
 
+const getAppointmentStatusText = (value: number) => {
+  switch (value) {
+    case 0:
+      return "Pending";
+    case 1:
+      return "Confirmed";
+    case 2:
+      return "Completed";
+    case 3:
+      return "Cancelled";
+    case 4:
+      return "Rescheduled";
+  }
+}
+
 export {
   showToast,
   formatTime,
@@ -298,5 +313,6 @@ export {
   getDoctorServiceTypeText,
   getDoctorServiceDurationText,
   getDayText,
-  getUpcomingDateNumbers
+  getUpcomingDateNumbers,
+  getAppointmentStatusText
 }

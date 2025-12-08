@@ -27,6 +27,6 @@ export const config = {
     "/doctors/:path*",
     "/hospitals/:path*",
     "/tabib-bot",
-    "/profile"
+    "/profile/:path*",
   ],
 };

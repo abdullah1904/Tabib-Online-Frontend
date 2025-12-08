@@ -13,7 +13,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 
-const SignInForm = () => {
+const SignInForm = ({callbackUrl}:{callbackUrl?: string}) => {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
 
@@ -49,7 +49,12 @@ const SignInForm = () => {
             }
         },
         onSuccess: () => {
-            router.push("/");
+            if(callbackUrl){
+                router.push(callbackUrl);
+            }
+            else{
+                router.push("/");
+            }
             showToast("Login successful!", "success");
         },
         onError: (error) => {
