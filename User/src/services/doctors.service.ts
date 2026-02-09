@@ -10,7 +10,7 @@ export const listDoctors = async (query: string) => {
         url: query !== '' ? `/doctors?query=${query}` : '/doctors',
         isProtected: true
     });
-    return response.doctors as Doctor[];
+    return response as { doctors: Doctor[], reasoning: string };
 }
 
 export const getDoctor = async (doctorId: string) => {

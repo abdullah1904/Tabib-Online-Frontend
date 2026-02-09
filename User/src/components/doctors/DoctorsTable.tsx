@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react'
 import DoctorCard from './DoctorCard'
-import { Card, CardBody, CardFooter, Pagination, Spinner } from '@heroui/react'
+import { Alert, Card, CardBody, CardHeader, Spinner } from '@heroui/react'
 import DoctorFilters from './DoctorFilters';
 import { useQuery } from '@tanstack/react-query';
 import { listDoctors } from '@/services/doctors.service';
@@ -12,7 +12,7 @@ const DoctorsTable = () => {
   const [searchTerm] = useState<string>("");
   const [value] = useDebounce(searchTerm, 1000);
   const {
-    data: doctorsData = [],
+    data: doctorsData = { doctors: [], reasoning: "" },
     isLoading,
     isError,
     error,
@@ -38,8 +38,15 @@ const DoctorsTable = () => {
     <div className='w-full flex flex-col md:flex-row justify-center items-start p-2 md:p-10 gap-2 h-[91vh] relative bg-foreground'>
       <DoctorFilters />
       <Card className='flex-3 w-full h-auto'>
+        <CardHeader>
+          <Alert
+            description={doctorsData.reasoning}
+            className='m-2'
+            color='success'
+          />
+        </CardHeader>
         <CardBody className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-primary'>
-          {doctorsData.map((doctor) => (
+          {doctorsData.doctors.map((doctor) => (
             <DoctorCard
               key={doctor.id}
               id={doctor.id}
@@ -52,9 +59,6 @@ const DoctorsTable = () => {
             />
           ))}
         </CardBody>
-        <CardFooter className='flex justify-center items-center p-4'>
-          <Pagination initialPage={1} total={10} />
-        </CardFooter>
       </Card >
     </div >
   )
