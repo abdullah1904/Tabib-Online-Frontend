@@ -1,4 +1,4 @@
-import AppointmentsProfile from "@/components/Profile/AppointmentsProfile";
+import AppointmentsProfile from "@/components/profile/AppointmentsProfile";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

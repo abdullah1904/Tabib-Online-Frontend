@@ -219,3 +219,9 @@ export const appointmentFormSchema = z.object({
 });
 
 export type AppointmentFormData = z.infer<typeof appointmentFormSchema>;
+
+export const topUpFormSchema = z.object({
+    amount: z.number("Amount is required").min(500, "Amount must be at least 500"),
+});
+
+export type TopUpFormData = z.infer<typeof topUpFormSchema>;
