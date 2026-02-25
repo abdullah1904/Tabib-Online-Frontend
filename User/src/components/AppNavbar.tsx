@@ -1,4 +1,5 @@
 "use client";
+import { UserRole } from "@/utils/constants";
 import {
   Navbar,
   NavbarBrand,
@@ -29,7 +30,8 @@ const AppNavbar = () => {
     {
       "name": "Doctors",
       "link": "/doctors",
-      "icon": <Stethoscope className="size-4" />
+      "icon": <Stethoscope className="size-4" />,
+      "forRole": UserRole.USER
     },
     // {
     //   "name": "Hospitals",
@@ -39,7 +41,14 @@ const AppNavbar = () => {
     {
       "name": "Tabib Bot",
       "link": "/tabib-bot",
-      "icon": <Bot className="size-4" />
+      "icon": <Bot className="size-4" />,
+      "forRole": UserRole.USER
+    },
+    {
+      "name": "Dashboard",
+      "link": "/doctor",
+      "icon": <Stethoscope className="size-4" />,
+      "forRole": UserRole.DOCTOR
     }
   ];
   const handleSignOut = () => {
@@ -57,17 +66,20 @@ const AppNavbar = () => {
           className="sm:hidden"
         />
         <NavbarBrand>
-          <Link href="/" className="font-semibold text-2xl text-secondary">Tabib Online</Link>
+          <Link href="/" className="font-semibold text-2xl text-secondary">
+          Tabib Online {session?.user.role === UserRole.DOCTOR && "(Doctor)"}
+          </Link>
         </NavbarBrand>
       </NavbarContent>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        {menuItems.map((item, index) => (
+        {menuItems.filter(item => item.forRole === UserRole.USER).map((item, index) => (
           <NavbarItem key={`${item.name}-${index}`} onClick={() => handlePress(item.link)}>
             <Link
               className="w-full flex items-center justify-start gap-2 text-secondary"
               color="secondary"
               href={item.link}
+              hidden={!!session && item.forRole !== session.user?.role}
             >
               {item.icon} {item.name}
             </Link>
@@ -102,6 +114,7 @@ const AppNavbar = () => {
                 </DropdownItem>
                 <DropdownItem
                   key="appointments"
+                  hidden={session.user.role !== UserRole.USER}
                   startContent={<Calendar className="size-4" />}
                   onPress={() => handlePress('/profile/appointments')}
                 >
@@ -140,6 +153,7 @@ const AppNavbar = () => {
               className="w-full flex items-center justify-start gap-2"
               color="primary"
               href={item.link}
+              hidden={item.forRole && session?.user?.role !== item.forRole}
             >
               {item.icon} {item.name}
             </Link>

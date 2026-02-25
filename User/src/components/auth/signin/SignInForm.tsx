@@ -8,12 +8,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignInFormData, signInFormSchema } from "@/lib/validation";
 import { showToast } from "@/utils";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { AccountStatus } from "@/utils/constants";
 
 
 const SignInForm = ({callbackUrl}:{callbackUrl?: string}) => {
+    const {data} = useSession();
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
 
@@ -49,11 +51,14 @@ const SignInForm = ({callbackUrl}:{callbackUrl?: string}) => {
             }
         },
         onSuccess: () => {
+            if(data?.user.verifiedAt === null && data?.user.status === AccountStatus.PENDING){
+                router.push(`/verify-account?email=${data.user.email}`);
+            }
             if(callbackUrl){
                 router.push(callbackUrl);
             }
             else{
-                router.push("/");
+                router.push("/doctors");
             }
             showToast("Login successful!", "success");
         },
@@ -71,7 +76,7 @@ const SignInForm = ({callbackUrl}:{callbackUrl?: string}) => {
             <div className="w-full max-w-6xl">
                 <Card className="w-full shadow-lg">
                     <CardBody className="p-0">
-                        <div className="flex flex-col lg:flex-row min-h-[600px]">
+                        <div className="flex flex-col lg:flex-row min-h-150">
                             {/* Form Section */}
                             <div className="flex-1 flex flex-col justify-center p-6 sm:p-8 lg:p-12">
                                 {/* Header */}

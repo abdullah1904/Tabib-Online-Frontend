@@ -4,7 +4,7 @@ import { Message } from "@/types/chatbot";
 export const getChatHistory = async () => {
     const response = await generateRequest({
         method: "GET",
-        url: `/chatbot/history`,
+        url: `/tabib-bot/history`,
         isProtected: true
     });
     return response.messages as Message[];

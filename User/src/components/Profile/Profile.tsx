@@ -1,12 +1,12 @@
 "use client";
-import { MedicalInfoFormData, medicalInfoFormSchema, UpdatePersonalProfileFormData, updatePersonalProfileFormSchema } from "@/lib/validation";
-import { getMedicalRecord, updateMedicalRecord, updatePersonalProfile } from "@/services/profile.service";
+import { MedicalInfoFormData, medicalInfoFormSchema, ProfessionalInfoFormData, professionalInfoSchema, UpdatePersonalProfileFormData, updatePersonalProfileFormSchema } from "@/lib/validation";
+import { getMedicalProfile, getProfessionalProfile, updateMedicalProfile, updatePersonalProfile, updateProfessionalProfile } from "@/services/profile.service";
 import { showToast } from "@/utils";
-import { GenderOptions } from "@/utils/constants";
+import { DoctorPrefixOptions, GenderOptions, MedicalDegreeOptions, PostGraduateDegreeOptions, SpecializationOptions, UserRole } from "@/utils/constants";
 import { Card, CardHeader, CardBody, Avatar, Tabs, Tab, Input, NumberInput, Select, SelectItem, Button, Spinner, Textarea, Tooltip } from "@heroui/react"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { ScanHeart, Shield, User, Info } from "lucide-react";
+import { ScanHeart, Shield, User, Info, Briefcase } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -20,8 +20,6 @@ const PersonalInfoTab = () => {
             age: session?.user?.age || undefined,
             gender: session?.user?.gender?.toString() || undefined,
             address: session?.user?.address || "",
-            emergencyContactName: session?.user?.emergencyContactName || "",
-            emergencyPhoneNumber: session?.user?.emergencyContactNumber || "",
         }
     });
 
@@ -32,8 +30,6 @@ const PersonalInfoTab = () => {
                 age: session.user.age || undefined,
                 gender: session.user.gender?.toString() || undefined,
                 address: session.user.address || '',
-                emergencyContactName: session.user.emergencyContactName || '',
-                emergencyPhoneNumber: session.user.emergencyContactNumber || '',
             });
         }
     }, [session?.user, updatePersonalProfileForm]);
@@ -43,21 +39,17 @@ const PersonalInfoTab = () => {
         onSuccess: async (data) => {
             updatePersonalProfileForm.reset({
                 profilePicture: undefined,
-                fullName: data.fullName,
-                address: data.address,
-                age: data.age,
-                gender: data.gender.toString() || undefined,
-                emergencyContactName: data.emergencyContactName,
-                emergencyPhoneNumber: data.emergencyContactNumber,
+                fullName: data.user.fullName,
+                address: data.user.address,
+                age: data.user.age,
+                gender: data.user.gender?.toString() || undefined,
             });
             await update({
-                imageURL: data.imageURL,
-                fullName: data.fullName,
-                address: data.address,
-                age: data.age,
-                gender: data.gender,
-                emergencyContactName: data.emergencyContactName,
-                emergencyContactNumber: data.emergencyContactNumber,
+                imageURL: data.user.imageURL,
+                fullName: data.user.fullName,
+                address: data.user.address,
+                age: data.user.age,
+                gender: data.user.gender,
             });
             showToast("Profile updated successfully!", "success");
         },
@@ -76,8 +68,6 @@ const PersonalInfoTab = () => {
         formData.append('address', data.address);
         formData.append('age', data.age ? data.age.toString() : '');
         formData.append('gender', data.gender);
-        formData.append('emergencyContactName', data.emergencyContactName);
-        formData.append('emergencyContactNumber', data.emergencyPhoneNumber);
         mutate(formData);
     }
 
@@ -119,7 +109,7 @@ const PersonalInfoTab = () => {
                     <Input
                         {...updatePersonalProfileForm.register("fullName")}
                         type="text"
-                        placeholder="John Doe"
+                        placeholder="Ahmad Ali"
                         label="Full Name"
                         isInvalid={!!updatePersonalProfileForm.formState.errors.fullName}
                         errorMessage={updatePersonalProfileForm.formState.errors.fullName?.message}
@@ -167,38 +157,10 @@ const PersonalInfoTab = () => {
                     <Input
                         {...updatePersonalProfileForm.register("address")}
                         type="text"
-                        placeholder="123 Main St, Any City, USA"
+                        placeholder="Johar Town, Lahore"
                         label="Address"
                         isInvalid={!!updatePersonalProfileForm.formState.errors.address}
                         errorMessage={updatePersonalProfileForm.formState.errors.address?.message}
-                        classNames={{
-                            base: "w-full",
-                            input: "text-base",
-                            label: "text-sm font-medium",
-                            errorMessage: "text-xs"
-                        }}
-                    />
-                    <Input
-                        {...updatePersonalProfileForm.register("emergencyContactName")}
-                        type="text"
-                        placeholder="Jane Doe"
-                        label="Emergency Contact Name"
-                        isInvalid={!!updatePersonalProfileForm.formState.errors.emergencyContactName}
-                        errorMessage={updatePersonalProfileForm.formState.errors.emergencyContactName?.message}
-                        classNames={{
-                            base: "w-full",
-                            input: "text-base",
-                            label: "text-sm font-medium",
-                            errorMessage: "text-xs"
-                        }}
-                    />
-                    <Input
-                        {...updatePersonalProfileForm.register("emergencyPhoneNumber")}
-                        type="text"
-                        placeholder="+1 (555) 123-4567"
-                        label="Emergency Phone Number"
-                        isInvalid={!!updatePersonalProfileForm.formState.errors.emergencyPhoneNumber}
-                        errorMessage={updatePersonalProfileForm.formState.errors.emergencyPhoneNumber?.message}
                         classNames={{
                             base: "w-full",
                             input: "text-base",
@@ -224,16 +186,18 @@ const PersonalInfoTab = () => {
 
 const MedicalInfoTab = () => {
     const { data: medicalRecord, isLoading, isSuccess, isError, error } = useQuery({
-        queryKey: ['medicalRecord'],
-        queryFn: getMedicalRecord,
+        queryKey: ['profile', 'medical'],
+        queryFn: getMedicalProfile,
     });
     const updateMedicalRecordForm = useForm<MedicalInfoFormData>({
         resolver: zodResolver(medicalInfoFormSchema),
         defaultValues: {
+            emergencyContactName: '',
+            emergencyContactNumber: '',
             bloodType: '',
             height: undefined,
             weight: undefined,
-            knownAllergies: '',
+            allergies: '',
             currentMedications: '',
             pastMedicalHistory: '',
             familyMedicalHistory: '',
@@ -243,34 +207,37 @@ const MedicalInfoTab = () => {
     useEffect(() => {
         if (medicalRecord) {
             updateMedicalRecordForm.reset({
+                emergencyContactName: medicalRecord.emergencyContactName || '',
+                emergencyContactNumber: medicalRecord.emergencyContactNumber || '',
                 bloodType: medicalRecord.bloodType || '',
                 height: medicalRecord.height || undefined,
                 weight: medicalRecord.weight || undefined,
-                knownAllergies: medicalRecord.allergies || '',
+                allergies: medicalRecord.allergies || '',
                 currentMedications: medicalRecord.currentMedications || '',
                 pastMedicalHistory: medicalRecord.pastMedicalHistory || '',
                 familyMedicalHistory: medicalRecord.familyMedicalHistory || '',
             });
         }
-        console.log(medicalRecord);
     }, [medicalRecord, isSuccess, updateMedicalRecordForm]);
 
     const { mutate, isPending } = useMutation({
-        mutationFn: updateMedicalRecord,
+        mutationFn: updateMedicalProfile,
         onSuccess: (data) => {
             updateMedicalRecordForm.reset({
+                emergencyContactName: data.emergencyContactName || '',
+                emergencyContactNumber: data.emergencyContactNumber || '',
                 bloodType: data.bloodType || '',
                 height: data.height || undefined,
                 weight: data.weight || undefined,
-                knownAllergies: data.allergies || '',
+                allergies: data.allergies || '',
                 currentMedications: data.currentMedications || '',
                 pastMedicalHistory: data.pastMedicalHistory || '',
                 familyMedicalHistory: data.familyMedicalHistory || '',
             });
-            showToast("Medical record updated successfully!", "success");
+            showToast("Medical profile updated successfully!", "success");
         },
         onError: (error) => {
-            showToast(error.message || "Failed to update medical record", "error");
+            showToast(error.message || "Failed to update medical profile", "error");
         }
     });
 
@@ -300,6 +267,34 @@ const MedicalInfoTab = () => {
         <form onSubmit={updateMedicalRecordForm.handleSubmit(onSubmit)} noValidate>
             <div className="space-y-6 mx-auto">
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                    <Input
+                        {...updateMedicalRecordForm.register("emergencyContactName")}
+                        type="text"
+                        placeholder="Emergency Contact Name"
+                        label="Emergency Contact Name"
+                        isInvalid={!!updateMedicalRecordForm.formState.errors.emergencyContactName}
+                        errorMessage={updateMedicalRecordForm.formState.errors.emergencyContactName?.message}
+                        classNames={{
+                            base: "w-full",
+                            input: "text-base",
+                            label: "text-sm font-medium",
+                            errorMessage: "text-xs"
+                        }}
+                    />
+                    <Input
+                        {...updateMedicalRecordForm.register("emergencyContactNumber")}
+                        type="text"
+                        placeholder="Emergency Contact Number"
+                        label="Emergency Contact Number"
+                        isInvalid={!!updateMedicalRecordForm.formState.errors.emergencyContactNumber}
+                        errorMessage={updateMedicalRecordForm.formState.errors.emergencyContactNumber?.message}
+                        classNames={{
+                            base: "w-full",
+                            input: "text-base",
+                            label: "text-sm font-medium",
+                            errorMessage: "text-xs"
+                        }}
+                    />
                     <Input
                         {...updateMedicalRecordForm.register("bloodType")}
                         type="text"
@@ -347,11 +342,11 @@ const MedicalInfoTab = () => {
                     />
 
                     <Textarea
-                        {...updateMedicalRecordForm.register("knownAllergies")}
+                        {...updateMedicalRecordForm.register("allergies")}
                         placeholder="List any known allergies"
                         label="Known Allergies"
-                        isInvalid={!!updateMedicalRecordForm.formState.errors.knownAllergies}
-                        errorMessage={updateMedicalRecordForm.formState.errors.knownAllergies?.message}
+                        isInvalid={!!updateMedicalRecordForm.formState.errors.allergies}
+                        errorMessage={updateMedicalRecordForm.formState.errors.allergies?.message}
                         minRows={2}
                         maxRows={2}
                         endContent={
@@ -480,6 +475,186 @@ const MedicalInfoTab = () => {
     )
 }
 
+const ProfessionalInfoTab = () => {
+    const { data: professionalInfo, isLoading, isSuccess, isError, error } = useQuery({
+        queryKey: ['profile', 'professional'],
+        queryFn: getProfessionalProfile,
+    });
+    const updateProfessionalInfoForm = useForm<ProfessionalInfoFormData>({
+        resolver: zodResolver(professionalInfoSchema),
+        defaultValues: {
+            prefix: undefined,
+            specialization: undefined,
+            medicalDegree: undefined,
+            postGraduateDegree: undefined,
+            yearsOfExperience: undefined,
+        }
+    });
+    useEffect(() => {
+        if (professionalInfo) {
+            updateProfessionalInfoForm.reset({
+                prefix: professionalInfo.prefix.toString() || undefined,
+                specialization: professionalInfo.specialization.toString() || undefined,
+                medicalDegree: professionalInfo.medicalDegree.toString() || undefined,
+                postGraduateDegree: professionalInfo.postGraduateDegree.toString() || undefined,
+                yearsOfExperience: professionalInfo.yearsOfExperience || undefined,
+            });
+        }
+    }, [professionalInfo, isSuccess, updateProfessionalInfoForm]);
+    
+    const { mutate, isPending } = useMutation({
+        mutationFn: updateProfessionalProfile,
+        onSuccess: (data) => {
+            updateProfessionalInfoForm.reset({
+                prefix: data.prefix.toString() || undefined,
+                specialization: data.specialization.toString() || undefined,
+                medicalDegree: data.medicalDegree.toString() || undefined,
+                postGraduateDegree: data.postGraduateDegree.toString() || undefined,
+                yearsOfExperience: data.yearsOfExperience || undefined,
+            });
+            showToast("Professional profile updated successfully!", "success");
+        },
+        onError: (error) => {
+            showToast(error.message || "Failed to update professional profile", "error");
+        }
+    });
+    const onSubmit = (data: ProfessionalInfoFormData) => {
+        mutate(data);
+    }
+    
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center py-12">
+                <div className="text-center flex gap-2">
+                    <Spinner /> <p className="text-gray-600">Loading your information...</p>
+                </div>
+            </div>
+        );
+    }
+    if (isError) {
+        return (
+            <div className="flex items-center justify-center py-12">
+                <div className="text-center flex gap-2 text-red-600">
+                    <p className="text-gray-600">Error loading professional info: {error instanceof Error ? error.message : 'Unknown error'}</p>
+                </div>
+            </div>
+        )
+    }
+    return (
+        <div>
+            <form onSubmit={updateProfessionalInfoForm.handleSubmit(onSubmit)} noValidate>
+                <div className="space-y-6 mx-auto">
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                        <Select
+                            label="Specialization"
+                            placeholder="Select your specialization"
+                            selectedKeys={updateProfessionalInfoForm.watch("specialization") ? [updateProfessionalInfoForm.watch("specialization")] : []}
+                            onSelectionChange={(e) => updateProfessionalInfoForm.setValue("specialization", e.anchorKey as string)}
+                            isInvalid={!!updateProfessionalInfoForm.formState.errors.specialization}
+                            errorMessage={updateProfessionalInfoForm.formState.errors.specialization?.message}
+                            className="col-span-1 md:col-span-2"
+                            classNames={{
+                                base: "w-full",
+                                label: "text-sm font-medium",
+                                errorMessage: "text-xs"
+                            }}
+                        >
+                            {SpecializationOptions.map((specialization) => (
+                                <SelectItem key={specialization.value}>
+                                    {specialization.label}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                        <Select
+                            placeholder="MBBS/BDS/DVM/Pharm-D"
+                            label="Medical Degree"
+                            selectedKeys={updateProfessionalInfoForm.watch("medicalDegree") ? [updateProfessionalInfoForm.watch("medicalDegree")] : []}
+                            onSelectionChange={(e) => updateProfessionalInfoForm.setValue("medicalDegree", e.anchorKey as string)}
+                            isInvalid={!!updateProfessionalInfoForm.formState.errors.medicalDegree}
+                            errorMessage={updateProfessionalInfoForm.formState.errors.medicalDegree?.message}
+                            classNames={{
+                                base: "w-full",
+                                label: "text-sm font-medium",
+                                errorMessage: "text-xs"
+                            }}
+                        >
+                            {MedicalDegreeOptions.map((degree) => (
+                                <SelectItem key={degree.value}>
+                                    {degree.label}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                        <Select
+                            label="Post Graduate Degree"
+                            placeholder="FCPS/MCPS/MD/MS/MDS/MPhil/MPH/PhD"
+                            selectedKeys={updateProfessionalInfoForm.watch("postGraduateDegree") ? [updateProfessionalInfoForm.watch("postGraduateDegree")] : []}
+                            onSelectionChange={(e) => updateProfessionalInfoForm.setValue("postGraduateDegree", e.anchorKey as string)}
+                            isInvalid={!!updateProfessionalInfoForm.formState.errors.postGraduateDegree}
+                            errorMessage={updateProfessionalInfoForm.formState.errors.postGraduateDegree?.message}
+                            classNames={{
+                                base: "w-full",
+                                label: "text-sm font-medium",
+                                errorMessage: "text-xs"
+                            }}
+                        >
+                            {PostGraduateDegreeOptions.map((degree) => (
+                                <SelectItem key={degree.value}>
+                                    {degree.label}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                        <Select
+                            placeholder="Dr./Prof./Mr./Mrs."
+                            label="Prefix"
+                            selectedKeys={updateProfessionalInfoForm.watch("prefix") ? [updateProfessionalInfoForm.watch("prefix")] : []}
+                            onSelectionChange={(e) => updateProfessionalInfoForm.setValue("prefix", e.anchorKey as string)}
+                            isInvalid={!!updateProfessionalInfoForm.formState.errors.prefix}
+                            errorMessage={updateProfessionalInfoForm.formState.errors.prefix?.message}
+                            classNames={{
+                                base: "w-full",
+                                label: "text-sm font-medium",
+                                errorMessage: "text-xs"
+                            }}
+                        >
+                            {DoctorPrefixOptions.map((prefix) => (
+                                <SelectItem key={prefix.value}>
+                                    {prefix.label}
+                                </SelectItem>
+                            ))}
+                        </Select>
+
+                        <NumberInput
+                            name="yearsOfExperience"
+                            placeholder="30"
+                            label="Years of Experience"
+                            value={updateProfessionalInfoForm.watch("yearsOfExperience")}
+                            onValueChange={(e) => updateProfessionalInfoForm.setValue("yearsOfExperience", e)}
+                            isInvalid={!!updateProfessionalInfoForm.formState.errors.yearsOfExperience}
+                            errorMessage={updateProfessionalInfoForm.formState.errors.yearsOfExperience?.message}
+                            classNames={{
+                                base: "w-full",
+                                input: "text-base",
+                                label: "text-sm font-medium",
+                                errorMessage: "text-xs"
+                            }}
+                        />
+                    </div>
+                    <Button
+                        type="submit"
+                        color="primary"
+                        size="lg"
+                        isLoading={isPending}
+                        disabled={isPending}
+                        className="w-full font-medium py-3 transition-all duration-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    >
+                        {updateProfessionalInfoForm.formState.isSubmitting ? "Saving..." : "Save"}
+                    </Button>
+                </div>
+            </form>
+        </div>
+    )
+}
+
 const SecurityTab = () => {
     return (
         <div>Security Info</div>
@@ -516,14 +691,26 @@ const Profile = () => {
                         }>
                             <PersonalInfoTab />
                         </Tab>
-                        <Tab key="medicalInfo" title={
-                            <div className="flex items-center space-x-2">
-                                <ScanHeart />
-                                <span>Medical Info</span>
-                            </div>
-                        }>
-                            <MedicalInfoTab />
-                        </Tab>
+                        {session?.user.role === UserRole.USER && (
+                            <Tab key="medicalInfo" title={
+                                <div className="flex items-center space-x-2">
+                                    <ScanHeart />
+                                    <span>Medical Info</span>
+                                </div>
+                            }>
+                                <MedicalInfoTab />
+                            </Tab>
+                        )}
+                        {session?.user.role === UserRole.DOCTOR && (
+                            <Tab key="professionalInfo" title={
+                                <div className="flex items-center space-x-2">
+                                    <Briefcase />
+                                    <span>Professional Info</span>
+                                </div>
+                            }>
+                                <ProfessionalInfoTab />
+                            </Tab>
+                        )}
                         <Tab key="security" title={
                             <div className="flex items-center space-x-2">
                                 <Shield />

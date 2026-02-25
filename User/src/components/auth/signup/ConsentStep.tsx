@@ -1,5 +1,6 @@
 import { consentFormSchema, ConsentFormData } from '@/lib/validation';
-import { Button, Checkbox, Input } from '@heroui/react';
+import { UserRole, UserRoleOptions } from '@/utils/constants';
+import { Button, Checkbox, Input, Select, SelectItem } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
@@ -25,6 +26,10 @@ const ConsentStep = ({ formData, onSubmit, isLoading }: ConsentStepProps) => {
             treatmentConsent: formData?.treatmentConsent || false,
             privacyPolicyAgreement: formData?.privacyPolicyAgreement || false,
             healthInfoDisclosure: formData?.healthInfoDisclosure || false,
+            authenticInformationConsent: formData?.authenticInformationConsent || false,
+            dataUsageConsent: formData?.dataUsageConsent || false,
+            licenseVerificationConsent: formData?.licenseVerificationConsent || false,
+            termsAgreementConsent: formData?.termsAgreementConsent || false,
         }
     })
     return (
@@ -39,17 +44,17 @@ const ConsentStep = ({ formData, onSubmit, isLoading }: ConsentStepProps) => {
             </div>
             <div className="flex justify-center mb-4">
                 <div className="flex items-center space-x-2">
-                    {[1, 2, 3, 4].map((step) => (
+                    {[1, 2, 3].map((step) => (
                         <div key={step} className="flex items-center">
                             <div
-                                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${step <= 4
+                                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${step <= 3
                                     ? "bg-primary text-white"
                                     : "bg-gray-200 text-gray-400"
                                     }`}
                             >
                                 {step}
                             </div>
-                            {step < 4 && (
+                            {step < 3 && (
                                 <div
                                     className={`w-8 h-0.5 mx-2 transition-colors ${step < 4 ? "bg-primary" : "bg-gray-200"}`}
                                 />
@@ -85,44 +90,122 @@ const ConsentStep = ({ formData, onSubmit, isLoading }: ConsentStepProps) => {
                                 errorMessage: "text-xs"
                             }}
                         />
-                        <Checkbox
-                            {...consentForm.register("treatmentConsent")}
-                            color='primary'
-                            classNames={{ label: 'text-primary' }}
+                        <Select
+                            {...consentForm.register('role')}
+                            placeholder="Select Role"
+                            label="Role"
+                            isInvalid={!!consentForm.formState.errors.role}
+                            errorMessage={consentForm.formState.errors.role?.message}
+                            classNames={{
+                                base: "w-full",
+                                label: "text-sm font-medium",
+                                errorMessage: "text-xs"
+                            }}
                         >
-                            I consent to receive treatment for my health condition.
-                            {consentForm.formState.errors.treatmentConsent && (
-                                <p className="text-xs text-danger">
-                                    {consentForm.formState.errors.treatmentConsent.message}
-                                </p>
-                            )}
-                        </Checkbox>
-                        <Checkbox
-                            {...consentForm.register("healthInfoDisclosure")}
-                            color='primary'
-                            classNames={{ label: 'text-primary' }}
-                        >
-                            I consent to the disclosure of my health information for treatment purposes.
-                            {consentForm.formState.errors.healthInfoDisclosure && (
-                                <p className="text-xs text-danger">
-                                    {consentForm.formState.errors.healthInfoDisclosure.message}
-                                </p>
-                            )}
-                        </Checkbox>
-                        <Checkbox
-                            {...consentForm.register("privacyPolicyAgreement")}
-                            isInvalid={!!consentForm.formState.errors.privacyPolicyAgreement}
+                            {UserRoleOptions.map((role) => (
+                                <SelectItem key={role.value}>
+                                    {role.label}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                        {consentForm.watch("role") === String(UserRole.USER) && (
+                            <>
+                                <Checkbox
+                                    {...consentForm.register("treatmentConsent")}
+                                    color='primary'
+                                    classNames={{ label: 'text-primary' }}
+                                >
+                                    I consent to receive treatment for my health condition.
+                                    {consentForm.formState.errors.treatmentConsent && (
+                                        <p className="text-xs text-danger">
+                                            {consentForm.formState.errors.treatmentConsent.message}
+                                        </p>
+                                    )}
+                                </Checkbox>
+                                <Checkbox
+                                    {...consentForm.register("healthInfoDisclosure")}
+                                    color='primary'
+                                    classNames={{ label: 'text-primary' }}
+                                >
+                                    I consent to the disclosure of my health information for treatment purposes.
+                                    {consentForm.formState.errors.healthInfoDisclosure && (
+                                        <p className="text-xs text-danger">
+                                            {consentForm.formState.errors.healthInfoDisclosure.message}
+                                        </p>
+                                    )}
+                                </Checkbox>
+                                <Checkbox
+                                    {...consentForm.register("privacyPolicyAgreement")}
+                                    isInvalid={!!consentForm.formState.errors.privacyPolicyAgreement}
 
-                            color='primary'
-                            classNames={{ label: 'text-primary' }}
-                        >
-                            I acknowledge that I gave reviewed and agree to the privacy policy.
-                            {consentForm.formState.errors.privacyPolicyAgreement && (
-                                <p className="text-xs text-danger">
-                                    {consentForm.formState.errors.privacyPolicyAgreement.message}
-                                </p>
-                            )}
-                        </Checkbox>
+                                    color='primary'
+                                    classNames={{ label: 'text-primary' }}
+                                >
+                                    I acknowledge that I gave reviewed and agree to the privacy policy.
+                                    {consentForm.formState.errors.privacyPolicyAgreement && (
+                                        <p className="text-xs text-danger">
+                                            {consentForm.formState.errors.privacyPolicyAgreement.message}
+                                        </p>
+                                    )}
+                                </Checkbox>
+                            </>
+                        )}
+                        {consentForm.watch("role") === String(UserRole.DOCTOR) && (
+                            <>
+                                <Checkbox
+                                    {...consentForm.register("authenticInformationConsent")}
+                                    isInvalid={!!consentForm.formState.errors.authenticInformationConsent}
+                                    color='primary'
+                                    classNames={{ label: 'text-primary' }}
+                                >
+                                    I confirm that all the information and documents I have provided are true, accurate, and belong to me.
+                                    {consentForm.formState.errors.authenticInformationConsent && (
+                                        <p className="text-xs text-danger">
+                                            {consentForm.formState.errors.authenticInformationConsent.message}
+                                        </p>
+                                    )}
+                                </Checkbox>
+                                <Checkbox
+                                    {...consentForm.register("licenseVerificationConsent")}
+                                    isInvalid={!!consentForm.formState.errors.licenseVerificationConsent}
+                                    color='primary'
+                                    classNames={{ label: 'text-primary' }}
+                                >
+                                    I consent to the verification of my professional license and credentials with the relevant medical authorities.
+                                    {consentForm.formState.errors.licenseVerificationConsent && (
+                                        <p className="text-xs text-danger">
+                                            {consentForm.formState.errors.licenseVerificationConsent.message}
+                                        </p>
+                                    )}
+                                </Checkbox>
+                                <Checkbox
+                                    {...consentForm.register("termsAgreementConsent")}
+                                    isInvalid={!!consentForm.formState.errors.termsAgreementConsent}
+                                    color='primary'
+                                    classNames={{ label: 'text-primary' }}
+                                >
+                                    I have read and agree to abide by the platform&apos;s terms of service, privacy policy, and code of conduct for medical professionals.
+                                    {consentForm.formState.errors.termsAgreementConsent && (
+                                        <p className="text-xs text-danger">
+                                            {consentForm.formState.errors.termsAgreementConsent.message}
+                                        </p>
+                                    )}
+                                </Checkbox>
+                                <Checkbox
+                                    {...consentForm.register("dataUsageConsent")}
+                                    isInvalid={!!consentForm.formState.errors.dataUsageConsent}
+                                    color='primary'
+                                    classNames={{ label: 'text-primary' }}
+                                >
+                                    I consent to the use of my professional and personal data for verification and compliance purposes.
+                                    {consentForm.formState.errors.dataUsageConsent && (
+                                        <p className="text-xs text-danger">
+                                            {consentForm.formState.errors.dataUsageConsent.message}
+                                        </p>
+                                    )}
+                                </Checkbox>
+                            </>
+                        )}
                     </div>
 
                     <Button

@@ -12,7 +12,7 @@ const DoctorsTable = () => {
   const [searchTerm] = useState<string>("");
   const [value] = useDebounce(searchTerm, 1000);
   const {
-    data: doctorsData = { doctors: [], reasoning: "" },
+    data: doctorsData = { doctors: [], recommendationReasoning: "" },
     isLoading,
     isError,
     error,
@@ -41,7 +41,7 @@ const DoctorsTable = () => {
       <Card className='flex-3 w-full h-auto'>
         <CardHeader>
           <Alert
-            description={doctorsData.reasoning}
+            description={doctorsData.recommendationReasoning}
             className='m-2'
             color='success'
           />
@@ -51,12 +51,12 @@ const DoctorsTable = () => {
             <DoctorCard
               key={doctor.id}
               id={doctor.id}
-              doctorPrefix={getDoctorPrefixText(doctor.doctorPrefix)!}
+              doctorPrefix={getDoctorPrefixText(doctor.professionalInfo.prefix)!}
               fullName={doctor.fullName}
-              specialization={getSpecializationText(doctor.specialization)!}
+              specialization={getSpecializationText(doctor.professionalInfo.specialization)!}
               image={doctor.imageURL!}
-              ratings={doctor.ratings}
-              isVerified={doctor.pmdcVerifiedAt !== null}
+              ratings={doctor.averageRating}
+              isVerified={doctor.professionalInfo.PMDCVerifiedAt !== null}
             />
           ))}
         </CardBody>

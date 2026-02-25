@@ -1,16 +1,17 @@
 import { generateRequest } from "@/lib/api-client";
+import { OTPType } from "@/utils/constants";
 
-export const signUp = async (data: FormData) => {
+export const register = async (data: FormData) => {
     const response = await generateRequest({
         method: "POST",
-        url: "/auth/signup",
+        url: "/auth/register",
         data,
         isFormData: true
     });
     return response;
 }
 
-export const sendOtp = async (data: { email: string }) => {
+export const sendOtp = async (data: { email: string, type: OTPType }) => {
     const response = await generateRequest({
         method: "POST",
         url: "/auth/send-otp",
@@ -22,16 +23,7 @@ export const sendOtp = async (data: { email: string }) => {
 export const verifyAccount = async (data: { email: string, otp: string }) => {
     const response = await generateRequest({
         method: "POST",
-        url: "/auth/verify-account",
-        data
-    });
-    return response;
-}
-
-export const forgotPassword = async (data: { email: string }) => {
-    const response = await generateRequest({
-        method: "POST",
-        url: "/auth/forgot-password",
+        url: "/auth/verify-email",
         data
     });
     return response;

@@ -24,7 +24,7 @@ export const generateRequest = async ({ method, url, data, isFormData = false, i
     const customHeaders = {
         headers: {
             "Content-Type": isFormData ? "multipart/form-data" : "application/json",
-            ...(isProtected && session?.user.accessToken ? { Authorization: `Bearer ${session?.user.accessToken}` } : {}),
+            ...(isProtected && session?.accessToken ? { Authorization: `Bearer ${session?.accessToken}` } : {}),
         },
     };
     console.log(axiosInstance.getUri());

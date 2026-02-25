@@ -20,11 +20,29 @@ export const VerificationDocumentOptions = [
     { label: "Other Govt Issued ID", value: 3 }
 ]
 
+export enum UserRole{
+    USER = 2,
+    DOCTOR = 3,
+    // HOSPITAL = 4,
+}
+
+export const UserRoleOptions = [
+    { label: "User", value: 2 },
+    { label: "Doctor", value: 3 },
+    // { label: "Hospital", value: 4 },
+]
+
 export enum AccountStatus {
     PENDING = 0,
     ACTIVE = 1,
     DEACTIVATED = 2,
     SUSPENDED = 3
+}
+
+export enum OTPType {
+    EMAIL_VERIFICATION = 1,
+    PASSWORD_RESET = 2,
+    TWO_FACTOR_AUTH = 3,
 }
 
 export enum MedicalDegree {
@@ -38,6 +56,17 @@ export enum MedicalDegree {
     DHMS = 8
 }
 
+export const MedicalDegreeOptions = [
+    { label: "MBBS", value: 1 },
+    { label: "BDS", value: 2 },
+    { label: "DVM", value: 3 },
+    { label: "Pharm-D", value: 4 },
+    { label: "DPT", value: 5 },
+    { label: "BEMS", value: 6 },
+    { label: "BUMS", value: 7 },
+    { label: "DHMS", value: 8 }
+]
+
 export enum PostGraduateDegree {
     NONE = 0,
     FCPS = 1,
@@ -50,6 +79,17 @@ export enum PostGraduateDegree {
     PhD = 8
 }
 
+export const PostGraduateDegreeOptions = [
+    { label: "None", value: 0 },
+    { label: "FCPS", value: 1 },
+    { label: "MCPS", value: 2 },
+    { label: "MD", value: 3 },
+    { label: "MS", value: 4 },
+    { label: "MDS", value: 5 },
+    { label: "MPhil", value: 6 },
+    { label: "MPH", value: 7 },
+    { label: "PhD", value: 8 }
+]
 
 export enum Specialization {
     // --- General & Family Practice ---
@@ -133,6 +173,88 @@ export enum Specialization {
     SexualHealthSpecialist = 58
 }
 
+export const SpecializationOptions = [
+    // --- General & Family Practice ---
+    { label: "General Physician", value: 1 },
+    { label: "Family Medicine", value: 2 },
+    { label: "Internal Medicine", value: 3 },
+    { label: "General Surgeon", value: 4 },
+
+    // --- Internal Medicine Subspecialties ---
+    { label: "Cardiologist", value: 5 },
+    { label: "Dermatologist", value: 6 },
+    { label: "Endocrinologist", value: 7 },
+    { label: "Gastroenterologist", value: 8 },
+    { label: "Hematologist", value: 9 },
+    { label: "Nephrologist", value: 10 },
+    { label: "Neurologist", value: 11 },
+    { label: "Oncologist", value: 12 },
+    { label: "Pulmonologist", value: 13 },
+    { label: "Rheumatologist", value: 14 },
+    { label: "Infectious Disease Specialist", value: 15 },
+
+    // --- Surgical Specialties ---
+    { label: "Orthopedic Surgeon", value: 16 },
+    { label: "Neurosurgeon", value: 17 },
+    { label: "Cardiothoracic Surgeon", value: 18 },
+    { label: "Plastic Surgeon", value: 19 },
+    { label: "Pediatric Surgeon", value: 20 },
+    { label: "Urologist", value: 21 },
+    { label: "Vascular Surgeon", value: 22 },
+    { label: "Laparoscopic Surgeon", value: 23 },
+
+    // --- Women & Child Health ---
+    { label: "Gynecologist", value: 24 },
+    { label: "Obstetrician", value: 25 },
+    { label: "Pediatrician", value: 26 },
+    { label: "Neonatologist", value: 27 },
+
+    // --- Eye, ENT, Dental ---
+    { label: "Ophthalmologist", value: 28 },
+    { label: "ENT Specialist", value: 29 },
+    { label: "Dentist", value: 30 },
+    { label: "Orthodontist", value: 31 },
+    { label: "Oral Surgeon", value: 32 },
+    { label: "Periodontist", value: 33 },
+    { label: "Prosthodontist", value: 34 },
+    { label: "Endodontist", value: 35 },
+
+    // --- Mental Health ---
+    { label: "Psychiatrist", value: 36 },
+    { label: "Psychologist", value: 37 },
+    { label: "Clinical Psychologist", value: 38 },
+
+    // --- Diagnostic & Lab ---
+    { label: "Radiologist", value: 39 },
+    { label: "Pathologist", value: 40 },
+    { label: "Nuclear Medicine Specialist", value: 41 },
+
+    // --- Emergency & Intensive Care ---
+    { label: "Anesthesiologist", value: 42 },
+    { label: "Emergency Medicine", value: 43 },
+    { label: "Critical Care Specialist", value: 44 },
+    { label: "Pain Management Specialist", value: 45 },
+
+    // --- Public & Preventive Health ---
+    { label: "Public Health Specialist", value: 46 },
+    { label: "Epidemiologist", value: 47 },
+    { label: "Community Medicine", value: 48 },
+    { label: "Occupational Health", value: 49 },
+
+    // --- Rehabilitation & Allied Medicine ---
+    { label: "Physiotherapist", value: 50 },
+    { label: "Nutritionist", value: 51 },
+    { label: "Dietitian", value: 52 },
+    { label: "Speech Therapist", value: 53 },
+    { label: "Chiropractor", value: 54 },
+
+    // --- Cosmetic & Misc ---
+    { label: "Cosmetic Surgeon", value: 55 },
+    { label: "Sports Medicine", value: 56 },
+    { label: "Sleep Medicine Specialist", value: 57 },
+    { label: "Sexual Health Specialist", value: 58 }
+];
+
 export enum DoctorPrefix {
   Dr = 1,
   Prof = 2,
@@ -149,6 +271,24 @@ export enum DoctorPrefix {
   Consultant = 13,
   Surgeon = 14,
 }
+
+export const DoctorPrefixOptions = [
+    { label: "Dr", value: 1 },
+    { label: "Prof", value: 2 },
+    { label: "Prof Dr", value: 3 },
+    { label: "Mr Dr", value: 4 },
+    { label: "Ms Dr", value: 5 },
+    { label: "Mrs Dr", value: 6 },
+    { label: "Mx Dr", value: 7 },
+    { label: "Assoc Prof", value: 8 },
+    { label: "Asst Prof", value: 9 },
+    { label: "Assoc Prof Dr", value: 10 },
+    { label: "Asst Prof Dr", value: 11 },
+    { label: "Rev Dr", value: 12 },
+    { label: "Consultant", value: 13 },
+    { label: "Surgeon", value: 14 }   
+]
+
 
 export enum DoctorServiceType {
     IN_PERSON = 1,

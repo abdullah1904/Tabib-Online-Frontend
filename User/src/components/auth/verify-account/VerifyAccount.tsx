@@ -2,6 +2,7 @@
 import { verifyAccountFormSchema, VerifyAccountFormData } from '@/lib/validation';
 import { sendOtp, verifyAccount } from '@/services/auth.service';
 import { showToast } from '@/utils';
+import { OTPType } from '@/utils/constants';
 import { Button, Card, CardBody, InputOtp } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -39,7 +40,7 @@ const VerifyAccount = ({ email }: Props) => {
     mutationFn: verifyAccount,
     onSuccess: () => {
       showToast('Account verified successfully', 'success');
-      router.push('/signin');
+      router.push('/doctors');
     },
     onError: (error) => {
       showToast(error.message || 'Failed to verify account', 'error');
@@ -47,7 +48,7 @@ const VerifyAccount = ({ email }: Props) => {
   });
 
   const onResendOTP = () => {
-    sendOTPMutate({ email });
+    sendOTPMutate({ email, type: OTPType.EMAIL_VERIFICATION });
   }
   const onSubmit = (data: VerifyAccountFormData) => {
     verifyAccountMutate({ email, otp: data.otp });
@@ -57,7 +58,7 @@ const VerifyAccount = ({ email }: Props) => {
       <div className="w-full max-w-6xl">
         <Card className="w-full shadow-lg">
           <CardBody className="p-0">
-            <div className="flex flex-col lg:flex-row min-h-[600px]">
+            <div className="flex flex-col lg:flex-row min-h-150">
               {/* Form Section */}
               <div className="flex-1 flex flex-col justify-center p-6 sm:p-8 lg:p-12">
 

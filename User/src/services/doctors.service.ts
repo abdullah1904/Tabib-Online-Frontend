@@ -7,10 +7,10 @@ import { Service } from "@/types/services";
 export const listDoctors = async (query: string) => {
     const response = await generateRequest({
         method: "GET",
-        url: query !== '' ? `/doctors?query=${query}` : '/doctors',
+        url: query !== '' ? `/doctors/recommend?query=${query}` : '/doctors/recommend',
         isProtected: true
     });
-    return response as { doctors: Doctor[], reasoning: string };
+    return response as { doctors: Doctor[], recommendationReasoning: string };
 }
 
 export const getDoctor = async (doctorId: string) => {

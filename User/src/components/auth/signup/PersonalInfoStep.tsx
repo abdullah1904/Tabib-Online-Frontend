@@ -22,8 +22,6 @@ const PersonalInfoStep = ({ onSubmit, formData }: PersonalInfoStepProps) => {
             email: formData?.email || undefined,
             phoneNumber: formData?.phoneNumber || undefined,
             address: formData?.address || undefined,
-            emergencyContactName: formData?.emergencyContactName || undefined,
-            emergencyPhoneNumber: formData?.emergencyPhoneNumber || undefined,
         }
     });
     return (
@@ -39,7 +37,7 @@ const PersonalInfoStep = ({ onSubmit, formData }: PersonalInfoStepProps) => {
             </div>
             <div className="flex justify-center mb-4">
                 <div className="flex items-center space-x-2">
-                    {[1, 2, 3, 4].map((step) => (
+                    {[1, 2, 3].map((step) => (
                         <div key={step} className="flex items-center">
                             <div
                                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${step <= 1
@@ -49,7 +47,7 @@ const PersonalInfoStep = ({ onSubmit, formData }: PersonalInfoStepProps) => {
                             >
                                 {step}
                             </div>
-                            {step < 4 && (
+                            {step < 3 && (
                                 <div
                                     className={`w-8 h-0.5 mx-2 transition-colors ${step < 1 ? "bg-primary" : "bg-gray-200"}`}
                                 />
@@ -65,7 +63,7 @@ const PersonalInfoStep = ({ onSubmit, formData }: PersonalInfoStepProps) => {
                         <Input
                             {...personalInfoForm.register("fullName")}
                             type="text"
-                            placeholder="John Doe"
+                            placeholder="Ahmad Ali"
                             label="Full Name"
                             isInvalid={!!personalInfoForm.formState.errors.fullName}
                             errorMessage={personalInfoForm.formState.errors.fullName?.message}
@@ -112,7 +110,7 @@ const PersonalInfoStep = ({ onSubmit, formData }: PersonalInfoStepProps) => {
                         <Input
                             {...personalInfoForm.register("email")}
                             type="text"
-                            placeholder="john.doe@example.com"
+                            placeholder="ahmad.ali@example.com"
                             label="Email"
                             isInvalid={!!personalInfoForm.formState.errors.email}
                             errorMessage={personalInfoForm.formState.errors.email?.message}
@@ -126,7 +124,7 @@ const PersonalInfoStep = ({ onSubmit, formData }: PersonalInfoStepProps) => {
                         <Input
                             {...personalInfoForm.register("phoneNumber")}
                             type="text"
-                            placeholder="+1 (555) 123-4567"
+                            placeholder="+92-300-1234567"
                             label="Phone Number"
                             isInvalid={!!personalInfoForm.formState.errors.phoneNumber}
                             errorMessage={personalInfoForm.formState.errors.phoneNumber?.message}
@@ -140,7 +138,7 @@ const PersonalInfoStep = ({ onSubmit, formData }: PersonalInfoStepProps) => {
                         <Input
                             {...personalInfoForm.register("address")}
                             type="text"
-                            placeholder="123 Main St, Anytown, USA"
+                            placeholder="Johar Town, Lahore"
                             label="Address"
                             isInvalid={!!personalInfoForm.formState.errors.address}
                             errorMessage={personalInfoForm.formState.errors.address?.message}
@@ -150,35 +148,7 @@ const PersonalInfoStep = ({ onSubmit, formData }: PersonalInfoStepProps) => {
                                 label: "text-sm font-medium",
                                 errorMessage: "text-xs"
                             }}
-                        />
-                        <Input
-                            {...personalInfoForm.register("emergencyContactName")}
-                            type="text"
-                            placeholder="Jane Doe"
-                            label="Emergency Contact Name"
-                            isInvalid={!!personalInfoForm.formState.errors.emergencyContactName}
-                            errorMessage={personalInfoForm.formState.errors.emergencyContactName?.message}
-                            classNames={{
-                                base: "w-full",
-                                input: "text-base",
-                                label: "text-sm font-medium",
-                                errorMessage: "text-xs"
-                            }}
-                        />
-                        <Input
-                            {...personalInfoForm.register("emergencyPhoneNumber")}
-                            type="text"
-                            placeholder="+1 (555) 123-4567"
-                            label="Emergency Phone Number"
-                            isInvalid={!!personalInfoForm.formState.errors.emergencyPhoneNumber}
-                            errorMessage={personalInfoForm.formState.errors.emergencyPhoneNumber?.message}
-                            classNames={{
-                                base: "w-full",
-                                input: "text-base",
-                                label: "text-sm font-medium",
-                                errorMessage: "text-xs"
-                            }}
-                        />
+                        />                        
                     </div>
 
                     <Button

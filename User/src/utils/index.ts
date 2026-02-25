@@ -9,6 +9,9 @@ const showToast = (message: string, type: 'success' | 'error' | 'warning') => {
       color: 'success',
       closeIcon: true,
       timeout: 3000,
+      classNames: {
+        title: 'whitespace-normal break-words'
+      }
     })
   }
   else if (type == 'error') {
@@ -17,6 +20,9 @@ const showToast = (message: string, type: 'success' | 'error' | 'warning') => {
       color: 'danger',
       closeIcon: true,
       timeout: 3000,
+      classNames: {
+        title: 'whitespace-normal break-words'
+      }
     })
   }
   else if (type == 'warning') {
@@ -25,6 +31,9 @@ const showToast = (message: string, type: 'success' | 'error' | 'warning') => {
       color: 'warning',
       closeIcon: true,
       timeout: 3000,
+      classNames: {
+        title: 'whitespace-normal break-words'
+      }
     })
   }
 }

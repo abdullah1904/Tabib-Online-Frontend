@@ -1,5 +1,5 @@
 
-import { GenderOptions, VerificationDocumentOptions } from "@/utils/constants";
+import { DoctorPrefixOptions, GenderOptions, MedicalDegreeOptions, PostGraduateDegreeOptions, SpecializationOptions, UserRole, UserRoleOptions, VerificationDocumentOptions } from "@/utils/constants";
 import z from "zod";
 
 // SignInForm validation schema and types
@@ -46,29 +46,6 @@ export const personalInfoFormSchema = z.object({
         .string("Address is required")
         .min(5, "Address must be at least 5 characters long")
         .max(200, "Address must be less than or equal to 200 characters"),
-    emergencyContactName: z
-        .string("Full name is required")
-        .min(2, "Full name must be at least 2 characters long")
-        .max(100, "Full name must be less than or equal to 100 characters"),
-    emergencyPhoneNumber: z
-        .string("Phone Number is required")
-        .regex(
-            /^\+[1-9]\d{1,14}$/,
-            "Phone number must be in international format (e.g., +923001234567)"
-        ),
-});
-
-export const medicalInfoFormSchema = z.object({
-    bloodType: z
-        .string()
-        .min(1, "Blood type is required")
-        .max(3, "Blood type must be less than or equal to 3 characters long"),
-    height: z.number("Height is required").min(0, "Height must be a positive number"),
-    weight: z.number("Weight is required").min(0, "Weight must be a positive number"),
-    knownAllergies: z.string().min(5, "Known allergies must be at least 5 characters long"),
-    currentMedications: z.string().min(5, "Current medications must be at least 5 characters long"),
-    pastMedicalHistory: z.string().min(5, "Past medical history must be at least 5 characters long"),
-    familyMedicalHistory: z.string().min(5, "Family medical history must be at least 5 characters long"),
 });
 
 export const verificationFormSchema = z.object({
@@ -77,31 +54,89 @@ export const verificationFormSchema = z.object({
     verificationDocument: z.instanceof(File, { message: "Verification document is required" })
 })
 
-export const consentFormSchema = z.object({
+export const consentFormSchema = z
+  .object({
     password: z
-        .string()
-        .min(8, "Password must be at least 8 characters")
-        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-            "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"),
-    treatmentConsent: z
-        .boolean()
-        .refine((value) => value === true, {
-            message: "You must consent to receive treatment to proceed"
-        }),
-    healthInfoDisclosure: z
-        .boolean()
-        .refine((value) => value === true, {
-            message: "You must consent to health information disclosure for treatment purposes"
-        }),
-    privacyPolicyAgreement: z
-        .boolean()
-        .refine((value) => value === true, {
-            message: "You must acknowledge that you have reviewed and agree to the privacy policy"
-        }),
-});
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
+        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      ),
+    role: z.enum(
+      UserRoleOptions.map((option) => String(option.value)) as [string, ...string[]],
+      { message: "User role is required" }
+    ),
+
+    // User-only consents
+    treatmentConsent: z.boolean().optional(),
+    healthInfoDisclosure: z.boolean().optional(),
+    privacyPolicyAgreement: z.boolean().optional(),
+
+    // Doctor-only consents
+    authenticInformationConsent: z.boolean().optional(),
+    dataUsageConsent: z.boolean().optional(),
+    licenseVerificationConsent: z.boolean().optional(),
+    termsAgreementConsent: z.boolean().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.role === String(UserRole.USER)) {
+      if (!data.treatmentConsent) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "You must consent to receive treatment to proceed",
+          path: ["treatmentConsent"],
+        });
+      }
+      if (!data.healthInfoDisclosure) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "You must consent to health information disclosure for treatment purposes",
+          path: ["healthInfoDisclosure"],
+        });
+      }
+      if (!data.privacyPolicyAgreement) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "You must acknowledge that you have reviewed and agree to the privacy policy",
+          path: ["privacyPolicyAgreement"],
+        });
+      }
+    }
+
+    if (data.role === String(UserRole.DOCTOR)) {
+      if (!data.authenticInformationConsent) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "You must consent to authentic information disclosure",
+          path: ["authenticInformationConsent"],
+        });
+      }
+      if (!data.dataUsageConsent) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "You must consent to data usage",
+          path: ["dataUsageConsent"],
+        });
+      }
+      if (!data.licenseVerificationConsent) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "You must consent to license verification",
+          path: ["licenseVerificationConsent"],
+        });
+      }
+      if (!data.termsAgreementConsent) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "You must agree to the terms and conditions",
+          path: ["termsAgreementConsent"],
+        });
+      }
+    }
+  });
 
 export type PersonalInfoFormData = z.infer<typeof personalInfoFormSchema>;
-export type MedicalInfoFormData = z.infer<typeof medicalInfoFormSchema>;
 export type VerificationFormData = z.infer<typeof verificationFormSchema>;
 export type ConsentFormData = z.infer<typeof consentFormSchema>;
 
@@ -170,19 +205,47 @@ export const updatePersonalProfileFormSchema = z.object({
         .string("Address is required")
         .min(5, "Address must be at least 5 characters long")
         .max(200, "Address must be less than or equal to 200 characters"),
+});
+
+export const medicalInfoFormSchema = z.object({
     emergencyContactName: z
         .string("Full name is required")
         .min(2, "Full name must be at least 2 characters long")
         .max(100, "Full name must be less than or equal to 100 characters"),
-    emergencyPhoneNumber: z
+    emergencyContactNumber: z
         .string("Phone Number is required")
         .regex(
             /^\+[1-9]\d{1,14}$/,
             "Phone number must be in international format (e.g., +923001234567)"
         ),
+    bloodType: z
+        .string()
+        .min(1, "Blood type is required")
+        .max(3, "Blood type must be less than or equal to 3 characters long"),
+    height: z.number("Height is required").min(0, "Height must be a positive number"),
+    weight: z.number("Weight is required").min(0, "Weight must be a positive number"),
+    allergies: z.string().min(5, "Known allergies must be at least 5 characters long"),
+    currentMedications: z.string().min(5, "Current medications must be at least 5 characters long"),
+    pastMedicalHistory: z.string().min(5, "Past medical history must be at least 5 characters long"),
+    familyMedicalHistory: z.string().min(5, "Family medical history must be at least 5 characters long"),
 });
 
+export const professionalInfoSchema = z.object({
+    medicalDegree: z.enum(MedicalDegreeOptions.map(option => String(option.value)) as [string, ...string[]], { message: 'Medical Degree is required' }),
+    postGraduateDegree: z.enum(PostGraduateDegreeOptions.map(option => String(option.value)) as [string, ...string[]], { message: 'Postgraduate Degree is required' }),
+    specialization: z.enum(SpecializationOptions.map(option => String(option.value)) as [string, ...string[]], { message: 'Specialization is required' }),
+    yearsOfExperience: z
+        .number("Years of Experience is required")
+        .min(0, "Years of Experience must be a positive number")
+        .max(60, "Years of Experience must be less than or equal to 60"),
+    prefix: z.enum(DoctorPrefixOptions.map(option => String(option.value)) as [string, ...string[]], { message: 'Doctor Prefix is required' }),
+});
+
+
+
 export type UpdatePersonalProfileFormData = z.infer<typeof updatePersonalProfileFormSchema>;
+export type MedicalInfoFormData = z.infer<typeof medicalInfoFormSchema>;
+export type ProfessionalInfoFormData = z.infer<typeof professionalInfoSchema>;
 
 
 export const reviewFormSchema = z.object({

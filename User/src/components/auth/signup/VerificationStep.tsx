@@ -35,17 +35,17 @@ const VerificationStep = ({ formData, onSubmit }: VerificationStepProps) => {
             </div>
             <div className="flex justify-center mb-4">
                 <div className="flex items-center space-x-2">
-                    {[1, 2, 3, 4].map((step) => (
+                    {[1, 2, 3].map((step) => (
                         <div key={step} className="flex items-center">
                             <div
-                                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${step <= 3
+                                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${step <= 2
                                     ? "bg-primary text-white"
                                     : "bg-gray-200 text-gray-400"
                                     }`}
                             >
                                 {step}
                             </div>
-                            {step < 4 && (
+                            {step < 3 && (
                                 <div
                                     className={`w-8 h-0.5 mx-2 transition-colors ${step < 3 ? "bg-primary" : "bg-gray-200"}`}
                                 />

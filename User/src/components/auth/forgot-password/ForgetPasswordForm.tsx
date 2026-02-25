@@ -9,7 +9,8 @@ import PasswordResetStep from "./PasswordResetStep";
 import { EmailFormData, PasswordResetFormData } from "@/lib/validation";
 import { showToast } from "@/utils";
 import { useMutation } from "@tanstack/react-query";
-import { forgotPassword, resetPassword } from "@/services/auth.service";
+import { resetPassword, sendOtp } from "@/services/auth.service";
+import { OTPType } from "@/utils/constants";
 
 const ForgotPasswordForm = () => {
     const router = useRouter();
@@ -17,7 +18,7 @@ const ForgotPasswordForm = () => {
     const [userEmail, setUserEmail] = useState("");
 
     const {mutate: sendOtpMutate, isPending: isSendingOTP} = useMutation({
-        mutationFn: forgotPassword,
+        mutationFn: sendOtp,
         onSuccess: ()=>{
             setCurrentStep(2);
             showToast("OTP sent to your email", "success");
@@ -40,7 +41,10 @@ const ForgotPasswordForm = () => {
 
     const onEmailSubmit = async (data: EmailFormData) => {
         setUserEmail(data.email);
-        sendOtpMutate(data);
+        sendOtpMutate({
+            email: data.email,
+            type: OTPType.PASSWORD_RESET
+        });
     };
 
     const onPasswordSubmit = async (data: PasswordResetFormData) => {
@@ -80,7 +84,7 @@ const ForgotPasswordForm = () => {
             <div className="w-full max-w-6xl">
                 <Card className="w-full shadow-lg">
                     <CardBody className="p-0">
-                        <div className="flex flex-col lg:flex-row min-h-[600px]">
+                        <div className="flex flex-col lg:flex-row min-h-150">
                             {/* Form Section */}
                             <div className="flex-1 flex flex-col justify-center p-6 sm:p-8 lg:p-12">
                                 {/* Back Button */}

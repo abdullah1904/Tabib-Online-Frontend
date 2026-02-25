@@ -4,14 +4,13 @@ import { ArrowLeft } from "lucide-react"
 import Image from "next/image"
 import { useState } from "react";
 import PersonalInfoStep from "./PersonalInfoStep";
-import { ConsentFormData, MedicalInfoFormData, medicalInfoFormSchema, PersonalInfoFormData, personalInfoFormSchema, VerificationFormData, verificationFormSchema } from "@/lib/validation";
+import { ConsentFormData,PersonalInfoFormData, personalInfoFormSchema, VerificationFormData, verificationFormSchema } from "@/lib/validation";
 import { showToast } from "@/utils";
-import MedicalInfoStep from "./MedicalInfoStep";
 import VerificationStep from "./VerificationStep";
 import ConsentStep from "./ConsentStep";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import { signUp } from "@/services/auth.service";
+import { register } from "@/services/auth.service";
 
 
 const SignUpForm = () => {
@@ -19,13 +18,12 @@ const SignUpForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<{
     personalInfoData: PersonalInfoFormData | null,
-    medicalInfoData: MedicalInfoFormData | null,
     verificationData: VerificationFormData | null
     consentData: ConsentFormData | null
-  }>({ medicalInfoData: null, personalInfoData: null, verificationData: null, consentData: null });
+  }>({ personalInfoData: null, verificationData: null, consentData: null });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: signUp,
+    mutationFn: register,
     onSuccess: () => {
       showToast("Sign Up successful! Please verify your account.", "success");
       router.push(`/verify-account?email=${formData.personalInfoData?.email}`);
@@ -39,29 +37,19 @@ const SignUpForm = () => {
     setFormData(prev => ({ ...prev, personalInfoData: data }));
     setCurrentStep(2);
   };
-  const onMedicalInfoSubmit = async (data: MedicalInfoFormData) => {
-    setFormData(prev => ({ ...prev, medicalInfoData: data }));
-    setCurrentStep(3);
-  };
 
   const onVerificationSubmit = async (data: VerificationFormData) => {
     setFormData(prev => ({ ...prev, verificationData: data }));
-    setCurrentStep(4);
+    setCurrentStep(3);
   };
   const onConsentSubmit = async (data: ConsentFormData) => {
     setFormData(prev => ({ ...prev, consentData: data }));
-    setCurrentStep(4);
+    setCurrentStep(3);
     const personalInfoDataResult = personalInfoFormSchema.safeParse(formData.personalInfoData);
-    const medicalInfoDataResult = medicalInfoFormSchema.safeParse(formData.medicalInfoData);
     const verificationDataResult = verificationFormSchema.safeParse(formData.verificationData);
     if (!personalInfoDataResult.success) {
       showToast("Invalid personal information data. Please review your inputs.","error");
       setCurrentStep(1);
-      return;
-    }
-    if (!medicalInfoDataResult.success) {
-      showToast("Invalid medical information data. Please review your inputs.","error");
-      setCurrentStep(2);
       return;
     }
     if (!verificationDataResult.success) {
@@ -74,24 +62,13 @@ const SignUpForm = () => {
     userData.append('age', String(formData.personalInfoData?.age || 0));
     userData.append('gender', String(formData.personalInfoData?.gender || 0));
     userData.append('email', formData.personalInfoData?.email || '');
-    userData.append('phone', formData.personalInfoData?.phoneNumber || '');
-    userData.append('address', formData.personalInfoData?.address || '');
-    userData.append('emergencyContactNumber', formData.personalInfoData?.emergencyPhoneNumber || '');
-    userData.append('emergencyContactName', formData.personalInfoData?.emergencyContactName || '');
-    userData.append('bloodType', formData.medicalInfoData?.bloodType || '');
-    userData.append('height', String(formData.medicalInfoData?.height || 0));
-    userData.append('weight', String(formData.medicalInfoData?.weight || 0));
-    userData.append('allergies', formData.medicalInfoData?.knownAllergies || '');
-    userData.append('currentMedications', formData.medicalInfoData?.currentMedications || '');
-    userData.append('familyMedicalHistory', formData.medicalInfoData?.familyMedicalHistory || '');
-    userData.append('pastMedicalHistory', formData.medicalInfoData?.pastMedicalHistory || '');
+    userData.append('phoneNumber', formData.personalInfoData?.phoneNumber || '');
+    userData.append('address', formData.personalInfoData?.address || '');  
     userData.append('verificationDocumentType', formData.verificationData?.verificationType || '');
     userData.append('verificationDocumentNumber', formData.verificationData?.verificationNumber || '');
     userData.append('image', formData.verificationData?.verificationDocument || '');
     userData.append('password', data.password);
-    userData.append('treatmentConsent', data.treatmentConsent ? 'true' : 'false');
-    userData.append('healthInfoDisclosureConsent', data.healthInfoDisclosure ? 'true' : 'false');
-    userData.append('privacyPolicyConsent', data.privacyPolicyAgreement ? 'true' : 'false');
+    userData.append('role', data.role);
     mutate(userData);
   }
 
@@ -105,10 +82,8 @@ const SignUpForm = () => {
       case 1:
         return <PersonalInfoStep onSubmit={onPersonalInfoSubmit} formData={formData.personalInfoData} />;
       case 2:
-        return <MedicalInfoStep onSubmit={onMedicalInfoSubmit} formData={formData.medicalInfoData} />;
-      case 3:
         return <VerificationStep onSubmit={onVerificationSubmit} formData={formData.verificationData} />;
-      case 4:
+      case 3:
         return <ConsentStep onSubmit={onConsentSubmit} isLoading={isPending} formData={formData.consentData} />;
       default:
         return <PersonalInfoStep onSubmit={onPersonalInfoSubmit} formData={formData.personalInfoData} />;
@@ -119,7 +94,7 @@ const SignUpForm = () => {
       <div className="w-full max-w-6xl">
         <Card className="w-full shadow-lg">
           <CardBody className="p-0">
-            <div className="flex flex-col lg:flex-row min-h-[600px]">
+            <div className="flex flex-col lg:flex-row min-h-150">
               {/* Form Section */}
               <div className="flex-1 flex flex-col justify-center p-6 sm:p-8 lg:p-12">
                 {/* Back Button */}

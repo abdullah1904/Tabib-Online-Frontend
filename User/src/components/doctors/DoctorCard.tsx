@@ -4,7 +4,7 @@ import Link from "next/link"
 import { Star, BadgeCheck } from "lucide-react"
 
 type DoctorCardProps = {
-    id: number;
+    id: string;
     doctorPrefix: string;
     fullName: string;
     specialization: string;
