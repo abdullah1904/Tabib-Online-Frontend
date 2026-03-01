@@ -5,7 +5,7 @@ type Props = {
     children: ReactNode
 }
 
-const UserLayout = ({children}: Props) => {
+const MainLayout = ({children}: Props) => {
   return (
     <main>
         <AppNavbar/>
@@ -14,4 +14,4 @@ const UserLayout = ({children}: Props) => {
   )
 }
 
-export default UserLayout
+export default MainLayout

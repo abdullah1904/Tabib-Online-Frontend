@@ -1,4 +1,3 @@
-import AppNavbar from "@/components/AppNavbar";
 import AppSidebar from "@/components/AppSidebar";
 import { ReactNode } from "react";
 
@@ -8,10 +7,11 @@ type Props = {
 
 const DoctorLayout = ({ children }: Props) => {
   return (
-    <div className="flex flex-col h-screen">
-      <AppNavbar />
-      <div className="flex flex-1 overflow-hidden">
-        <AppSidebar />
+    <div className="flex flex-col h-[91vh]">
+      <div className="flex flex-1 overflow-hidden relative">
+        <div className="sticky top-0 h-full overflow-y-auto shrink-0">
+          <AppSidebar />
+        </div>
         <main className="flex-1 overflow-auto p-6">
           {children}
         </main>

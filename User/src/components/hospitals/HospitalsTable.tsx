@@ -70,7 +70,7 @@ const hospitalsData = [
 
 const HospitalsTable = () => {
   return (
-    <div className='w-full flex flex-col md:flex-row justify-center items-start p-2 md:p-10 gap-2 min-h-[91vh] relative bg-foreground'>
+    <div className='w-full flex flex-col md:flex-row justify-center items-start p-2 md:p-10 gap-2 min-h-[91vh] relative'>
       <Card className='flex-1 w-full shadow-lg rounded-lg h-[80vh]'>
         <CardBody className='text-primary'>
           Filter Section

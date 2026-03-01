@@ -1,6 +1,5 @@
 "use client";
 
-import { listWalletTopups } from "@/services/wallet.service";
 import {
     Alert,
     Avatar,
@@ -20,8 +19,9 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import TopUpModal from "./TopupModal";
 import { Banknote } from "lucide-react";
+import { listCheckouts } from "@/services/profile.service";
+import CheckoutModal from "./CheckoutModal";
 
 type Props = {
     topupStatus: "success" | "cancel" | undefined;
@@ -37,12 +37,12 @@ const WalletProfile = ({ topupStatus }: Props) => {
         isError,
         error,
     } = useQuery({
-        queryKey: ["walletTopups"],
-        queryFn: listWalletTopups,
+        queryKey: ["checkouts"],
+        queryFn: listCheckouts,
     });
     if (isLoading) {
         return (
-            <div className="w-full flex flex-col justify-center items-center p-2 md:p-10 gap-2 min-h-[91vh] relative bg-foreground">
+            <div className="w-full flex flex-col justify-center items-center p-2 md:p-10 gap-2 min-h-[91vh] relative">
                 <div className="flex items-center justify-center py-12">
                     <div className="text-center flex gap-2">
                         <Spinner />{" "}
@@ -54,7 +54,7 @@ const WalletProfile = ({ topupStatus }: Props) => {
     }
     if (isError) {
         return (
-            <div className="w-full flex flex-col justify-center items-center p-2 md:p-10 gap-2 min-h-[91vh] relative bg-foreground">
+            <div className="w-full flex flex-col justify-center items-center p-2 md:p-10 gap-2 min-h-[91vh] relative">
                 <div className="flex items-center justify-center py-12">
                     <div className="text-center flex gap-2 text-red-600">
                         <p className="text-gray-600">
@@ -68,7 +68,7 @@ const WalletProfile = ({ topupStatus }: Props) => {
     }
 
     return (
-        <div className="w-full flex flex-col justify-center items-center p-2 md:p-10 gap-4 min-h-[91vh] relative bg-foreground">
+        <div className="w-full flex flex-col justify-start items-center p-2 md:p-10 gap-4 min-h-[91vh]">
             {topupStatus === "success" && (
                 <Alert
                     color="success"
@@ -171,7 +171,7 @@ const WalletProfile = ({ topupStatus }: Props) => {
                 </CardBody>
             </Card>
             {showModal && (
-                <TopUpModal showModal={showModal} setShowModal={setShowModal} />
+                <CheckoutModal showModal={showModal} setShowModal={setShowModal} />
             )}
         </div>
     );

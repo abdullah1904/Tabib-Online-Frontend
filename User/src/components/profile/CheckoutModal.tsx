@@ -1,5 +1,5 @@
-import { TopUpFormData, topUpFormSchema } from '@/lib/validation';
-import { createWalletTopup } from '@/services/wallet.service';
+import { CheckoutFormData, checkoutFormSchema } from '@/lib/validation';
+import { createCheckout } from '@/services/profile.service';
 import { showToast } from '@/utils';
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Slider } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,13 +12,12 @@ type Props = {
     setShowModal: (show: boolean) => void;
 }
 
-const TopUpModal = ({ setShowModal, showModal }: Props) => {
-
+const CheckoutModal = ({ setShowModal, showModal }: Props) => {
     const { mutate, isPending } = useMutation({
-        mutationFn: createWalletTopup,
+        mutationFn: createCheckout,
         onSuccess: (data:unknown) => {
-            if (typeof data === 'object' && data !== null && 'checkoutURL' in data) {
-                const checkoutUrl = (data as { checkoutURL: string }).checkoutURL;
+            if (typeof data === 'object' && data !== null && 'url' in data) {
+                const checkoutUrl = (data as { url: string }).url;
                 window.location.href = checkoutUrl;
             }
         },
@@ -28,15 +27,15 @@ const TopUpModal = ({ setShowModal, showModal }: Props) => {
 
     });
 
-    const topUpForm = useForm<TopUpFormData>({
+    const topUpForm = useForm<CheckoutFormData>({
         mode: 'onBlur',
-        resolver: zodResolver(topUpFormSchema)
+        resolver: zodResolver(checkoutFormSchema)
     });
 
     const handleClose = () => {
         setShowModal(false);
     }
-    const onSubmit = (data: TopUpFormData) => {
+    const onSubmit = (data: CheckoutFormData) => {
         mutate(data);
     }
     return (
@@ -72,4 +71,4 @@ const TopUpModal = ({ setShowModal, showModal }: Props) => {
     )
 }
 
-export default TopUpModal
+export default CheckoutModal;

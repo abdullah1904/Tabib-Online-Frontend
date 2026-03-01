@@ -1,9 +1,21 @@
 "use client";
 
+import { UserRole } from "@/utils/constants";
 import { Button } from "@heroui/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const Hero = () => {
+    const { data, status } = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (status === "authenticated" && data?.user.role === UserRole.DOCTOR) {
+            router.push("/doctor-panel");
+        }
+    }, [status, data, router]);
     return (
         <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
             {/* Background Image */}

@@ -1,4 +1,4 @@
-import { AppointmentStatus, DoctorPrefix, Gender, Specialization } from "@/utils/constants";
+import { DoctorPrefix, Gender, Specialization } from "@/utils/constants";
 
 export interface Doctor {
     id: string;
@@ -12,21 +12,4 @@ export interface Doctor {
         prefix: DoctorPrefix;
     }
     averageRating: number;
-}
-
-export interface DoctorAppointment {
-    id: number;
-    appointmentDate: string;
-    appointmentTime: string;
-    status: AppointmentStatus;
-    doctor: {
-        id: number;
-        fullName: string;
-        imageURL?: string | null;
-        specialization: Specialization;
-        email: string;  
-        phoneNumber: string;
-    };
-    createdAt: Date;
-    updatedAt: Date;   
 }

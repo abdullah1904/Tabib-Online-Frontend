@@ -130,7 +130,7 @@ const FileUpload = <
                                         width={200}
                                         height={200}
                                         alt="Selected file preview"
-                                        className="w-full h-auto max-h-[400px] object-contain"
+                                        className="w-full h-auto max-h-100 object-contain"
                                     />
                                     <button
                                         className="absolute top-4 right-4 text-white p-2 rounded-full transition-all"

@@ -1,34 +1,33 @@
 import { AppointmentFormData, appointmentFormSchema } from '@/lib/validation'
-import { Service } from '@/types/services'
-import { getDoctorServiceDurationText, getDoctorServiceTypeText, getUpcomingDateNumbers, showToast } from '@/utils'
+import { formatTime, getConsultationDurationText, getConsultationTypeText, getUpcomingDateNumbers, showToast } from '@/utils'
 import { Button, Checkbox, DatePicker, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, TimeInput } from '@heroui/react'
 import { today, getLocalTimeZone, Time, parseDate } from '@internationalized/date'
-import React from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { Consultation } from '@/types/consultations'
+import { createAppointment } from '@/services/appointments.service'
 import { useMutation } from '@tanstack/react-query'
-import { createDoctorAppointment } from '@/services/doctors.service'
 
 type Props = {
     showModal: string,
     setShowModal: (value: null) => void
-    service: Service | null,
-    setService: (type: Service | null) => void
+    consultation: Consultation | null,
+    setConsultation: (type: Consultation | null) => void
 }
 
-const ServiceDetailModal = ({ showModal, setShowModal, service, setService }: Props) => {
+const AppointmentFormModal = ({ showModal, setShowModal, consultation, setConsultation }: Props) => {
     const appointmentForm = useForm<AppointmentFormData>({
         mode: 'onBlur',
         resolver: zodResolver(appointmentFormSchema),
         defaultValues: {
             appointmentDate: undefined,
-            appointmentTime: service?.time || undefined,
+            appointmentTime: consultation?.time ? formatTime(consultation.time) : undefined,
             additionalNotes: undefined,
             healthInfoSharingConsent: false
         }
     });
     const { mutate, isPending } = useMutation({
-        mutationFn: createDoctorAppointment,
+        mutationFn: createAppointment,
         onSuccess() {
             showToast('Appointment booked successfully', 'success');
             handleClose();
@@ -39,14 +38,15 @@ const ServiceDetailModal = ({ showModal, setShowModal, service, setService }: Pr
     });
     const handleClose = () => {
         setShowModal(null)
-        setService(null);
+        setConsultation(null);
     }
     const onSubmit = (data: AppointmentFormData) => {
-        if (!service) return;
+        if (!consultation) return;
+        console.log(consultation.id);
         mutate({
-            doctorId: service.doctor,
-            serviceId: service.id,
-            appointmentData: data
+            consultationId: consultation.id,
+            doctorId: consultation.doctorId,
+            ...data
         });
     }
     return (
@@ -55,7 +55,7 @@ const ServiceDetailModal = ({ showModal, setShowModal, service, setService }: Pr
                 <ModalContent>
                     <ModalHeader className="border-b pb-3">
                         <h2 className="text-xl font-semibold text-primary-dark">
-                            {getDoctorServiceTypeText(service?.type ?? 0)} Consultation Details
+                            {getConsultationTypeText(consultation?.type ?? 0)} Consultation Details
                         </h2>
                     </ModalHeader>
 
@@ -63,10 +63,10 @@ const ServiceDetailModal = ({ showModal, setShowModal, service, setService }: Pr
                     <ModalBody className="py-6">
                         <div className="grid grid-cols-1 gap-4">
                             <div>
-                                <h3 className="text-lg font-medium text-primary-dark mb-1">{service?.title}</h3>
-                                <p className="text-primary-dark/70">Price: {(service?.price ?? 0).toFixed(2)} | Duration: {getDoctorServiceDurationText(service?.duration ?? 0)}</p>
-                                {service?.location && (
-                                    <p className="text-primary-dark/70">Location: {service?.location}</p>
+                                <h3 className="text-lg font-medium text-primary-dark mb-1">{consultation?.title}</h3>
+                                <p className="text-primary-dark/70">Price: {(consultation?.price ?? 0).toFixed(2)} | Duration: {getConsultationDurationText(consultation?.duration ?? 0)}</p>
+                                {consultation?.location && (
+                                    <p className="text-primary-dark/70">Location: {consultation?.location}</p>
                                 )}
                             </div>
                             <DatePicker
@@ -103,10 +103,10 @@ const ServiceDetailModal = ({ showModal, setShowModal, service, setService }: Pr
                                 calendarProps={{
                                     minValue: today(getLocalTimeZone()),
                                     isDateUnavailable(date) {
-                                        if (service?.allowCustom) {
+                                        if (consultation?.allowCustom) {
                                             return false;
                                         }
-                                        const unavailableDays = getUpcomingDateNumbers(service?.availableDays ?? []);
+                                        const unavailableDays = getUpcomingDateNumbers(consultation?.consultationSlots.map(slot => slot.dayOfWeek) ?? []);
                                         return !unavailableDays.includes(date.day);
                                     },
                                     classNames: {
@@ -167,23 +167,27 @@ const ServiceDetailModal = ({ showModal, setShowModal, service, setService }: Pr
                                 }}
                             />
                             <TimeInput
-                                onChange={(value) => appointmentForm.setValue('appointmentTime', value?.toString() || '')}
-                                value={appointmentForm.watch('appointmentTime') ? (() => {
+                                onChange={(value) => appointmentForm.setValue('appointmentTime', value ? `${String(value.hour).padStart(2, '0')}:${String(value.minute).padStart(2, '0')}` : '')}
+                                value={(() => {
                                     const timeStr = appointmentForm.watch('appointmentTime');
-                                    if (timeStr) {
+                                    if (timeStr && typeof timeStr === 'string') {
                                         const [hours, minutes] = timeStr.split(':');
-                                        return new Time(Number(hours), Number(minutes));
+                                        const h = Number(hours);
+                                        const m = Number(minutes);
+                                        if (!isNaN(h) && !isNaN(m)) {
+                                            return new Time(h, m);
+                                        }
                                     }
                                     return null;
-                                })() : null}
+                                })()}
                                 isInvalid={!!appointmentForm.formState.errors.appointmentTime}
                                 errorMessage={appointmentForm.formState.errors.appointmentTime?.message}
                                 label="Select Time"
-                                isDisabled={service?.allowCustom ? false : true}
+                                isDisabled={consultation?.allowCustom ? false : true}
                                 defaultValue={
-                                    service?.time
+                                    consultation?.time
                                         ? (() => {
-                                            const [hours, minutes] = service.time.split(':');
+                                            const [hours, minutes] = consultation.time.split(':');
                                             return new Time(Number(hours), Number(minutes));
                                         })()
                                         : undefined
@@ -262,4 +266,4 @@ const ServiceDetailModal = ({ showModal, setShowModal, service, setService }: Pr
     )
 }
 
-export default ServiceDetailModal
+export default AppointmentFormModal;

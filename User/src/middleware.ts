@@ -7,7 +7,7 @@ const COMMON_ROUTES = ["/profile", "/profile/wallet"];
 const USER_ONLY_ROUTES = ["/profile/appointments"];
 
 const isDoctorRoute = (pathname: string) =>
-  pathname === "/doctor" || pathname.startsWith("/doctor/");
+  pathname === "/doctor-panel" || pathname.startsWith("/doctor-panel/");
 
 export default withAuth(
   function middleware(req) {
@@ -40,7 +40,7 @@ export default withAuth(
     }
 
     if (token.role === UserRole.DOCTOR && !isDoctorRoute(pathname)) {
-      return NextResponse.redirect(new URL("/doctor", req.url));
+      return NextResponse.redirect(new URL("/doctor-panel", req.url));
     }
 
     if (token.role === UserRole.USER && isDoctorRoute(pathname)) {
@@ -58,7 +58,7 @@ export default withAuth(
 
 export const config = {
   matcher: [
-    "/doctor/:path*",
+    "/doctor-panel/:path*",
     "/doctors/:path*",
     "/hospitals/:path*",
     "/tabib-bot",

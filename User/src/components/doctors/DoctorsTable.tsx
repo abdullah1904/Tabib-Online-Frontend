@@ -36,7 +36,7 @@ const DoctorsTable = () => {
     )
   }
   return (
-    <div className='w-full flex flex-col md:flex-row justify-center items-start p-2 md:p-10 gap-2 h-[91vh] relative bg-foreground'>
+    <div className='w-full flex flex-col md:flex-row justify-center items-start p-2 md:p-10 gap-2 h-[91vh] relative'>
       <DoctorFilters />
       <Card className='flex-3 w-full h-auto'>
         <CardHeader>

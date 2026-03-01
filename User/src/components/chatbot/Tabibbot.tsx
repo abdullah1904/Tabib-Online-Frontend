@@ -133,7 +133,7 @@ const TabibBot = () => {
     };
 
     return (
-        <div className='w-full flex flex-col md:flex-row justify-center items-start p-2 md:p-10 gap-2 min-h-[91vh] relative bg-foreground'>
+        <div className='w-full flex flex-col md:flex-row justify-center items-start p-2 md:p-10 gap-2 min-h-[91vh] relative'>
             <Card className='w-[95%] md:w-4/5 h-[80vh] mx-auto'>
                 <CardBody className="p-0 flex-1 flex flex-col">
                     <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">

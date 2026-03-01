@@ -664,7 +664,7 @@ const SecurityTab = () => {
 const Profile = () => {
     const { data: session } = useSession();
     return (
-        <div className='w-full flex justify-center items-start p-2 md:p-10 gap-2 min-h-[91vh] relative bg-foreground'>
+        <div className='w-full flex justify-center items-start p-2 md:p-10 gap-2 min-h-[91vh] relative'>
             <Card className="flex-1 max-w-4xl">
                 <CardHeader>
                     <div className="text-primary flex items-center justify-center gap-6">

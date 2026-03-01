@@ -39,8 +39,8 @@ const showToast = (message: string, type: 'success' | 'error' | 'warning') => {
 }
 
 const formatTime = (timeStr: string) => {
-  const date = new Date(`2000-01-01T${timeStr}`);
-  return format(date, 'hh:mm a');
+  const date = new Date(timeStr);
+  return format(date, 'HH:mm'); // 24-hour format
 };
 
 
@@ -220,7 +220,7 @@ const getDoctorPrefixText = (value: number) => {
 }
 
 
-const getDoctorServiceTypeText = (value: number) => {
+const getConsultationTypeText = (value: number) => {
   switch (value) {
     case 1:
       return "In-Person";
@@ -231,7 +231,7 @@ const getDoctorServiceTypeText = (value: number) => {
   }
 }
 
-const getDoctorServiceDurationText = (value: number) => {
+const getConsultationDurationText = (value: number) => {
   switch (value) {
     case 1:
       return "30 Minutes";
@@ -261,26 +261,7 @@ const getDayText = (day: number) => {
   }
 }
 
-// const getUpcomingDateNumbers = (days: DayOfWeek[], count: number = 4): number[] =>{
-//   const today = new Date();
-//   const result: number[] = [];
-
-//   const targetDays = [...new Set(days)].sort((a, b) => a - b);
-
-//   for (let i = 0; i < count * 7; i++) {
-//     const date = new Date(today);
-//     date.setDate(today.getDate() + i);
-//     const day = date.getDay();
-
-//     if (targetDays.includes(day)) {
-//       result.push(date.getDate());
-//     }
-//   }
-
-//   return result;
-// }
-
-const getUpcomingDateNumbers = (days: DayOfWeek[], count: number = 4): number[] => {
+const getUpcomingDateNumbers = (days: DayOfWeek[], count: number = 4): number[] =>{
   const today = new Date();
   const result: number[] = [];
 
@@ -298,6 +279,25 @@ const getUpcomingDateNumbers = (days: DayOfWeek[], count: number = 4): number[] 
 
   return result;
 }
+
+// const getUpcomingDateNumbers = (days: DayOfWeek[], count: number = 4): number[] => {
+//   const today = new Date();
+//   const result: number[] = [];
+
+//   const targetDays = [...new Set(days)].sort((a, b) => a - b);
+
+//   for (let i = 0; i < count * 7; i++) {
+//     const date = new Date(today);
+//     date.setDate(today.getDate() + i);
+//     const day = date.getDay();
+
+//     if (targetDays.includes(day)) {
+//       result.push(date.getDate());
+//     }
+//   }
+
+//   return result;
+// }
 
 const getAppointmentStatusText = (value: number) => {
   switch (value) {
@@ -319,8 +319,8 @@ export {
   formatTime,
   getSpecializationText,
   getDoctorPrefixText,
-  getDoctorServiceTypeText,
-  getDoctorServiceDurationText,
+  getConsultationTypeText,
+  getConsultationDurationText,
   getDayText,
   getUpcomingDateNumbers,
   getAppointmentStatusText

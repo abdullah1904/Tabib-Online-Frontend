@@ -46,7 +46,7 @@ const AppNavbar = () => {
     },
     {
       "name": "Dashboard",
-      "link": "/doctor",
+      "link": "/doctor-panel",
       "icon": <Stethoscope className="size-4" />,
       "forRole": UserRole.DOCTOR
     }

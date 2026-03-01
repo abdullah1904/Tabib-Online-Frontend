@@ -1,6 +1,6 @@
 import { generateRequest } from "@/lib/api-client";
-import { MedicalInfoFormData, ProfessionalInfoFormData } from "@/lib/validation";
-import { MedicalRecord, ProfessionalInfo } from "@/types/users";
+import { CheckoutFormData, MedicalInfoFormData, ProfessionalInfoFormData } from "@/lib/validation";
+import { Checkouts, MedicalRecord, ProfessionalInfo } from "@/types/users";
 
 export const updatePersonalProfile = async (data: FormData ) => {
     const response = await generateRequest({
@@ -49,4 +49,23 @@ export const updateProfessionalProfile = async (data: ProfessionalInfoFormData)=
         isProtected: true
     });
     return response.professionalInfo as ProfessionalInfo;
+}
+
+export const createCheckout = async (data: CheckoutFormData) => {
+    const response = await generateRequest({
+        method: "POST",
+        url: '/users/profile/wallet/checkouts',
+        isProtected: true,
+        data
+    });
+    return response;
+}
+
+export const listCheckouts = async () => {
+    const response = await generateRequest({
+        method: "GET",
+        url: '/users/profile/wallet/checkouts',
+        isProtected: true
+    });
+    return response as { sessions: Checkouts[], balance: number };
 }

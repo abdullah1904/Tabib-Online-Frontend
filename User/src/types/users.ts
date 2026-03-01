@@ -25,3 +25,12 @@ export interface ProfessionalInfo {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface Checkouts {
+    id: string,
+    amount: number,
+    currency: string,
+    status: 'paid' | 'unpaid';
+    checkoutURL: string | null;
+    createdAt: Date;
+}

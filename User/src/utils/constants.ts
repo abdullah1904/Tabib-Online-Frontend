@@ -290,17 +290,29 @@ export const DoctorPrefixOptions = [
 ]
 
 
-export enum DoctorServiceType {
+export enum ConsultationType {
     IN_PERSON = 1,
     AUDIO_CALL = 2,
     VIDEO_CALL = 3,
 }
 
-export enum DoctorServiceDuration {
+export const ConsultationTypeOptions = [
+    { label: "In-Person", value: 1 },
+    { label: "Audio Call", value: 2 },
+    { label: "Video Call", value: 3 },
+]
+
+export enum ConsultationDuration {
     MIN_30 = 1,
     MIN_45 = 2,
     MIN_60 = 3,
 }
+
+export const ConsultationDurationOptions = [
+    { label: "30 Minutes", value: 1 },
+    { label: "45 Minutes", value: 2 },
+    { label: "60 Minutes", value: 3 },
+]
 
 export enum DayOfWeek {
     SUNDAY = 0,
@@ -311,6 +323,16 @@ export enum DayOfWeek {
     FRIDAY = 5,
     SATURDAY = 6,   
 }
+
+export const DayOfWeekOptions = [
+    { label: "Sunday", value: 0 },
+    { label: "Monday", value: 1 },
+    { label: "Tuesday", value: 2 },
+    { label: "Wednesday", value: 3 },
+    { label: "Thursday", value: 4 },
+    { label: "Friday", value: 5 },
+    { label: "Saturday", value: 6 },
+]
 
 export enum AppointmentStatus {
     PENDING = 0,

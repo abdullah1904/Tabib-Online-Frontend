@@ -1,5 +1,5 @@
 import { ReviewFormData, reviewFormSchema } from '@/lib/validation'
-import { createDoctorReview } from '@/services/doctors.service'
+import { createDoctorReview } from '@/services/review.service'
 import { showToast } from '@/utils'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Textarea } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
