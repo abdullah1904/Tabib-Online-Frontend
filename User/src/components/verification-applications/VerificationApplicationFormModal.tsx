@@ -1,7 +1,7 @@
-import { verificationApplicationFormData } from '@/lib/validation';
-import { Modal, ModalContent, ModalHeader } from '@heroui/react';
+// import { verificationApplicationFormData } from '@/lib/validation';
+import { Modal, ModalBody, ModalContent, ModalHeader } from '@heroui/react';
 import React from 'react'
-import { useForm } from 'react-hook-form';
+// import { useForm } from 'react-hook-form';
 
 type Props = {
     showModal: boolean;
@@ -9,11 +9,11 @@ type Props = {
 }
 
 const VerificationApplicationFormModal = ({ setShowModal, showModal }: Props) => {
-    const verificationApplicationForm = useForm<verificationApplicationFormData>({
-        defaultValues: {
-            
-        }
-    });
+    // const verificationApplicationForm = useForm<verificationApplicationFormData>({
+    //     defaultValues: {
+
+    //     }
+    // });
     const handleClose = () => {
         setShowModal(false);
     };
@@ -27,21 +27,21 @@ const VerificationApplicationFormModal = ({ setShowModal, showModal }: Props) =>
                         </h2>
                     </ModalHeader>
                     <ModalBody className='grid gap-4'>
-                                            <Input
-                                                {...consultationForm.register("title")}
-                                                type="text"
-                                                placeholder="Consultation Title"
-                                                label="Title"
-                                                isInvalid={!!consultationForm.formState.errors.title}
-                                                errorMessage={consultationForm.formState.errors.title?.message}
-                                                classNames={{
-                                                    base: "w-full",
-                                                    input: "text-base",
-                                                    label: "text-sm font-medium",
-                                                    errorMessage: "text-xs"
-                                                }}
-                                            />
-                                            </ModalBody>
+                        {/* <Input
+                            {...consultationForm.register("title")}
+                            type="text"
+                            placeholder="Consultation Title"
+                            label="Title"
+                            isInvalid={!!consultationForm.formState.errors.title}
+                            errorMessage={consultationForm.formState.errors.title?.message}
+                            classNames={{
+                                base: "w-full",
+                                input: "text-base",
+                                label: "text-sm font-medium",
+                                errorMessage: "text-xs"
+                            }}
+                        /> */}
+                    </ModalBody>
                 </ModalContent>
             </form>
         </Modal>

@@ -8,6 +8,7 @@ import {
   LucideIcon,
   Stethoscope,
   Mails,
+  Calendar,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -30,7 +31,8 @@ const NAV_ITEMS: NavItemType[] = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/doctor-panel" },
   { label: "Consultations", icon: Stethoscope, href: "/doctor-panel/consultations" },
   { label: "Reviews", icon: Star, href: "/doctor-panel/reviews" },
-  {label: "Verification Applications", icon: Mails, href: "/doctor-panel/verification-applications"},
+  { label: "Verification Applications", icon: Mails, href: "/doctor-panel/verification-applications" },
+  { label: "Appointments", icon: Calendar, href: "/doctor-panel/appointments" },
   // { label: "Appointments", icon: CalendarDays, href: "/doctor/appointments" },
   // {
   //   label: "Patients",

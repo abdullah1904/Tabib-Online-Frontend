@@ -2,9 +2,14 @@ import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 import { AccountStatus, UserRole } from "./utils/constants";
 
-const COMMON_ROUTES = ["/profile", "/profile/wallet"];
+const COMMON_ROUTES = new Set([
+  "/profile",
+  "/profile/wallet",
+]);
 
-const USER_ONLY_ROUTES = ["/profile/appointments"];
+const USER_ONLY_ROUTES = [
+  "/profile/appointments",
+];
 
 const isDoctorRoute = (pathname: string) =>
   pathname === "/doctor-panel" || pathname.startsWith("/doctor-panel/");
@@ -18,33 +23,42 @@ export default withAuth(
       return NextResponse.redirect(new URL("/signin", req.url));
     }
 
-    if (token.verifiedAt === null && token.status === AccountStatus.PENDING) {
+    if (
+      token.status === AccountStatus.PENDING &&
+      token.verifiedAt === null
+    ) {
       return NextResponse.redirect(
         new URL(`/verify-account?email=${token.email}`, req.url)
       );
     }
 
-    if (token.role !== UserRole.USER && token.role !== UserRole.DOCTOR) {
+    if (![UserRole.USER, UserRole.DOCTOR].includes(token.role)) {
       return NextResponse.redirect(new URL("/api/auth/signout", req.url));
-    }
-
-    if (COMMON_ROUTES.some((path) => pathname === path || pathname.startsWith(path + "/"))) {
-      return NextResponse.next();
     }
 
     if (
       token.role === UserRole.DOCTOR &&
-      USER_ONLY_ROUTES.some((path) => pathname === path || pathname.startsWith(path + "/"))
+      USER_ONLY_ROUTES.some(
+        (route) => pathname === route || pathname.startsWith(route + "/")
+      )
     ) {
       return NextResponse.redirect(new URL("/doctors", req.url));
     }
 
-    if (token.role === UserRole.DOCTOR && !isDoctorRoute(pathname)) {
-      return NextResponse.redirect(new URL("/doctor-panel", req.url));
+    if (COMMON_ROUTES.has(pathname)) {
+      return NextResponse.next();
     }
 
-    if (token.role === UserRole.USER && isDoctorRoute(pathname)) {
-      return NextResponse.redirect(new URL("/doctors", req.url));
+    if (token.role === UserRole.DOCTOR) {
+      if (!isDoctorRoute(pathname)) {
+        return NextResponse.redirect(new URL("/doctor-panel", req.url));
+      }
+    }
+
+    if (token.role === UserRole.USER) {
+      if (isDoctorRoute(pathname)) {
+        return NextResponse.redirect(new URL("/doctors", req.url));
+      }
     }
 
     return NextResponse.next();

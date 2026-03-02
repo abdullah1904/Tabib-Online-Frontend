@@ -43,7 +43,6 @@ const formatTime = (timeStr: string) => {
   return format(date, 'HH:mm'); // 24-hour format
 };
 
-
 const getSpecializationText = (value: number) => {
   switch (value) {
     // --- General & Family Practice ---

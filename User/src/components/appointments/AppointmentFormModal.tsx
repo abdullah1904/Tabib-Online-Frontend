@@ -42,7 +42,7 @@ const AppointmentFormModal = ({ showModal, setShowModal, consultation, setConsul
     }
     const onSubmit = (data: AppointmentFormData) => {
         if (!consultation) return;
-        console.log(consultation.id);
+        console.log(data);
         mutate({
             consultationId: consultation.id,
             doctorId: consultation.doctorId,
