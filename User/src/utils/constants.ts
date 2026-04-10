@@ -334,6 +334,18 @@ export const DayOfWeekOptions = [
     { label: "Saturday", value: 6 },
 ]
 
+export enum PMDCVerifierType {
+    AGENT = 1,
+    WORKER = 2,
+} 
+
+export enum PMDCApplicationStatus {
+    PENDING = 0,
+    IN_PROGRESS = 1,
+    COMPLETED = 2,
+    ERROR = 3,
+}
+
 export enum AppointmentStatus {
     PENDING = 0,
     CONFIRMED = 1,

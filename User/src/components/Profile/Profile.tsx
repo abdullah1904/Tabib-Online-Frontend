@@ -1,14 +1,15 @@
 "use client";
-import { MedicalInfoFormData, medicalInfoFormSchema, ProfessionalInfoFormData, professionalInfoSchema, UpdatePersonalProfileFormData, updatePersonalProfileFormSchema } from "@/lib/validation";
+import { ChangePasswordFormData, changePasswordFormSchema, MedicalInfoFormData, medicalInfoFormSchema, ProfessionalInfoFormData, professionalInfoSchema, UpdatePersonalProfileFormData, updatePersonalProfileFormSchema } from "@/lib/validation";
+import { changePassword } from "@/services/auth.service";
 import { getMedicalProfile, getProfessionalProfile, updateMedicalProfile, updatePersonalProfile, updateProfessionalProfile } from "@/services/profile.service";
 import { showToast } from "@/utils";
 import { DoctorPrefixOptions, GenderOptions, MedicalDegreeOptions, PostGraduateDegreeOptions, SpecializationOptions, UserRole } from "@/utils/constants";
 import { Card, CardHeader, CardBody, Avatar, Tabs, Tab, Input, NumberInput, Select, SelectItem, Button, Spinner, Textarea, Tooltip } from "@heroui/react"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { ScanHeart, Shield, User, Info, Briefcase } from "lucide-react";
+import { ScanHeart, Shield, User, Info, Briefcase, EyeOff, Eye } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const PersonalInfoTab = () => {
@@ -501,7 +502,7 @@ const ProfessionalInfoTab = () => {
             });
         }
     }, [professionalInfo, isSuccess, updateProfessionalInfoForm]);
-    
+
     const { mutate, isPending } = useMutation({
         mutationFn: updateProfessionalProfile,
         onSuccess: (data) => {
@@ -521,7 +522,7 @@ const ProfessionalInfoTab = () => {
     const onSubmit = (data: ProfessionalInfoFormData) => {
         mutate(data);
     }
-    
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center py-12">
@@ -656,8 +657,93 @@ const ProfessionalInfoTab = () => {
 }
 
 const SecurityTab = () => {
+    const [showPassword, setShowPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const changePasswordForm = useForm<ChangePasswordFormData>({
+        resolver: zodResolver(changePasswordFormSchema),
+        defaultValues: {
+            currentPassword: '',
+            newPassword: '',
+        }
+    });
+    const { mutate, isPending } = useMutation({
+        mutationFn: changePassword,
+        onSuccess: () => {
+            changePasswordForm.reset();
+            showToast("Password updated successfully!", "success");
+        },
+        onError: (error) => {
+            showToast(error.message || "Failed to update password", "error");
+        }
+    });
+    const onSubmit = (data: ChangePasswordFormData) => {
+        mutate(data);
+    }
     return (
-        <div>Security Info</div>
+        <form onSubmit={changePasswordForm.handleSubmit(onSubmit)} noValidate>
+            <div className="space-y-6 mx-auto">
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                    <Input
+                        {...changePasswordForm.register("currentPassword")}
+                        type={showPassword ? "text" : "password"}
+                        endContent={
+                            <button
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="text-primary hover:text-primary-600 transition-colors focus:outline-none"
+                                type="button"
+                                aria-label={showPassword ? "Hide password" : "Show password"}
+                            >
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        }
+                        placeholder="********"
+                        label="Current Password"
+                        isInvalid={!!changePasswordForm.formState.errors.currentPassword}
+                        errorMessage={changePasswordForm.formState.errors.currentPassword?.message}
+                        classNames={{
+                            base: "w-full",
+                            input: "text-base",
+                            label: "text-sm font-medium",
+                            errorMessage: "text-xs"
+                        }}
+                    />
+                    <Input
+                        {...changePasswordForm.register("newPassword")}
+                        type={showNewPassword ? "text" : "password"}
+                        endContent={
+                            <button
+                                onClick={() => setShowNewPassword(!showNewPassword)}
+                                className="text-primary hover:text-primary-600 transition-colors focus:outline-none"
+                                type="button"
+                                aria-label={showNewPassword ? "Hide password" : "Show password"}
+                            >
+                                {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        }
+                        placeholder="********"
+                        label="New Password"
+                        isInvalid={!!changePasswordForm.formState.errors.newPassword}
+                        errorMessage={changePasswordForm.formState.errors.newPassword?.message}
+                        classNames={{
+                            base: "w-full",
+                            input: "text-base",
+                            label: "text-sm font-medium",
+                            errorMessage: "text-xs"
+                        }}
+                    />
+                </div>
+                <Button
+                    type="submit"
+                    color="primary"
+                    size="lg"
+                    isLoading={isPending}
+                    disabled={isPending}
+                    className="w-full font-medium py-3 transition-all duration-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                >
+                    {changePasswordForm.formState.isSubmitting ? "Changing..." : "Change password"}
+                </Button>
+            </div>
+        </form>
     )
 }
 

@@ -55,86 +55,86 @@ export const verificationFormSchema = z.object({
 })
 
 export const consentFormSchema = z
-  .object({
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
-      ),
-    role: z.enum(
-      UserRoleOptions.map((option) => String(option.value)) as [string, ...string[]],
-      { message: "User role is required" }
-    ),
+    .object({
+        password: z
+            .string()
+            .min(8, "Password must be at least 8 characters")
+            .regex(
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
+                "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+            ),
+        role: z.enum(
+            UserRoleOptions.map((option) => String(option.value)) as [string, ...string[]],
+            { message: "User role is required" }
+        ),
 
-    // User-only consents
-    treatmentConsent: z.boolean().optional(),
-    healthInfoDisclosure: z.boolean().optional(),
-    privacyPolicyAgreement: z.boolean().optional(),
+        // User-only consents
+        treatmentConsent: z.boolean().optional(),
+        healthInfoDisclosure: z.boolean().optional(),
+        privacyPolicyAgreement: z.boolean().optional(),
 
-    // Doctor-only consents
-    authenticInformationConsent: z.boolean().optional(),
-    dataUsageConsent: z.boolean().optional(),
-    licenseVerificationConsent: z.boolean().optional(),
-    termsAgreementConsent: z.boolean().optional(),
-  })
-  .superRefine((data, ctx) => {
-    if (data.role === String(UserRole.USER)) {
-      if (!data.treatmentConsent) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "You must consent to receive treatment to proceed",
-          path: ["treatmentConsent"],
-        });
-      }
-      if (!data.healthInfoDisclosure) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "You must consent to health information disclosure for treatment purposes",
-          path: ["healthInfoDisclosure"],
-        });
-      }
-      if (!data.privacyPolicyAgreement) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "You must acknowledge that you have reviewed and agree to the privacy policy",
-          path: ["privacyPolicyAgreement"],
-        });
-      }
-    }
+        // Doctor-only consents
+        authenticInformationConsent: z.boolean().optional(),
+        dataUsageConsent: z.boolean().optional(),
+        licenseVerificationConsent: z.boolean().optional(),
+        termsAgreementConsent: z.boolean().optional(),
+    })
+    .superRefine((data, ctx) => {
+        if (data.role === String(UserRole.USER)) {
+            if (!data.treatmentConsent) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "You must consent to receive treatment to proceed",
+                    path: ["treatmentConsent"],
+                });
+            }
+            if (!data.healthInfoDisclosure) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "You must consent to health information disclosure for treatment purposes",
+                    path: ["healthInfoDisclosure"],
+                });
+            }
+            if (!data.privacyPolicyAgreement) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "You must acknowledge that you have reviewed and agree to the privacy policy",
+                    path: ["privacyPolicyAgreement"],
+                });
+            }
+        }
 
-    if (data.role === String(UserRole.DOCTOR)) {
-      if (!data.authenticInformationConsent) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "You must consent to authentic information disclosure",
-          path: ["authenticInformationConsent"],
-        });
-      }
-      if (!data.dataUsageConsent) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "You must consent to data usage",
-          path: ["dataUsageConsent"],
-        });
-      }
-      if (!data.licenseVerificationConsent) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "You must consent to license verification",
-          path: ["licenseVerificationConsent"],
-        });
-      }
-      if (!data.termsAgreementConsent) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "You must agree to the terms and conditions",
-          path: ["termsAgreementConsent"],
-        });
-      }
-    }
-  });
+        if (data.role === String(UserRole.DOCTOR)) {
+            if (!data.authenticInformationConsent) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "You must consent to authentic information disclosure",
+                    path: ["authenticInformationConsent"],
+                });
+            }
+            if (!data.dataUsageConsent) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "You must consent to data usage",
+                    path: ["dataUsageConsent"],
+                });
+            }
+            if (!data.licenseVerificationConsent) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "You must consent to license verification",
+                    path: ["licenseVerificationConsent"],
+                });
+            }
+            if (!data.termsAgreementConsent) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "You must agree to the terms and conditions",
+                    path: ["termsAgreementConsent"],
+                });
+            }
+        }
+    });
 
 export type PersonalInfoFormData = z.infer<typeof personalInfoFormSchema>;
 export type VerificationFormData = z.infer<typeof verificationFormSchema>;
@@ -179,6 +179,27 @@ export const passwordResetFormSchema = z.object({
 
 export type EmailFormData = z.infer<typeof emailFormSchema>;
 export type PasswordResetFormData = z.infer<typeof passwordResetFormSchema>;
+
+export const changePasswordFormSchema = z.object({
+    currentPassword: z
+        .string()
+        .min(1, "Current password is required")
+        .min(8, "Current password must be at least 8 characters long")
+        .regex(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+            "Current password must contain at least one uppercase letter, one lowercase letter, and one number"
+        ),
+    newPassword: z
+        .string()
+        .min(1, "New password is required")
+        .min(8, "New password must be at least 8 characters long")
+        .regex(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+            "New password must contain at least one uppercase letter, one lowercase letter, and one number"
+        ),
+});
+
+export type ChangePasswordFormData = z.infer<typeof changePasswordFormSchema>;
 
 export const updatePersonalProfileFormSchema = z.object({
     profilePicture: z
@@ -295,16 +316,16 @@ export const consultationFormSchema = z.object({
     location: z.string().max(200).optional(),
     allowCustom: z.boolean(),
 }).refine(
-  (data) => {
-    if (data.type === ConsultationType.IN_PERSON.toString()) {
-      return !!data.location && data.location.trim().length > 0;
+    (data) => {
+        if (data.type === ConsultationType.IN_PERSON.toString()) {
+            return !!data.location && data.location.trim().length > 0;
+        }
+        return true;
+    },
+    {
+        message: "Location is required for in-person services",
+        path: ["location"],
     }
-    return true;
-  },
-  {
-    message: "Location is required for in-person services",
-    path: ["location"],
-  }
 );
 
 export type ConsultationFormData = z.infer<typeof consultationFormSchema>;
@@ -316,7 +337,19 @@ export const checkoutFormSchema = z.object({
 export type CheckoutFormData = z.infer<typeof checkoutFormSchema>;
 
 export const verificationApplicationFormSchema = z.object({
-  
+    image: z.instanceof(File, { message: "Verification document is required" }),
+    pmdcRedgNo: z.string().refine(
+        val =>
+            /^\d{1,6}-\d{2}-.$/.test(val) ||
+            /^\d{1,6}-.$/.test(val),
+        {
+            message: 'Invalid PMDC number format. Expected formats: XXXXXX-XX-X or XXXXX-X'
+        }
+    ),
+    pmdcRedgDate: z
+        .string("PMDC Registration Date is required")
+        .min(1, "PMDC Registration Date is required")
+        .regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format. Expected YYYY-MM-DD"),
 });
 
 export type verificationApplicationFormData = z.infer<typeof verificationApplicationFormSchema>;

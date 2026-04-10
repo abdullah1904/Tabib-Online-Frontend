@@ -298,6 +298,28 @@ const getUpcomingDateNumbers = (days: DayOfWeek[], count: number = 4): number[] 
 //   return result;
 // }
 
+const getPMDCVerifierTypeText = (value: number) => {
+  switch (value) {
+    case 1:
+      return "Agent";
+    case 2:
+      return "Worker";
+  }
+}
+
+const getPMDCApplicationStatusText = (value: number) => {
+  switch (value) {
+    case 0:
+      return "Pending";
+    case 1:
+      return "In Progress";
+    case 2:
+      return "Completed";
+    case 3:
+      return "Error";
+  }
+}
+
 const getAppointmentStatusText = (value: number) => {
   switch (value) {
     case 0:
@@ -313,6 +335,7 @@ const getAppointmentStatusText = (value: number) => {
   }
 }
 
+
 export {
   showToast,
   formatTime,
@@ -322,5 +345,7 @@ export {
   getConsultationDurationText,
   getDayText,
   getUpcomingDateNumbers,
+  getPMDCVerifierTypeText,
+  getPMDCApplicationStatusText,
   getAppointmentStatusText
 }

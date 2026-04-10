@@ -5,7 +5,7 @@ import { VerificationApplication } from "@/types/verification-application";
 export const createVerificationApplication = async ({doctorId, data}: {doctorId: string, data: verificationApplicationFormData}) => {
     const response = await generateRequest({
         method: "POST",
-        url: `/pmdc-verification-application/${doctorId}`,
+        url: `/pmdc-verification/${doctorId}`,
         isProtected: true,
         data,
         isFormData: true
@@ -13,10 +13,10 @@ export const createVerificationApplication = async ({doctorId, data}: {doctorId:
     return response;
 }
 
-export const getVerificationApplications = async (doctorId: string) => {
+export const listVerificationApplications = async (doctorId: string) => {
     const response = await generateRequest({
         method: "GET",
-        url: `/pmdc-verification-application/${doctorId}`,
+        url: `/pmdc-verification/${doctorId}`,
         isProtected: true
     });
     return response.applications as VerificationApplication[];
