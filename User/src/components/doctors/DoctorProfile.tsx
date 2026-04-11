@@ -6,11 +6,12 @@ import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query';
 import { getDoctor } from '@/services/doctors.service';
 import { getConsultationDurationText, getDayText, getDoctorPrefixText, getSpecializationText } from '@/utils';
-import { format, formatDate } from 'date-fns';
+import { formatDate } from 'date-fns';
 import { Consultation } from '@/types/consultations';
 import { ConsultationType } from '@/utils/constants';
 import ReviewModal from '../reviews/ReviewModal';
 import AppointmentFormModal from '../appointments/AppointmentFormModal';
+import { formatInTimeZone } from 'date-fns-tz';
 
 type Props = {
   doctorId: string
@@ -197,7 +198,7 @@ const DoctorProfile = ({ doctorId }: Props) => {
 
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-600">Time:</span>
-                      <span className="font-medium text-gray-900">{format(service.time, 'hh:mm a')}</span>
+                      <span className="font-medium text-gray-900">{formatInTimeZone(new Date(service.time), 'UTC', 'hh:mm a')}</span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-600">Availability Days:</span>

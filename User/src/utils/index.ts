@@ -43,6 +43,13 @@ const formatTime = (timeStr: string) => {
   return format(date, 'HH:mm'); // 24-hour format
 };
 
+const formatISOTime = (timeStr: string) => {
+  const date = new Date(timeStr);
+  const h = String(date.getUTCHours()).padStart(2, '0');
+  const m = String(date.getUTCMinutes()).padStart(2, '0');
+  return `${h}:${m}`;
+};
+
 const getSpecializationText = (value: number) => {
   switch (value) {
     // --- General & Family Practice ---
@@ -339,6 +346,7 @@ const getAppointmentStatusText = (value: number) => {
 export {
   showToast,
   formatTime,
+  formatISOTime,
   getSpecializationText,
   getDoctorPrefixText,
   getConsultationTypeText,

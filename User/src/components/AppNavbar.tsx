@@ -15,7 +15,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "@heroui/react";
-import { Bot, Calendar, CreditCard, LogIn, LogOut, Stethoscope, User } from "lucide-react";
+import { Bot, Calendar, CreditCard, LayoutDashboard, LogIn, LogOut, Mails, Star, Stethoscope, User } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -47,7 +47,31 @@ const AppNavbar = () => {
     {
       "name": "Dashboard",
       "link": "/doctor-panel",
+      "icon": <LayoutDashboard className="size-4" />,
+      "forRole": UserRole.DOCTOR
+    },
+    {
+      "name": "Consultations",
+      "link": "/doctor-panel/consultations",
       "icon": <Stethoscope className="size-4" />,
+      "forRole": UserRole.DOCTOR
+    },
+    {
+      "name": "Appointments",
+      "link": "/doctor-panel/appointments",
+      "icon": <Calendar className="size-4" />,
+      "forRole": UserRole.DOCTOR
+    },
+    {
+      "name": "Reviews",
+      "link": "/doctor-panel/reviews",
+      "icon": <Star className="size-4" />,
+      "forRole": UserRole.DOCTOR
+    },
+    {
+      "name": "Verification Applications",
+      "link": "/doctor-panel/verification-applications",
+      "icon": <Mails className="size-4" />,
       "forRole": UserRole.DOCTOR
     }
   ];
@@ -67,7 +91,7 @@ const AppNavbar = () => {
         />
         <NavbarBrand>
           <Link href="/" className="font-semibold text-2xl text-secondary">
-          Tabib Online {session?.user.role === UserRole.DOCTOR && "(Doctor)"}
+            Tabib Online {session?.user.role === UserRole.DOCTOR && "(Doctor)"}
           </Link>
         </NavbarBrand>
       </NavbarContent>
@@ -148,15 +172,14 @@ const AppNavbar = () => {
       </NavbarContent>
       <NavbarMenu>
         {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`} onClick={() => handlePress(item.link)}>
-            <Link
+          <NavbarMenuItem key={`${item}-${index}`}>
+            <button
               className="w-full flex items-center justify-start gap-2"
-              color="primary"
-              href={item.link}
-              hidden={item.forRole && session?.user?.role !== item.forRole}
+              onClick={() => handlePress(item.link)}
+              hidden={session ? item.forRole !== session.user?.role : item.forRole !== UserRole.USER}
             >
               {item.icon} {item.name}
-            </Link>
+            </button>
           </NavbarMenuItem>
         ))}
       </NavbarMenu>

@@ -1,5 +1,5 @@
 import { AppointmentFormData, appointmentFormSchema } from '@/lib/validation'
-import { formatTime, getConsultationDurationText, getConsultationTypeText, getUpcomingDateNumbers, showToast } from '@/utils'
+import { formatISOTime, getConsultationDurationText, getConsultationTypeText, getUpcomingDateNumbers, showToast } from '@/utils'
 import { Button, Checkbox, DatePicker, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, TimeInput } from '@heroui/react'
 import { today, getLocalTimeZone, Time, parseDate } from '@internationalized/date'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -21,7 +21,7 @@ const AppointmentFormModal = ({ showModal, setShowModal, consultation, setConsul
         resolver: zodResolver(appointmentFormSchema),
         defaultValues: {
             appointmentDate: undefined,
-            appointmentTime: consultation?.time ? formatTime(consultation.time) : undefined,
+            appointmentTime: consultation?.time ? formatISOTime(consultation.time) : undefined,
             additionalNotes: undefined,
             healthInfoSharingConsent: false
         }

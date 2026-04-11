@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle, Pencil, PlusCircle, Trash, XCircle } from "lucide-react";
 import { useState } from "react";
 import ConsultationFormModal from "./ConsultationFormModal";
+import { ConsultationType } from "@/utils/constants";
 
 const ConsultationsTable = () => {
   const queryClient = useQueryClient();
@@ -62,7 +63,7 @@ const ConsultationsTable = () => {
           <PlusCircle/>
         </Button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
         {consultations.map((consultation) => (
           <Card key={consultation.id} className="mb-4 text-primary">
             <CardHeader>
@@ -72,7 +73,7 @@ const ConsultationsTable = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <p className="text-sm"><span className="font-bold">Type:</span> {getConsultationTypeText(consultation.type)}</p>
                 <p className="text-sm"><span className="font-bold">Duration:</span> {getConsultationDurationText(consultation.duration)}</p>
-                <p className="text-sm"><span className="font-bold">Price:</span> ${consultation.price}</p>
+                <p className="text-sm"><span className="font-bold">Price:</span> {consultation.price} PKR</p>
                 <p className="text-sm"><span className="font-bold">Time:</span> {formatTime(consultation.time)}</p>
                 <div className="text-sm flex items-center gap-2">
                   <span className="font-bold">Allow Custom:</span>
@@ -85,7 +86,7 @@ const ConsultationsTable = () => {
                 <p className="text-sm col-span-1 md:col-span-2">
                   <span className="font-bold">Available Days:</span> {consultation.consultationSlots.map(slot => getDayText(slot.dayOfWeek)).join(", ")}
                 </p>
-                {consultation.allowCustom && (
+                {consultation.type === ConsultationType.IN_PERSON && (
                   <p className="text-sm col-span-1 md:col-span-2">
                     <span className="font-bold">Location:</span> {consultation.location}
                   </p>

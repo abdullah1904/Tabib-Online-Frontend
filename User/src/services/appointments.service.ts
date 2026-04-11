@@ -21,6 +21,15 @@ export const createAppointment = async (data: AppointmentFormData & {doctorId: s
     return response;
 }
 
+export const getAppointment = async (appointmentId: string)=>{
+    const response = await generateRequest({
+        method: "GET",
+        url: `/appointments/${appointmentId}`,
+        isProtected: true
+    });
+    return response.appointment as Appointment;
+}
+
 export const confirmAppointment = async (appointmentId: string) => {
     const response = await generateRequest({
         method: "PATCH",

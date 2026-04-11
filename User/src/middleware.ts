@@ -5,6 +5,7 @@ import { AccountStatus, UserRole } from "./utils/constants";
 const COMMON_ROUTES = new Set([
   "/profile",
   "/profile/wallet",
+  "/calls/:id"
 ]);
 
 const USER_ONLY_ROUTES = [
@@ -77,5 +78,6 @@ export const config = {
     "/hospitals/:path*",
     "/tabib-bot",
     "/profile/:path*",
+    "/calls/:path*",
   ],
 };

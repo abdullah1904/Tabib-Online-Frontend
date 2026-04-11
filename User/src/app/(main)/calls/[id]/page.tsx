@@ -1,3 +1,4 @@
+import Call from "@/components/calls/Call";
 
 type Props = {
   params: Promise<{ id: string }>
@@ -6,9 +7,7 @@ type Props = {
 const CallPage = async ({params}: Props) => {
     const {id} = await params;
   return (
-    <div>
-        {id }
-    </div>
+    <Call appointmentId={id}/>
   )
 }
 

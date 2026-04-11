@@ -27,7 +27,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { EllipsisVertical } from "lucide-react";
 import { useState } from "react";
 import AppointmentInfoModal from "./AppointmentInfoModal";
-import { format } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 
 type Props = {
@@ -172,7 +171,7 @@ const AppointmentsTable = ({ role, showHeader = false }: Props) => {
                                 )}
                             </TableCell>
                             <TableCell>
-                                {format(new Date(appointment.appointmentDate), "MMM dd, yyyy")}
+                                {formatInTimeZone(new Date(appointment.appointmentDate), "UTC", "MMM dd, yyyy")}
                             </TableCell>
                             <TableCell>
                                 {formatInTimeZone(appointment.appointmentTime, 'UTC', 'hh:mm a')}
