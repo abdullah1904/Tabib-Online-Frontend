@@ -8,7 +8,7 @@ import {
     getSpecializationText,
     showToast,
 } from "@/utils";
-import { AppointmentStatus, UserRole } from "@/utils/constants";
+import { AppointmentStatus, ConsultationType, UserRole } from "@/utils/constants";
 import {
     Avatar,
     Dropdown,
@@ -28,6 +28,7 @@ import { EllipsisVertical } from "lucide-react";
 import { useState } from "react";
 import AppointmentInfoModal from "./AppointmentInfoModal";
 import { formatInTimeZone } from 'date-fns-tz';
+import { useRouter } from "next/navigation";
 
 type Props = {
     role: UserRole;
@@ -35,6 +36,7 @@ type Props = {
 };
 
 const AppointmentsTable = ({ role, showHeader = false }: Props) => {
+    const router = useRouter();
     const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
     const {
         data: doctorAppointments,
@@ -74,6 +76,9 @@ const AppointmentsTable = ({ role, showHeader = false }: Props) => {
     }
     const handleViewDetails = (appointment: Appointment) => {
         setSelectedAppointment(appointment);
+    }
+    const handleCallStart = (appointment:Appointment)=>{
+        router.push(`/calls/${appointment.id}`);
     }
     if (isLoading) {
         return (
@@ -192,8 +197,17 @@ const AppointmentsTable = ({ role, showHeader = false }: Props) => {
                                             hidden={role !== UserRole.DOCTOR}
                                             key="Confirm"
                                             onPress={() => { handleConfirm(appointment) }}
+                                            isDisabled={appointment.status === AppointmentStatus.CONFIRMED || appointment.status === AppointmentStatus.CANCELLED}
                                         >
                                             Confirm
+                                        </DropdownItem>
+                                        <DropdownItem
+                                            hidden={role !== UserRole.DOCTOR}
+                                            key="Call"
+                                            onPress={() => { handleCallStart(appointment) }}
+                                            isDisabled={appointment.status !== AppointmentStatus.CONFIRMED && appointment.consultation.type === ConsultationType.IN_PERSON}
+                                        >
+                                            Start Call
                                         </DropdownItem>
                                         <DropdownItem key="Cancel" onPress={() => { handleCancel(appointment) }}>
                                             Cancel

@@ -1,8 +1,9 @@
+import DoctorDashboard from "@/components/dashboard/DoctorDashboard";
 
 const HomePage = () => {
   return (
     <div className="custom-scrollbar">
-      Doctor Panel
+      <DoctorDashboard/>
     </div>
   );
 };

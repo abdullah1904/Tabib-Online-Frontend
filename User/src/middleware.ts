@@ -5,7 +5,6 @@ import { AccountStatus, UserRole } from "./utils/constants";
 const COMMON_ROUTES = new Set([
   "/profile",
   "/profile/wallet",
-  "/calls/:id"
 ]);
 
 const USER_ONLY_ROUTES = [
@@ -14,6 +13,9 @@ const USER_ONLY_ROUTES = [
 
 const isDoctorRoute = (pathname: string) =>
   pathname === "/doctor-panel" || pathname.startsWith("/doctor-panel/");
+
+const isCallsRoute = (pathname: string) =>
+  pathname === "/calls" || pathname.startsWith("/calls/");
 
 export default withAuth(
   function middleware(req) {
@@ -44,6 +46,11 @@ export default withAuth(
       )
     ) {
       return NextResponse.redirect(new URL("/doctors", req.url));
+    }
+
+    // Handle /calls/:id — accessible by both roles
+    if (isCallsRoute(pathname)) {
+      return NextResponse.next();
     }
 
     if (COMMON_ROUTES.has(pathname)) {

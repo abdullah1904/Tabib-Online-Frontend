@@ -1,8 +1,9 @@
 import { generateRequest } from "@/lib/api-client";
 import { CheckoutFormData, MedicalInfoFormData, ProfessionalInfoFormData } from "@/lib/validation";
+import { ProfessionalStats } from "@/types/profile";
 import { Checkouts, MedicalRecord, ProfessionalInfo } from "@/types/users";
 
-export const updatePersonalProfile = async (data: FormData ) => {
+export const updatePersonalProfile = async (data: FormData) => {
     const response = await generateRequest({
         method: "PATCH",
         url: "/users/profile/personal",
@@ -22,7 +23,7 @@ export const getMedicalProfile = async () => {
     return response.medicalRecord as MedicalRecord;
 }
 
-export const updateMedicalProfile = async (data:MedicalInfoFormData)=>{
+export const updateMedicalProfile = async (data: MedicalInfoFormData) => {
     const response = await generateRequest({
         method: "PUT",
         url: "/users/profile/medical",
@@ -30,7 +31,7 @@ export const updateMedicalProfile = async (data:MedicalInfoFormData)=>{
         isProtected: true
     });
     return response.medicalRecord as MedicalRecord;
-} 
+}
 
 export const getProfessionalProfile = async () => {
     const response = await generateRequest({
@@ -41,7 +42,18 @@ export const getProfessionalProfile = async () => {
     return response.professionalInfo as ProfessionalInfo;
 }
 
-export const updateProfessionalProfile = async (data: ProfessionalInfoFormData)=>{
+export const getProfessionalStats = async () => {
+    const response = await generateRequest({
+        method: "GET",
+        url: "/users/profile/professional/stats",
+        isProtected: true
+    }
+    );
+    return response.stats as ProfessionalStats; 
+
+}
+
+export const updateProfessionalProfile = async (data: ProfessionalInfoFormData) => {
     const response = await generateRequest({
         method: "PUT",
         url: "/users/profile/professional",
