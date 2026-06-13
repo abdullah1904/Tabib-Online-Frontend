@@ -3,7 +3,7 @@
 </div>
 
 <h2>Environment Variables:</h2>
-<p>To run the project locally, you’ll need to set up the following environment variables:</p>
+<p>To run the project locally, you’ll need to set up the following environment variables in .env:</p>
 
 ```bash
 NEXTAUTH_SECRET=""
